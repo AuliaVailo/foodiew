@@ -11,6 +11,10 @@ app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/profile', function(req, res){
+    res.sendFile(__dirname + '/profile.html');
+});
+
 http.listen(process.env.PORT, function() {
     console.log('listening on *:' + process.env.PORT)
 })

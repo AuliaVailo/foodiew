@@ -12,7 +12,8 @@ const index = new Vue({
         passwordError: '',
         confirmPasswordError: '',
         isLoading: false,
-        generalErrorMessage: ''
+        generalErrorMessage: '',
+        profile: []
     },
     created () {
         let token = localStorage.getItem('token')
@@ -148,11 +149,33 @@ const index = new Vue({
         },
         signout: function () {
             localStorage.removeItem('token')
-            localStorage.removeItem('userProfile')
+            localStorage.removeItem('profile')
             this.isLogin = 0
         },
         getProfile: function () {
-
+            let url = this.url + '/api/users'
+            let token = 'Bearer' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`,
+                }
+            }
+            axios.get(url, header)
+                .then((res) => {
+                    this.profile = res.data.data[0]
+                    localStorage.setItem('profile', JSON.stringify(this.profile))
+                })
+                .catch((err) => {
+                    if (err.response !== undefined) {
+                        this.generalErrorMessage = err.response.data
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
         },
         getListItems: function () {
             // let url = 'https://api.foodiew.com/getlist'
