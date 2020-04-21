@@ -1,7 +1,8 @@
 const index = new Vue({
     el: '#app',
     data: { 
-        url: 'https://tranquil-dawn-58446.herokuapp.com',
+        // url: 'https://tranquil-dawn-58446.herokuapp.com',
+        url: 'http://localhost:8000',
         title: 'foodiew',
         isLogin: 0,
         email: '',
@@ -13,14 +14,21 @@ const index = new Vue({
         confirmPasswordError: '',
         isLoading: false,
         generalErrorMessage: '',
-        profile: []
+        profile: [],
+        trending_caffe: [],
+        trending_foods: [],
+        trending_baverages: [],
+        location: '',
     },
     created () {
         let token = localStorage.getItem('token')
         if (token !== null) {
             this.isLogin = 1
-            this.getListItems()
         }
+        this.getCaffe()
+        this.getFoods()
+        this.getBeverages()
+        this.location = 'Bandung'
     },
     methods: {
         register: function () {
@@ -148,13 +156,12 @@ const index = new Vue({
                 })
         },
         signout: function () {
-            localStorage.removeItem('token')
-            localStorage.removeItem('profile')
+            localStorage.clear()
             this.isLogin = 0
         },
         getProfile: function () {
             let url = this.url + '/api/users'
-            let token = 'Bearer' + localStorage.getItem('token')
+            let token = 'Bearer ' + localStorage.getItem('token')
             let header = {
                 headers: {
                     'Authorization': `${token}`,
@@ -177,15 +184,82 @@ const index = new Vue({
                     }, 3000);
                 })
         },
-        getListItems: function () {
-            // let url = 'https://api.foodiew.com/getlist'
-            // axios.get(url)
-            //     .then((res) => {
-            //        this.items,push(res)
-            //     })
-            //     .catch((err) => {
-            //         console.log(err)
-            //     })
-        }
+        getCaffe: function () {
+            let location = 'bandung'
+            let url = this.url + '/api/caffes/' + location + '/location'
+            // let token = 'Bearer' + localStorage.getItem('token')
+            let header = {
+                // headers: {
+                //     'Authorization': `${token}`,
+                // }
+            }
+            axios.get(url, header)
+                .then((res) => {
+                    this.trending_caffe = res.data.data
+                    localStorage.setItem('trending_caffe', JSON.stringify(this.trending_caffe))
+                })
+                .catch((err) => {
+                    if (err.response !== undefined) {
+                        this.generalErrorMessage = err.response.data
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        getFoods: function () {
+            let url = this.url + '/api/foods/1/type'
+            // let token = 'Bearer' + localStorage.getItem('token')
+            let header = {
+                // headers: {
+                //     'Authorization': `${token}`,
+                // }
+            }
+            axios.get(url, header)
+                .then((res) => {
+                    this.trending_foods = res.data.data
+                    localStorage.setItem('trending_foods', JSON.stringify(this.trending_foods))
+                })
+                .catch((err) => {
+                    if (err.response !== undefined) {
+                        this.generalErrorMessage = err.response.data
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        getBeverages: function () {
+            let url = this.url + '/api/foods/2/type'
+            // let token = 'Bearer' + localStorage.getItem('token')
+            let header = {
+                // headers: {
+                //     'Authorization': `${token}`,
+                // }
+            }
+            axios.get(url, header)
+                .then((res) => {
+                    this.trending_baverages = res.data.data
+                    localStorage.setItem('trending_baverages', JSON.stringify(this.trending_baverages))
+                })
+                .catch((err) => {
+                    if (err.response !== undefined) {
+                        this.generalErrorMessage = err.response.data
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        
     }
 })
