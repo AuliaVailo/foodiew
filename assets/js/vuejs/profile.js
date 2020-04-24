@@ -2,11 +2,21 @@ const index = new Vue({
     el: '#app',
     data: { 
         url: 'https://tranquil-dawn-58446.herokuapp.com',
+        // url: 'http://localhost:8000',
         title: 'foodiew',
         isLogin: 0,
         items: [],
         isLoading: false,
-        profile: []
+        profile: [],
+        generalErrorMessage: '',
+        cafeName: '',
+        cafeAddress: '',
+        locationLink: '',
+        locationMap: '',
+        cafenameError: '',
+        cafeAddressError: '',
+        locationErrorLink: '',
+        locationErrorMap: ''
     },
     computed: {
         profileUser: function () {
@@ -50,10 +60,68 @@ const index = new Vue({
             localStorage.removeItem('token')
             localStorage.removeItem('userProfile')
             this.isLogin = 0
+            window.location.replace('/')
+        },
+        registerCafe: function () {
+            this.isLoading = true
+            let url = this.url + '/api/caffes/register'
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`,
+                }
+            }
+            let payload = {
+                caffe_name: this.cafeName,
+                caffe_address: this.cafeAddress,
+                googlemaplink: this.locationLink,
+                googlemaphtml: this.locationMap,
+            }
+            axios.post(url, payload, header)
+                .then((res) => {
+                    console.log(res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.generalErrorMessage = res.data.message
+                        $('#generalModal').modal('show')
+                        this.cafeName = ''
+                        this.cafeAddress = ''
+                        this.locationLink = ''
+                        this.locationMap = ''
+                        this.getProfile()
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                            $('#registerCafe').modal('hide')
+                            window.location.replace('/mycafe')
+                        }, 5000);
+                    }
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
         },
         getProfile: function () {
             let url = this.url + '/api/users'
-            let token = 'Bearer' + localStorage.getItem('token')
+            let token = 'Bearer ' + localStorage.getItem('token')
             let header = {
                 headers: {
                     'Authorization': `${token}`,
@@ -61,7 +129,8 @@ const index = new Vue({
             }
             axios.get(url, header)
                 .then((res) => {
-                    console.log(res)
+                    this.profile = res.data.data[0]
+                    localStorage.setItem('profile', JSON.stringify(this.profile))
                 })
                 .catch((err) => {
                     if (err.response !== undefined) {
@@ -75,15 +144,7 @@ const index = new Vue({
                     }, 3000);
                 })
         },
-        getListItems: function () {
-            // let url = 'https://api.foodiew.com/getlist'
-            // axios.get(url)
-            //     .then((res) => {
-            //        this.items,push(res)
-            //     })
-            //     .catch((err) => {
-            //         console.log(err)
-            //     })
-        }
     }
 })
+
+$('[data-toggle="tooltip"]').tooltip()

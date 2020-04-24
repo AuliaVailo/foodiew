@@ -15,6 +15,11 @@ app.get('/profile', function(req, res){
     res.sendFile(__dirname + '/profile.html');
 });
 
+
+app.get('/mycafe', function(req, res){
+    res.sendFile(__dirname + '/profile_cafe.html');
+});
+
 http.listen(process.env.PORT, function() {
-    console.log('listening on *:' + process.env.PORT)
+    console.log('listening on http://localhost:' + process.env.PORT)
 })
