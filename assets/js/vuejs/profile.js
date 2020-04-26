@@ -1,9 +1,12 @@
 const index = new Vue({
     el: '#app',
     data: { 
-        // url: 'https://tranquil-dawn-58446.herokuapp.com',
-        url: 'http://localhost:8000',
-        profileUrl: 'http://localhost:8000/profiles/',
+        // url: 'http://localhost:8000',
+        url: 'https://tranquil-dawn-58446.herokuapp.com',
+        // imageUrl: 'http://localhost:8000/menus/',
+        imageUrl: 'https://tranquil-dawn-58446.herokuapp.com/menus/',
+        // profileUrl: 'http://localhost:8000/profiles/',
+        profileUrl: 'https://tranquil-dawn-58446.herokuapp.com/profiles/',
         title: 'foodiew',
         isLogin: 0,
         items: [],
