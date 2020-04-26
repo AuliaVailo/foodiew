@@ -99,7 +99,7 @@
             </div>
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img src="./assets/img/Profile_dummy.svg" alt="" class="img-thumbnail img-circle">
+                    <img :src="profile.members.profile_pictures ? profileUrl + profile.members.profile_pictures : './assets/img/Profile_dummy.svg'" alt="" class="img-thumbnail img-circle">
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" style="font-size: .85rem;">
                     <a class="dropdown-item" href="./mycafe"><i class="fas fa-user"></i> &nbsp;My Cafe</a>
@@ -115,7 +115,7 @@
                         <!-- sidebar-header  -->
                         <div class="sidebar-item sidebar-header d-flex flex-nowrap">
                             <div class="user-pic">
-                                <img class="img-responsive img-rounded" src="./assets/img/Profile_dummy.svg" alt="User picture">
+                                <img class="img-responsive img-rounded" :src="profile.members.profile_pictures ? profileUrl + profile.members.profile_pictures : './assets/img/Profile_dummy.svg'" alt="User picture">
                             </div>
                             <div class="user-info text-gold">
                                 <span class="user-name"><strong>{{profileUser.name}}</strong></span>
@@ -126,11 +126,11 @@
                                     <span>Online</span>
                                 </span>
                                 <span class="mt-2">
-                                    <a href="./profile" class="label-sidebar text-center mr-1">
-                                        &nbsp;<i class="fas fa-cog text-navy-blue pr-0"></i>
+                                    <a href="#" class="label-sidebar text-center mr-1"  data-toggle="modal" data-target="#settingModal">
+                                        <i class="fas fa-cog text-navy-blue pr-0"></i>
                                     </a>
-                                    <a href="./profile" class="label-sidebar">
-                                        &nbsp;<i class="fas fa-envelope text-navy-blue"></i>&nbsp;
+                                    <a href="./message" class="label-sidebar">
+                                        <i class="fas fa-envelope text-navy-blue"></i>&nbsp;
                                     </a>
                                 </span>
                             </div>
@@ -151,6 +151,12 @@
                                     <a href="./profile">
                                         <i class="fas fa-user text-gold"></i>
                                         <span class="menu-text text-gold">Profile</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="./mycafe">
+                                        <i class="fas fa-store text-gold"></i>
+                                        <span class="menu-text text-gold">My Cafe</span>
                                     </a>
                                 </li>
                                 <li class="sidebar-dropdown">
@@ -218,7 +224,7 @@
                     <h6>Cafe</h6>
                     <div class="row">
                         <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem">
-                            <a href="./profile_cafe.html">
+                            <a href="./mycafe">
                                 <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
                                 <p class="mx-2 mt-2 pb-2 font-weight-bolder">Dopamine Cafe</p>
                             </a>
@@ -254,7 +260,7 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-3 col-lg-2">
-                                    <img src="./assets/img/Profile_dummy.svg" class="img-fluid img-profile-photo img-thumbnail">
+                                    <img :src="profile.members.profile_pictures ? profileUrl + profile.members.profile_pictures : './assets/img/Profile_dummy.svg'" class="img-fluid img-profile-photo img-thumbnail">
                                     <div id="badge-label" class="text-white text-center" style="margin-top: .475rem">
                                         <i class="far fa-square kotak-bawah-tiga"></i>
                                         <i class="far fa-square kotak-bawah-tiga"></i>
@@ -283,7 +289,7 @@
                                                         <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="11" aria-valuemin="0" aria-valuemax="100" style="width: 11%"></div>
                                                         <small class="justify-content-center d-flex position-absolute w-100 text-navy-blue">27789 votes</small>
                                                     </div>
-                                                    <!-- CARA NGODING WIDTHNYA -->
+                                                <!-- CARA NGODING WIDTHNYA -->
                                                     <!--
                                                     Misal ini kan dia sekarang di Intermediate I, berarti rentangnya antara 25000-50000 itu kan ada 25000 vote, berarti ngitungnya misalnya kalo votenya sekarang 27789, itu width nya berarti (27789-25000)/25000 x 100 = 11,156 persen, saran sih, digenapin ke bilangan bulat aja, berarti 11 persen
                                                     Rumus (Vote Sekarang-Selisih Rentang)/Selisih Rentang x 100
@@ -395,7 +401,7 @@
                             </div>
                             <div class="row">
                                 <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                    <a href="./profile_cafe.html" class="text-white">
+                                    <a href="./mycafe" class="text-white">
                                         <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
                                         <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
                                         <p class="rating mx-2 mb-0 white-text">
@@ -409,7 +415,7 @@
                                     </a>
                                 </div>
                                 <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                    <a href="./profile_cafe.html" class="text-white">
+                                    <a href="./mycafe" class="text-white">
                                         <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
                                         <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
                                         <p class="rating mx-2 mb-0 white-text">
@@ -423,7 +429,7 @@
                                     </a>
                                 </div>
                                 <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                    <a href="./profile_cafe.html" class="text-white">
+                                    <a href="./mycafe" class="text-white">
                                         <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
                                         <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
                                         <p class="rating mx-2 mb-0 white-text">
@@ -606,10 +612,10 @@
                     <!-- sidebar-header  -->
                     <div class="sidebar-item sidebar-header d-flex flex-nowrap">
                         <div class="user-pic">
-                            <img class="img-responsive img-rounded" src="./assets/img/Profile_dummy.svg" alt="User picture">
+                            <img class="img-responsive img-rounded" :src="profile.members.profile_pictures ? profileUrl + profile.members.profile_pictures : './assets/img/Profile_dummy.svg'" alt="User picture">
                         </div>
                         <div class="user-info text-gold">
-                            <span class="user-name">Muhammad <strong>Adli</strong>
+                            <span class="user-name">{{profileUser.name}}</strong>
                             </span>
                             <span class="user-role"><i class="fas fa-star"></i> Intermediate Reviewer</span>
                             <span class="user-status">
@@ -617,7 +623,7 @@
                                 <span>Online</span>
                             </span>
                             <span class="mt-2">
-                                <a href="./profile" class="label-sidebar mr-1">
+                                <a href="#" class="label-sidebar mr-1" data-toggle="modal" data-target="#settingModal">
                                     <i class="fas fa-cog text-navy-blue"></i>
                                 </a>
                                 <a href="./profile" class="label-sidebar">
@@ -655,6 +661,12 @@
                                 <a href="./profile">
                                     <i class="fas fa-user text-gold"></i>
                                     <span class="menu-text text-gold">Profile</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-dropdown">
+                                <a href="./mycafe">
+                                    <i class="fas fa-store text-gold"></i>
+                                    <span class="menu-text text-gold">My Cafe</span>
                                 </a>
                             </li>
                             <li class="sidebar-dropdown">
@@ -724,9 +736,10 @@
                 </div>
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav btn-transparent" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding-left: 0px;padding-right: 0px">
-                        <img src="./assets/img/Profile_dummy.svg" alt="" class="img-thumbnail img-circle">
+                        <img :src="profile.members.profile_pictures ? profileUrl + profile.members.profile_pictures : './assets/img/Profile_dummy.svg'" alt="" class="img-thumbnail img-circle">
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" style="font-size: .85rem;">
+                        <a class="dropdown-item" href="./mycafe"><i class="fas fa-user"></i> &nbsp;My Cafe</a>
                         <a class="dropdown-item" href="#" v-on:click="signout"><i class="fas fa-power-off"></i> Logout</a>
                     </div>
                 </div>
@@ -743,10 +756,10 @@
                             </a>
                         </div>
                         <div class="col-3">
-                            <a class="text-gold" href="./profile" style="cursor: pointer">
+                            <a class="text-gold" href="#" style="cursor: pointer" v-on:click="toProfile">
                                 <i class="fas fa-user fa-2x"></i>
                                 <br>
-                                <span class="nav-bawah">Profil</span>
+                                <span class="nav-bawah">Profile</span>
                             </a>
                         </div>
                         <div class="col-3">
@@ -774,7 +787,7 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-3 col-lg-2">
-                                <img src="./assets/img/Profile_dummy.svg" class="img-fluid img-profile-photo img-thumbnail">
+                                <img :src="profile.members.profile_pictures ? profileUrl + profile.members.profile_pictures : './assets/img/Profile_dummy.svg'" class="img-fluid img-profile-photo img-thumbnail">
                                 <br>
                                 <br>
                                 <div id="badge-label-profile" class="text-white d-flex justify-content-between" style="margin-top: .475rem">
@@ -829,12 +842,12 @@
                             </div>
                             <div class="col-3 col-lg-2 text-gold">
                                 <div class="d-flex justify-content-center my-cafe">
-                                    <a href="./profile_cafe.html" class="text-gold" style="font-size: 1rem">
+                                    <a href="./mycafe" class="text-gold" style="font-size: 1rem">
                                         <img src="./assets/img/My Cafe.png" style="width: 3.5rem;">
                                     </a>
                                 </div>
                                 <div class="d-flex justify-content-center my-cafe">
-                                    <a href="./profile_cafe.html" class="text-gold bashirah" style="font-size: 1.5rem; line-height: .75rem;">
+                                    <a href="./mycafe" class="text-gold bashirah" style="font-size: 1.5rem; line-height: .75rem;">
                                     My Cafe
                                     </a>
                                 </div>
@@ -863,7 +876,7 @@
                         </div>
                         <div class="row">
                             <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                <a href="./profile_cafe.html" class="text-white">
+                                <a href="./mycafe" class="text-white">
                                     <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
                                     <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
                                     <p class="rating mx-2 mb-0 white-text">
@@ -877,7 +890,7 @@
                                 </a>
                             </div>
                             <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                <a href="./profile_cafe.html" class="text-white">
+                                <a href="./mycafe" class="text-white">
                                     <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
                                     <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
                                     <p class="rating mx-2 mb-0 white-text">
@@ -891,7 +904,7 @@
                                 </a>
                             </div>
                             <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                <a href="./profile_cafe.html" class="text-white">
+                                <a href="./mycafe" class="text-white">
                                     <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
                                     <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
                                     <p class="rating mx-2 mb-0 white-text">
@@ -1055,7 +1068,6 @@
                         </div>
                     </div>
                 </section>
-    
             </main>
         </div>
     
@@ -1215,6 +1227,84 @@
               </div>
             </div>
         </div>
+
+        <!-- Modal Setting-->
+        <div class="modal fade" id="settingModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content modal-register">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-navy-blue" id="staticBackdropLabel">Profile Settings</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"> 
+                        <img :src="profile.members.profile_pictures ? profileUrl + profile.members.profile_pictures : './assets/img/Profile_dummy.svg'" class="img-fluid mx-auto d-block pb-3" width="50%" alt="">
+                        <div class="pb-3">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input form-control" id="imageFile" multiple v-on:change="changeProfile" ref="imageFile">
+                                <label class="custom-file-label" for="imageFile">Choose file</label>
+                            </div>
+                        </div>
+                        <form class="form-signup" v-on:submit.prevent="updateProfile">
+                            <div :class="usernameError ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="text" id="inputUsername" name="inputUsername" class="form-control" placeholder="Menu Name" v-model="username" required>
+                                <label for="inputUsername">User Name</label>
+                                <span v-if="usernameError" class="help-block" style="color: #F4D58D">{{usernameError}}</span>
+                            </div>
+                            <div :class="emailError ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email" v-model="email" required>
+                                <label for="inputEmail">Email</label>
+                                <span v-if="emailError" class="help-block" style="color: #F4D58D">{{emailError}}</span>
+                            </div>
+                            <div :class="firstNameError ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="text" id="inputFirstName" name="inputFirstName" class="form-control" placeholder="First Name" v-model="firstName" required>
+                                <label for="inputFirstName">First Name</label>
+                                <span v-if="firstNameError" class="help-block" style="color: #F4D58D">{{firstNameError}}</span>
+                            </div>
+                            <div :class="midNameError ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="text" id="inputMidName" name="inputMidName" class="form-control" placeholder="Midle Name" v-model="midName" required>
+                                <label for="inputMidName">Midle Name</label>
+                                <span v-if="midNameError" class="help-block" style="color: #F4D58D">{{midNameError}}</span>
+                            </div>
+                            <div :class="latNameError ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="text" id="inputLastName" name="inputLastName" class="form-control" placeholder="Last Name" v-model="lastName" required>
+                                <label for="inputLastName">Last Name</label>
+                                <span v-if="latNameError" class="help-block" style="color: #F4D58D">{{latNameError}}</span>
+                            </div>
+                            <div :class="placeOfBirthError ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="text" id="inputplaceOfBirth" name="inputplaceOfBirth" class="form-control" placeholder="Place of Birth" v-model="placeOfBirth" required>
+                                <label for="inputplaceOfBirth">Place of Birth</label>
+                                <span v-if="placeOfBirthError" class="help-block" style="color: #F4D58D">{{placeOfBirthError}}</span>
+                            </div>
+                            <div :class="dateOfBirthError ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="date" id="inputdateOfBirth" name="inputdateOfBirth" class="form-control" placeholder="Date of Birth" v-model="dateOfBirth" required>
+                                <label for="inputdateOfBirth">Place of Birth</label>
+                                <span v-if="dateOfBirthError" class="help-block" style="color: #F4D58D">{{dateOfBirthError}}</span>
+                            </div>
+                            <div :class="genderError ? 'form-label-group has-error' : 'form-label-group '">
+                                <select name="inputType" id="inputType" class="form-control" v-model="gender">
+                                    <option value="1">MALE</option>
+                                    <option value="0">FEMALE</option>
+                                </select>
+                                <span v-if="genderError" class="help-block" style="color: #F4D58D">{{genderError}}</span>
+                            </div>
+                            <div :class="addressError ? 'form-label-group has-error' : 'form-label-group '">
+                                <!-- <label for="inputCafeAddress text-light">Cafe Address</label> -->
+                                <textarea class="form-control" id="inputAddress" name="inputAddress" style="height: 75px;" v-model="address" placeholder="Address" required></textarea>
+                                <span v-if="addressError" class="help-block" style="color: #F4D58D">{{addressError}}</span>
+                            </div>
+                            <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                                <div class="spinner-border spinner-border-sm text-light" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </button>
+                            <button v-else type="submit" class="btn btn-review text-gold">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 
@@ -1224,6 +1314,7 @@
     <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="assets/js/sidebar.js"></script>
     <script src="assets/js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
     <!-- <script src="assets/js/custom_underline.js"></script> -->
 
     <!-- Load vuejs  -->

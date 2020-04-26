@@ -1,8 +1,10 @@
 const index = new Vue({
     el: '#app',
     data: { 
-        url: 'https://tranquil-dawn-58446.herokuapp.com',
-        // url: 'http://localhost:8000',
+        // url: 'https://tranquil-dawn-58446.herokuapp.com',
+        url: 'http://localhost:8000',
+        imageUrl: 'http://localhost:8000/menus/',
+        profileUrl: 'http://localhost:8000/profiles/',
         title: 'foodiew',
         isLogin: 0,
         email: '',
@@ -20,15 +22,43 @@ const index = new Vue({
         trending_baverages: [],
         location: '',
     },
+    computed: {
+        profileUser: function () {
+            let firstname = this.profile.members.first_name
+            let midname = this.profile.members.mid_name
+            let lastname = this.profile.members.last_name
+            if (firstname === null) {
+                firstname = ''
+            }
+            if (midname === null) {
+                midname = ''
+            }
+            if (lastname === null) {
+                lastname = ''
+            }
+            let name = firstname + ' ' + midname + ' ' + lastname
+            name = name.trim()
+            if (name === '') {
+                name = this.profile.email
+            }
+            this.profile.name = name
+            return this.profile
+        }
+    },
     created () {
         let token = localStorage.getItem('token')
         if (token !== null) {
             this.isLogin = 1
+            if(localStorage.getItem('profile')) {
+                this.profile = JSON.parse(localStorage.getItem('profile'))
+            } else {
+                this.getProfile()
+            }
         }
+        this.getLocationIp()
         this.getCaffe()
         this.getFoods()
         this.getBeverages()
-        this.location = 'Bandung'
     },
     methods: {
         register: function () {
@@ -137,7 +167,6 @@ const index = new Vue({
                             $('#sign-in').modal('hide')
                             $('#sign-in2').modal('hide')
                         }, 1000);
-
                         // get profile user
                         this.getProfile()
                     }
@@ -171,6 +200,7 @@ const index = new Vue({
                 .then((res) => {
                     this.profile = res.data.data[0]
                     localStorage.setItem('profile', JSON.stringify(this.profile))
+                    window.location.replace('/')
                 })
                 .catch((err) => {
                     if (err.response !== undefined) {
@@ -199,15 +229,16 @@ const index = new Vue({
                     localStorage.setItem('trending_caffe', JSON.stringify(this.trending_caffe))
                 })
                 .catch((err) => {
-                    if (err.response !== undefined) {
-                        this.generalErrorMessage = err.response.data
-                    } else {
-                        this.generalErrorMessage = err
-                    }
-                    $('#generalModal').modal('show')
-                    setTimeout(() => {
-                        $('#generalModal').modal('hide')
-                    }, 3000);
+                    console.error(err)
+                    // if (err.response !== undefined) {
+                    //     this.generalErrorMessage = err.response.data
+                    // } else {
+                    //     this.generalErrorMessage = err
+                    // }
+                    // $('#generalModal').modal('show')
+                    // setTimeout(() => {
+                    //     $('#generalModal').modal('hide')
+                    // }, 3000);
                 })
         },
         getFoods: function () {
@@ -224,15 +255,16 @@ const index = new Vue({
                     localStorage.setItem('trending_foods', JSON.stringify(this.trending_foods))
                 })
                 .catch((err) => {
-                    if (err.response !== undefined) {
-                        this.generalErrorMessage = err.response.data
-                    } else {
-                        this.generalErrorMessage = err
-                    }
-                    $('#generalModal').modal('show')
-                    setTimeout(() => {
-                        $('#generalModal').modal('hide')
-                    }, 3000);
+                    console.error(err)
+                    // if (err.response !== undefined) {
+                    //     this.generalErrorMessage = err.response.data
+                    // } else {
+                    //     this.generalErrorMessage = err
+                    // }
+                    // $('#generalModal').modal('show')
+                    // setTimeout(() => {
+                    //     $('#generalModal').modal('hide')
+                    // }, 3000);
                 })
         },
         getBeverages: function () {
@@ -249,17 +281,40 @@ const index = new Vue({
                     localStorage.setItem('trending_baverages', JSON.stringify(this.trending_baverages))
                 })
                 .catch((err) => {
-                    if (err.response !== undefined) {
-                        this.generalErrorMessage = err.response.data
-                    } else {
-                        this.generalErrorMessage = err
-                    }
-                    $('#generalModal').modal('show')
-                    setTimeout(() => {
-                        $('#generalModal').modal('hide')
-                    }, 3000);
+                    console.error(err)
+                    // if (err.response !== undefined) {
+                    //     this.generalErrorMessage = err.response.data
+                    // } else {
+                    //     this.generalErrorMessage = err
+                    // }
+                    // $('#generalModal').modal('show')
+                    // setTimeout(() => {
+                    //     $('#generalModal').modal('hide')
+                    // }, 3000);
                 })
         },
-        
+        getLocationIp: function () {
+            let url = 'http://ip-api.com/json/'
+            axios.get(url)
+                .then((res) => {
+                    console.log(res)
+                    this.location = res.data
+                    localStorage.setItem('myLocation', JSON.stringify(res.data))
+                })
+                .catch((err) => {
+                    console.error(err)
+                })
+        },
+        toProfile: function () {
+            if (this.isLogin) {
+                window.location.replace('/profile')
+            }
+
+            this.generalErrorMessage = "You need to login, to acces your Profile"
+            $('#generalModal').modal('show')
+            setTimeout(() => {
+                $('#generalModal').modal('hide')
+            }, 3000);
+        }
     }
 })
