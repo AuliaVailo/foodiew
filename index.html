@@ -404,7 +404,7 @@
                                         <div class="col-6 col-lg-3 col-md-4 col-sm-6" v-for="item in trending_caffe.data" >
                                             <div class="col px-0 card-cafe" style="font-size: .8rem">
                                                 <a href="./profile_cafe.html" class="text-white">
-                                                    <img class="img-fluid" src="https://image.freepik.com/free-vector/coffee-shop-badge-vintage-style_1176-95.jpg" alt="">
+                                                    <img class="img-fluid" :src="item.caffe_pictures ? profileUrl + item.caffe_pictures : './assets/img/cafe.svg'" alt="">
                                                     <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.caffe_name}}</p>
                                                     <p class="rating mx-2 mb-0 white-text">
                                                         <i class="lnr lnr-star text-warning"></i>
