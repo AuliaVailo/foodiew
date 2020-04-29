@@ -1,4 +1,4 @@
-const index = new Vue({
+new Vue({
     el: '#app',
     data: { 
         url: 'http://localhost:8000',

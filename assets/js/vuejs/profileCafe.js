@@ -1,4 +1,4 @@
-const index = new Vue({
+new Vue({
     el: '#app',
     data: { 
         url: 'http://localhost:8000',
@@ -33,7 +33,9 @@ const index = new Vue({
         trending_foods: [],
         detailDialog: [],
         formDelete: [],
-        formUpdate: []
+        formUpdate: [],
+        nextBeverages: null,
+        nextFoods: null
     },
     computed: {
         food: function () {
@@ -64,8 +66,10 @@ const index = new Vue({
             return this.profile
         }
     },
-    created () {
+    mounted () {
         localStorage.setItem('route', 'mycafe')
+    },
+    created () {
         let token = localStorage.getItem('token')
         if (token !== null) {
             this.isLogin = 1
@@ -152,6 +156,8 @@ const index = new Vue({
                             console.log('baverages', result)
                             this.trending_baverages.data.push(result)
                         }
+                        var form = document.getElementById('add-Food')
+                        form.reset()
                         setTimeout(() => {
                             $('#generalModal').modal('hide')
                             $('#addFood').modal('hide')
@@ -222,8 +228,52 @@ const index = new Vue({
             }
             axios.get(url, header)
                 .then((res) => {
+                    this.nextFoods = res.data.data.next_page_url
                     this.trending_foods = res.data.data
                     localStorage.setItem('trending_foods', JSON.stringify(this.trending_foods))
+                })
+                .catch((err) => {
+                    console.error(err)
+                    // if (err.response !== undefined) {
+                    //     this.generalErrorMessage = err.response.data
+                    // } else {
+                    //     this.generalErrorMessage = err
+                    // }
+                    // $('#generalModal').modal('show')
+                    // setTimeout(() => {
+                    //     $('#generalModal').modal('hide')
+                    // }, 3000);
+                })
+        },
+        seeMoreFood: function (type) {
+            let url
+            if (type === 1) {
+                url = this.nextFoods
+            }
+
+            if (type === 2) {
+                url = this.nextBeverages
+            }
+            // let token = 'Bearer' + localStorage.getItem('token')
+            let header = {
+                // headers: {
+                //     'Authorization': `${token}`,
+                // }
+            }
+            axios.get(url, header)
+                .then((res) => {
+                    let data = res.data.data.data
+                    if (type === 1) {
+                        data.map(el => {this.trending_foods.data.push(el)})
+                        this.nextFoods = res.data.data.next_page_url
+                        localStorage.setItem('trending_foods', JSON.stringify(this.trending_foods))
+                    }
+
+                    if (type === 2) {
+                        data.map(el => {this.trending_baverages.data.push(el)})
+                        this.nextBeverages = res.data.data.next_page_url
+                        localStorage.setItem('trending_beverages', JSON.stringify(this.trending_baverages))
+                    }
                 })
                 .catch((err) => {
                     console.error(err)
@@ -248,6 +298,7 @@ const index = new Vue({
             }
             axios.get(url, header)
                 .then((res) => {
+                    this.nextBeverages = res.data.data.next_page_url
                     this.trending_baverages = res.data.data
                     localStorage.setItem('trending_baverages', JSON.stringify(this.trending_baverages))
                 })
@@ -478,7 +529,6 @@ const index = new Vue({
                             }
                         }
                         var form = document.getElementById('update_form')
-                        form.reset()
                         form.reset()
                         setTimeout(() => {
                             $('#generalModal').modal('hide')

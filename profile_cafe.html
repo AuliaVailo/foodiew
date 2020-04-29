@@ -379,7 +379,7 @@
                                 </div>
                             </div>
                             <br>
-                            <div class="row" v-if="trending_foods.data">
+                            <div class="row d-flex justify-content-center px-0" v-if="trending_foods.data">
                                 <div class="col-6 col-lg-3 col-md-4 col-sm-6 px-0 card-cafe" style="font-size: .8rem" v-for="item in food">
                                     <a href="#" role="button" data-toggle="modal" data-target="#detailFood" v-on:click="setDetail(item.id, 1)">
                                         <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/cup-instant-noodles-placed-napery-with-chilli-as-ingredients-top-view-noodle-copy-space_41722-860.jpg'" alt="">
@@ -402,9 +402,9 @@
                                 </div>
                             </div>
                             <br>
-                            <div class="row">
+                            <div class="row" v-if="nextFoods">
                                 <div class="col text-center">
-                                    <a href="" class="btn btn-primary see-more-btn">See More...</a>
+                                    <button v-on:click="seeMoreFood(1)" class="btn btn-primary see-more-btn">See More...</button>
                                 </div>
                             </div>
                             <!--  -->
@@ -420,7 +420,7 @@
                                     <div class="garis"></div>
                                 </div>
                             </div>
-                            <div class="row" v-if="trending_baverages.data">
+                            <div class="row d-flex justify-content-center" v-if="trending_baverages.data">
                                 <div class="col-6 col-lg-3 col-md-4 col-sm-6  px-0 card-cafe" style="font-size: .8rem" v-for="item in baverages">
                                     <a href="#" role="button" data-toggle="modal" data-target="#detailDrink"  v-on:click="setDetail(item.id, 1)">
                                         <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/close-up-coffee-cup-decorated-with-coffee-beans-placed-wooden-serving-board_141793-2026.jpg'" alt="">
@@ -440,9 +440,9 @@
                                     <p class="fixed-bottom"><a href="#" class="float-right px-2" v-on:click="confirmDelete(item.id)"><i class="fa fa-trash"></i></a><a href="#" class="float-right px-2"  v-on:click="confirmEdit(item.id)"><i class="fa fa-edit"></i></a></p>
                                 </div>
                             </div>
-                            <div class="row pb-4" style="background: rgba(0,0,0,0.1)">
+                            <div class="row pb-4" style="background: rgba(0,0,0,0.1)" v-if="nextBeverages">
                                 <div class="col text-center">
-                                    <a href="" class="btn btn-primary see-more-btn">See More...</a>
+                                    <button v-on:click="seeMoreFood(2)" class="btn btn-primary see-more-btn">See More...</button>
                                 </div>
                             </div>
                         </div>
@@ -1041,7 +1041,7 @@
                     </div>
                     <div class="modal-body"> 
                         <img :src="imagePreview ? imagePreview : defaultImage" class="img-fluid mx-auto d-block" width="70%" alt="">
-                        <form class="form-signup pt-3" v-on:submit.prevent="addNewMenu">
+                        <form class="form-signup pt-3" v-on:submit.prevent="addNewMenu" id="add-Food">
                             <div class="pb-3">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input form-control" id="imageFile" multiple v-on:change="readFile" ref="imageFile">
