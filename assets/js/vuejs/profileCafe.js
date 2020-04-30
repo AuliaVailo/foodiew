@@ -198,7 +198,7 @@ new Vue({
             }
             axios.get(url, header)
                 .then((res) => {
-                    this.profile = res.data.data[0]
+                    this.profile = res.data.data
                     localStorage.setItem('profile', JSON.stringify(this.profile))
                 })
                 .catch((err) => {

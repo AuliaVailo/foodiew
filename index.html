@@ -400,7 +400,7 @@
                                 </div>
                                 <br>
                                 <div class="desktop-only">
-                                    <div class="row" v-if="trending_caffe.data">
+                                    <div class="row d-flex justify-content-center" v-if="trending_caffe.data">
                                         <div class="col-6 col-lg-3 col-md-4 col-sm-6" v-for="item in trending_caffe.data" >
                                             <div class="col px-0 card-cafe" style="font-size: .8rem">
                                                 <a href="./profile_cafe.html" class="text-white">
@@ -444,9 +444,9 @@
                                 </div>
                                 <br>
                                 <div class="desktop-only">
-                                    <div class="row" v-if="trending_foods.data">
+                                    <div class="row d-flex justify-content-center" v-if="trending_foods.data">
                                         <div class="col-6 col-lg-3 col-md-4 col-sm-6 px-0 card-cafe" style="font-size: .8rem" v-for="item in trending_foods.data">
-                                            <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
+                                            <a href="#" role="button" data-toggle="modal" data-target="#detailFood" v-on:click="setDetail(item.id, 1)">
                                                 <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/cup-instant-noodles-placed-napery-with-chilli-as-ingredients-top-view-noodle-copy-space_41722-860.jpg'" alt="">
                                                 <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
                                                 <p class="rating mx-2 mb-0 white-text">
@@ -465,9 +465,9 @@
                                     </div>
                                 </div>
                                 <br>
-                                <div class="row" v-if="trending_foods.data">
+                                <div class="row" v-if="nextFoods">
                                     <div class="col text-center">
-                                        <a href="./dashboard_alt_food.html" class="btn btn-primary see-more-btn">See More...</a>
+                                        <button v-on:click="seeMoreFood(1)" class="btn btn-primary see-more-btn">See More...</button>
                                     </div>
                                 </div>
                             </div>
@@ -488,9 +488,9 @@
                                 </div>
                                 <br>
                                 <div class="desktop-only">
-                                    <div class="row" v-if="trending_baverages.data">
+                                    <div class="row d-flex justify-content-center" v-if="trending_baverages.data">
                                         <div class="col-6 col-lg-3 col-md-4 col-sm-6  px-0 card-cafe" style="font-size: .8rem" v-for="item in trending_baverages.data">
-                                            <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
+                                            <a href="#" role="button" data-toggle="modal" data-target="#detailDrink" v-on:click="setDetail(item.id, 1)">
                                                 <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/close-up-coffee-cup-decorated-with-coffee-beans-placed-wooden-serving-board_141793-2026.jpg'" alt="">
                                                 <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
                                                 <p class="rating mx-2 mb-0 white-text">
@@ -509,9 +509,9 @@
                                     </div>
                                 </div>
                                 <br>
-                                <div class="row" v-if="trending_baverages.data">
+                                <div class="row" v-if="nextBeverages">
                                     <div class="col text-center">
-                                        <a href="./dashboard_alt_drink.html" class="btn btn-primary see-more-btn">See More...</a>
+                                        <button v-on:click="seeMoreFood(2)" class="btn btn-primary see-more-btn">See More...</button>
                                     </div>
                                 </div>
                             </div>
@@ -989,14 +989,14 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-4 px-0">
-                                    <img src="./assets/img/logo-icon/noodles.svg" class="img-fluid img-thumbnail" style="width: 10rem; height: 10rem" alt="">
+                                    <img :src="detailDialog.pictures ? imageUrl + detailDialog.pictures : 'https://image.freepik.com/free-photo/close-up-coffee-cup-decorated-with-coffee-beans-placed-wooden-serving-board_141793-2026.jpg'" class="img-fluid img-thumbnail" style="width: 10rem; height: 10rem" alt="">
                                 </div>
                                 <div class="col-8 text-gold">
-                                    <p>Noodles</p>
-                                    <p><i class="fas fa-store"></i> KFC</p>
-                                    <p><i class="fas fa-map-marked-alt"></i> Medan</p>
-                                    <p>Categories : <a class="link-categories-gold" href="./noodles.html">Noodles</a></p>
-                                    <p>Calories : 2000 calories</p>
+                                    <p>{{detailDialog.name}}</p>
+                                    <p><i class="fas fa-store" ></i> {{detailDialog.caffes ? detailDialog.caffes.caffe_name : ''}}</p>
+                                    <p><a :href="detailDialog.caffes ? detailDialog.caffes.googleMapLink : '#'" target="_blank" style="text-decoration: none; color: #f4d58d"><i class="fas fa-map-marked-alt"></i> {{detailDialog.caffes ? detailDialog.caffes.caffe_address : ''}}</a></p>
+                                    <p>Categories : <a class="link-categories-gold" href="./noodles.html">{{searchCategory(detailDialog.category)}}</a></p>
+                                    <p>Description : {{detailDialog.description}}s</p>
                                 </div>
                             </div>
                             <h6 class="text-gold">Review <small>(scroll to see more)</small></h6>
@@ -1004,25 +1004,15 @@
                             <br>
                             <div class="row">
                                 <div class="col">
-                                    <button type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
-                                    <br>
-                                    <br>
-                                    <div class="review-box review-box-mak-mik">
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                                    <button v-if="letReview" type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
+                                    <br v-if="letReview">
+                                    <br v-if="letReview">
+                                    <div class="review-box review-box-mak-mik" v-if="detailDialog.reviews">
+                                        <div v-for="item in detailDialog.reviews">
+                                            <div class="review-single">
+                                                <p>@ {{item.users.user_name ? item.users.user_name : item.users.email}} - <small><i class="fas fa-star"></i> Intermediate Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1095,22 +1085,38 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title text-navy-blue" id="writeReviewMobileLabel">Nama Food / Beverages</h5>
+                        <h5 class="modal-title text-navy-blue" id="writeReviewMobileLabel">{{detailDialog.name}}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
-                        <form action="POST">
+                        <form action="POST" v-on:submit.prevent="addReview">
+                            <div class="form-group text-navy-blue">
+                                <label for="exampleFormControlTextarea1">Ratings</label>
+                                <select class="custom-select" name="selectRating" style="font-family: 'Font Awesome 5 Free'" v-model="rate">
+                                        <option value="0" selected>Select your rating</option>
+                                        <option value="1" style="font-family: 'Font Awesome 5 Free'">&#xf005;</option>
+                                        <option value="2" style="font-family: 'Font Awesome 5 Free'">&#xf005;&#xf005;</option>
+                                        <option value="3" style="font-family: 'Font Awesome 5 Free'">&#xf005;&#xf005;&#xf005;</option>
+                                        <option value="4" style="font-family: 'Font Awesome 5 Free'">&#xf005;&#xf005;&#xf005;&#xf005;</option>
+                                        <option value="5" style="font-family: 'Font Awesome 5 Free'">&#xf005;&#xf005;&#xf005;&#xf005;&#xf005;</option>
+                                    </select>
+                            </div>
                             <div class="form-group text-navy-blue">
                                 <label for="exampleFormControlTextarea1">Add your review</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="review"></textarea>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <!-- <button type="button" class="btn btn-secondary btn-close-review" data-dismiss="modal">Close</button> -->
-                        <button type="button" class="btn btn-review text-gold">Submit Review</button>
+                        <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                            <div class="spinner-border spinner-border-sm text-light" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </button>
+                        <button v-else type="button" class="btn btn-review text-gold" v-on:click="addReview">Submit Review</button>
                     </div>
                 </div>
             </div>
@@ -1129,6 +1135,24 @@
                 <div class="modal-body">
                   <p>{{generalErrorMessage}}</p>
                 </div>
+              </div>
+            </div>
+        </div>
+
+        <!-- Modal for alert -->
+        <div id="deleteReview" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Information</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p>Yakin akan menghapus review Anda?</p>
+                </div>
+                <button class="btn btn-danger" v-on:click="doDelete">Delete</button>
               </div>
             </div>
         </div>

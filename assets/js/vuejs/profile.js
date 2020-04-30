@@ -38,7 +38,8 @@ new Vue({
         placeOfBirth: '',
         dateOfBirth: '',
         gender: '',
-        address: ''
+        address: '',
+        detailDialog: [],
     },
     computed: {
         profileUser: function () {
@@ -160,7 +161,7 @@ new Vue({
             }
             axios.get(url, header)
                 .then((res) => {
-                    this.profile = res.data.data[0]
+                    this.profile = res.data.data
                     localStorage.setItem('profile', JSON.stringify(this.profile))
                 })
                 .catch((err) => {
@@ -334,7 +335,28 @@ new Vue({
             setTimeout(() => {
                 $('#generalModal').modal('hide')
             }, 3000);
-        }
+        },
+        setDetail: function(id, type) {
+            console.log(id, type)
+            const that = this
+            let array = []
+
+            if (type === 1) {
+                array = that.trending_foods.data
+            }
+
+            if (type === 2) {
+                array = that.trending_baverages.data
+            }
+
+            let result = array.filter(el => {
+                return el.id === id
+            })
+
+            if (result.length > 0) {
+                this.detailDialog = result[0]
+            }
+        },
     }
 })
 

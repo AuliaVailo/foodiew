@@ -10,7 +10,7 @@ $(window).on("scroll", function() {
 
 
 $(window).keydown((event) => {
-    if (event.keyCode = 27) {
+    if (event.keyCode === 27) {
         $('#writeReview').modal('hide');
         $('#writeReviewMobile').modal('hide');
         $('#reviewMobile').modal('hide');
