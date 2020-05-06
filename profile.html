@@ -119,7 +119,7 @@
                             </div>
                             <div class="user-info text-gold">
                                 <span class="user-name"><strong>{{profileUser.name}}</strong></span>
-                                <span class="user-role"><i class="fas fa-star"></i> Intermediate</span>
+                                <span class="user-role"><i class="fas fa-star"></i> {{defineBedge() ?  defineBedge().name : ''}}</span>
                                 <span class="user-role">Reviewer</span>
                                 <span class="user-status">
                                     <i class="fa fa-circle"></i>
@@ -129,7 +129,7 @@
                                     <a href="#" class="label-sidebar text-center mr-1"  data-toggle="modal" data-target="#settingModal">
                                         <i class="fas fa-cog text-navy-blue pr-0"></i>
                                     </a>
-                                    <a href="./message" class="label-sidebar">
+                                    <a :href="'mailto:' + profileUser.email" target="_blank" class="label-sidebar">
                                         <i class="fas fa-envelope text-navy-blue"></i>&nbsp;
                                     </a>
                                 </span>
@@ -153,11 +153,25 @@
                                         <span class="menu-text text-gold">Profile</span>
                                     </a>
                                 </li>
-                                <li class="sidebar-dropdown">
-                                    <a href="./mycafe">
+                                <li class="sidebar-dropdown" v-if="isLogin && profile.caffe !== null">
+                                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">
                                         <i class="fas fa-store text-gold"></i>
                                         <span class="menu-text text-gold">My Cafe</span>
                                     </a>
+                                    <ul class="collapse list-unstyled pl-3" id="pageSubmenu">
+                                        <li>
+                                            <a href="./mycafe">
+                                                <i class="fas fa-store text-gold"></i>
+                                                Cafe Profile
+                                            </a>
+                                        </li>
+                                        <!-- <li>
+                                            <a href="#" data-toggle="modal" data-target="#addFood">
+                                                <i class="fas fa-utensils text-gold"></i>
+                                                Add Menu
+                                            </a>
+                                        </li> -->
+                                    </ul>
                                 </li>
                                 <li class="sidebar-dropdown">
                                     <a href="./promo.html">
@@ -166,25 +180,25 @@
                                     </a>
                                 </li>
                                 <li class="sidebar-dropdown">
-                                    <a href="./halloffame.html">
+                                    <a href="./halloffame">
                                         <i class="fas fa-trophy text-gold"></i>
                                         <span class="menu-text text-gold">Hall of Fame</span>
                                     </a>
                                 </li>
                                 <li class="sidebar-dropdown">
-                                    <a href="./contact-us.html">
+                                    <a href="./contact-us">
                                         <i class="fas fa-2x fa-envelope text-gold"></i>
                                         <span class="menu-text text-gold">Contact Us</span>
                                     </a>
                                 </li>
                                 <li class="sidebar-dropdown">
-                                    <a href="./contact-us.html">
+                                    <a href="./contact-us">
                                         <i class="fas fa-2x fa-shield-alt text-gold"></i>
                                         <span class="menu-text text-gold">Privacy Policy</span>
                                     </a>
                                 </li>
                                 <li class="sidebar-dropdown">
-                                    <a href="./contact-us.html">
+                                    <a href="./contact-us">
                                         <i class="fas fa-2x fa-book text-gold"></i>
                                         <span class="menu-text text-gold">T & C</span>
                                     </a>
@@ -211,7 +225,7 @@
                     <div class="sidebar-footer">
                         <div>
                             <a href="javascript:void(0)" class="text-gold">
-                                &copy;2020, Foodiew.
+                                &copy;2020, {{title}}.
                             </a>
                         </div>
                     </div>
@@ -221,41 +235,33 @@
                     <h6 class="text-gold">Sponsored</h6>
                     <div class="garis-promoted"></div>
                     <br>
-                    <h6>Cafe</h6>
-                    <div class="row">
-                        <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem">
-                            <a href="./mycafe">
-                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                <p class="mx-2 mt-2 pb-2 font-weight-bolder">Dopamine Cafe</p>
-                            </a>
-                        </div>
-                    </div>
-                    <br>
-                    <h6>Food</h6>
-                    <div class="row">
-                        <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem">
-                            <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
-                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                <p class="mx-2 mt-2 mb-0 font-weight-bolder">Food</p>
-                                <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                            </a>
-                        </div>
-                    </div>
-                    <br>
-                    <h6>Beverages</h6>
-                    <div class="row">
-                        <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem">
-                            <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
-                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                <p class="mx-2 mt-2 mb-0 font-weight-bolder">Beverages</p>
-                                <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                            </a>
+                    <div v-if="promos">
+                        <div v-for="item in promos">
+                            <h6 v-if="item.details.type === '1'">Food</h6>
+                            <h6 v-if="item.details.type === '2'">Beverages</h6>
+                            <h6 v-if="item.details.type === '2' && item.details.type === '1'">Cafe</h6>
+                            <div class="row" v-if="item.details.type === '1' || item.details.type === '2'">
+                                <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem; min-height: 170px;">
+                                    <a href="#" v-on:click="openDetailSponsore(item.details)">
+                                        <img class="img-fluid" :src="item.details.pictures ? imageUrl + item.details.pictures : './assets/img/Header.jpg'" alt="">
+                                        <p class="mx-2 mt-2 pb-2 font-weight-bolder">{{item.details.name}}</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row" v-else>
+                                <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem; min-height: 170px">
+                                    <a href="#" v-on:click="openThisCafe(item.details.id)">
+                                        <img class="img-fluid" :src="item.details.caffe_pictures ? imageUrl + item.details.caffe_pictures : './assets/img/cafe.svg'" alt="">
+                                        <p class="mx-2 mt-2 pb-2 font-weight-bolder">{{item.details.caffe_name}}</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <br>
                         </div>
                     </div>
                 </nav>
     
                 <main class="col-md-9 col-xl-8 py-md-3 pl-md-3 dsk-content">
-    
                     <section id="information-panel">
                         <div class="container">
                             <div class="row">
@@ -269,9 +275,9 @@
                                 </div>
                                 <div class="col-6 col-lg-8 text-gold px-0 info-panel">
                                     <span class="h5 d-block mb-0" style="font-size: 1rem">{{profileUser.name}}</span>
-                                    <span class="h6" style="font-size: .75rem">{{(profileUser.user_name === null) ? profileUser.email : '@' + profileUser.user}}</span>
+                                    <span class="h6" style="font-size: .75rem">{{profileUser.user_name ? '@' + profileUser.user_name : profileUser.email}}</span>
                                     <br>
-                                    <a href="#" data-toggle="modal" data-target="#aaa" role="button" class="text-navy-blue px-2 py-1 btn-profile" style="font-size: 1rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem;"><i class="fas fa-star"></i> Intermediate Reviewer</a>
+                                    <img :src="defineBedge() ? './assets/img/badges/' + defineBedge().id + '.png' : './assets/img/badges/1.png'" width="10%" alt=""><a href="#" data-toggle="modal" data-target="#aaa" role="button" class="text-navy-blue px-2 py-1 btn-profile" style="font-size: 1rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem;"><i class="fas fa-star"></i> {{defineBedge() ?  defineBedge().name : ''}}</a>
                                     <br>
                                     <!-- Modal -->
                                     <div class="modal fade" id="aaa" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -284,10 +290,11 @@
                                                 </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <h6>Intermediate I Reviewer</h6>
+                                                    <img :src="defineBedge() ? './assets/img/badges/' + defineBedge().id + '.png' : './assets/img/badges/1.png'" width="20%" alt="">
+                                                    <h6> {{defineBedge() ?  defineBedge().name : ''}}</h6>
                                                     <div class="progress position-relative">
-                                                        <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="11" aria-valuemin="0" aria-valuemax="100" style="width: 11%"></div>
-                                                        <small class="justify-content-center d-flex position-absolute w-100 text-navy-blue">27789 votes</small>
+                                                        <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="11" aria-valuemin="0" aria-valuemax="100" :style="'width: ' + defineBedge() ? 'width: ' +  defineBedge().percentage + '%' : '100%'"></div>
+                                                        <small class="justify-content-center d-flex position-absolute w-100 text-navy-blue">{{profileUser.voted_by.length}} votes ({{defineBedge() ? defineBedge().percentage + '%' : '0%' }})</small>
                                                     </div>
                                                 <!-- CARA NGODING WIDTHNYA -->
                                                     <!--
@@ -296,17 +303,17 @@
                                                 -->
                                                     <br>
                                                     <!-- <h6>Current Vote: 27789 Vote.</h6> -->
-                                                    <h6>Next level : Intermediate II Reviewer at 50000 votes</h6>
+                                                    <h6>Next level : {{defineBedge() ?  defineBedge().nextLevel.name : ''}} at {{defineBedge() ?  defineBedge().end : ''}} votes <br><small>Need {{defineBedge() ?  Number(defineBedge().end) - Number(profileUser.voted_by.length) : 0 }} votes to reach next emblem</small></h6>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="addon">
-                                        <a href="./my-voucher.html" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem;">
+                                    <div class="">
+                                        <a href="./my-voucher" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem;">
                                             <i class="fas fa-tags"></i> Voucher
                                         </a>
-                                        <a href="./my-voucher.html" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem;">
-                                            <i class="far fa-thumbs-up"></i> Vote
+                                        <a href="#" v-on:click="vote()" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem;">
+                                            <i class="far fa-thumbs-up"></i> &nbsp;<b> {{Number(profileUser.voted_by.length).toLocaleString('id')}}</b> &nbsp; Vote
                                         </a>
                                     </div>
                                 </div>
@@ -383,7 +390,7 @@
     
                     <section id="user-recommendation" style="padding-bottom: 5rem;">
                         <div class="container">
-                            <div class="row mb-0">
+                            <div class="row mb-0" id="cafeRecomendation">
                                 <div class="col">
                                     <p class="text-center text-navy-blue mb-0">My cafe recommendation</p>
                                 </div>
@@ -394,65 +401,36 @@
                                 </div>
                             </div>
                             <br>
-                            <div class="row text-center">
-                                <div class="col choice-label" style="color: gold">1st</div>
-                                <div class="col choice-label" style="color: silver">2nd</div>
-                                <div class="col choice-label" style="color: #cd7f32">3rd</div>
-                            </div>
-                            <div class="row">
-                                <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                    <a href="./mycafe" class="text-white">
-                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
+                            <div class="row d-flex justify-content-center" v-if="cafeRecomendation">
+                                <div v-for="(item, index) in cafeRecomendation" class="col-3 px-0 card-cafe" style="font-size: .8rem">
+                                    <a href="#" v-on:click="openThisCafe(item.caffe_id)" class="text-white">
+                                        <img class="img-fluid" :src="item.rating_cafe.caffe_pictures ? imageUrl + item.rating_cafe.caffe_pictures : './assets/img/cafe.svg'" alt="">
+                                        <i v-if="(Number(index) + 1) === 1" class="fa fa-star fa-lg pt-3 pl-3" style="color: gold"></i>
+                                        <i v-if="(Number(index) + 1) === 2" class="fa fa-star fa-lg pt-3 pl-3" style="color: silver"></i>
+                                        <i v-if="(Number(index) + 1) === 3" class="fa fa-star fa-lg pt-3 pl-3" style="color: #cd7f32"></i>
+                                        <i v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3" class="far fa-star fa-lg pt-3 pl-3" style="color: white"></i>&nbsp;<span class="font-weight-bold">{{Number(index) + 1}}</span>
+                                        <span v-if="(Number(index) + 1) === 1">st</span>
+                                        <span v-if="(Number(index) + 1) === 2">nd</span>
+                                        <span v-if="(Number(index) + 1) === 3">rd</span>
+                                        <span v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3">th</span>
+                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.rating_cafe.caffe_name}}</p>
                                         <p class="rating mx-2 mb-0 white-text">
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating_cafe.rating)"></i><span class="mx-2 mb-2 font-weight-bolder">({{Number(item.rating_cafe.rating).toLocaleString('id')}})</span>
                                         </p>
-                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                    </a>
-                                </div>
-                                <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                    <a href="./mycafe" class="text-white">
-                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                        <p class="rating mx-2 mb-0 white-text">
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                        </p>
-                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                    </a>
-                                </div>
-                                <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                    <a href="./mycafe" class="text-white">
-                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                        <p class="rating mx-2 mb-0 white-text">
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                        </p>
-                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
+                                        <p class="text-truncate pr-1 pb-2"><i class="mx-2 mb-2 fas fa-map-marker-alt"></i>{{item.rating_cafe.caffe_address}}</p>
                                     </a>
                                 </div>
                             </div>
                             <br>
-                            <div class="row">
+                            <div class="row" v-if="nextCafeRecomendation">
                                 <div class="col text-center">
-                                    <a href="" class="btn btn-primary see-more-btn">See More...</a>
+                                    <a href="#cafeRecomendation" v-on:click="nextRecomendation(0)" class="btn btn-primary see-more-btn">See More...</a>
                                 </div>
                             </div>
                             <!--  -->
                             <br>
                             <!--  -->
-                            <div class="row mb-0 pt-2" style="background: rgba(0,0,0,0.1)">
+                            <div class="row mb-0 pt-2" style="background: rgba(0,0,0,0.1)" id="foodRecomendation">
                                 <div class="col">
                                     <p class="text-center text-navy-blue mb-0">My food recommendation</p>
                                 </div>
@@ -462,67 +440,40 @@
                                     <div class="garis"></div>
                                 </div>
                             </div>
-                            <div class="row text-center" style="background: rgba(0,0,0,0.1)">
-                                <div class="col choice-label" style="color: gold">1st</div>
-                                <div class="col choice-label" style="color: silver">2nd</div>
-                                <div class="col choice-label" style="color: #cd7f32">3rd</div>
-                            </div>
-                            <div class="row pb-4" style="background: rgba(0,0,0,0.1)">
-                                <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                    <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
-                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
+                            <div class="row pb-4 d-flex justify-content-center" style="background: rgba(0,0,0,0.1)"  v-if="foodRecomendation">
+                                <div v-for="(item, index) in foodRecomendation"  class="col-3 px-0 card-cafe" style="font-size: .8rem">
+                                    <a href="#" role="button" data-toggle="modal" data-target="#detailFood" v-on:click="setDetail(item.foodBaverages_id, 1)">
+                                        <img class="img-fluid" :src="item.rating_menu.pictures ? imageUrl + item.rating_menu.pictures : 'https://image.freepik.com/free-photo/cup-instant-noodles-placed-napery-with-chilli-as-ingredients-top-view-noodle-copy-space_41722-860.jpg'" alt="">
+                                        <i v-if="(Number(index) + 1) === 1" class="fa fa-star fa-lg pt-3 pl-3" style="color: gold"></i>
+                                        <i v-if="(Number(index) + 1) === 2" class="fa fa-star fa-lg pt-3 pl-3" style="color: silver"></i>
+                                        <i v-if="(Number(index) + 1) === 3" class="fa fa-star fa-lg pt-3 pl-3" style="color: #cd7f32"></i>
+                                        <i v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3" class="far fa-star fa-lg pt-3 pl-3" style="color: white"></i>&nbsp;<span class="font-weight-bold">{{Number(index) + 1}}</span>
+                                        <span v-if="(Number(index) + 1) === 1">st</span>
+                                        <span v-if="(Number(index) + 1) === 2">nd</span>
+                                        <span v-if="(Number(index) + 1) === 3">rd</span>
+                                        <span v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3">th</span>
+                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.rating_menu.name}}</p>
                                         <p class="rating mx-2 mb-0 white-text">
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating_menu.rating)"></i>
                                         </p>
-                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                        <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                                    </a>
-                                </div>
-                                <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                    <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
-                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                        <p class="rating mx-2 mb-0 white-text">
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
+                                        <span v-if="item.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.rating_menu.price).toLocaleString('id')}}</span> <span  v-if="item.rating_menu.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
+                                        <p v-if="item.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.rating_menu.priceSale).toLocaleString('id')}}</p>
+                                        <p v-else class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.rating_menu.price).toLocaleString('id')}}</p>
+                                        <p class="text-truncate pr-1">
+                                            <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> {{item.rating_menu.caffes.caffe_name}} - {{item.rating_menu.caffes.caffe_address}}
                                         </p>
-                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                        <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                                    </a>
-                                </div>
-                                <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                    <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
-                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                        <p class="rating mx-2 mb-0 white-text">
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                        </p>
-                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                        <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
                                     </a>
                                 </div>
                             </div>
-                            <div class="row pb-4" style="background: rgba(0,0,0,0.1)">
+                            <div class="row pb-4" style="background: rgba(0,0,0,0.1)" v-if="nextFoodRecomendation">
                                 <div class="col text-center">
-                                    <a href="" class="btn btn-primary see-more-btn">See More...</a>
+                                    <a href="#foodRecomendation" class="btn btn-primary see-more-btn" v-on:click="nextRecomendation(1)">See More...</a>
                                 </div>
                             </div>
                             <!--  -->
                             <br>
                             <!--  -->
-                            <div class="row mb-0">
+                            <div class="row mb-0" id="beveragesRecomendation">
                                 <div class="col">
                                     <p class="text-center text-navy-blue mb-0">My beverages recommendation</p>
                                 </div>
@@ -533,62 +484,35 @@
                                 </div>
                             </div>
                             <br>
-                            <div class="row text-center">
-                                <div class="col choice-label" style="color: gold">1st</div>
-                                <div class="col choice-label" style="color: silver">2nd</div>
-                                <div class="col choice-label" style="color: #cd7f32">3rd</div>
-                            </div>
-                            <div class="row">
-                                <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                    <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
-                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
+                            <div class="row pb-4 d-flex justify-content-center" style="background: rgba(0,0,0,0.1)"  v-if="foodRecomendation">
+                                <div v-for="(item, index) in beveragesRecomendation"  class="col-3 px-0 card-cafe" style="font-size: .8rem">
+                                    <a href="#" role="button" data-toggle="modal" data-target="#detailFood" v-on:click="setDetail(item.foodBaverages_id, 2)">
+                                        <img class="img-fluid" :src="item.rating_menu.pictures ? imageUrl + item.rating_menu.pictures : 'https://image.freepik.com/free-photo/cup-instant-noodles-placed-napery-with-chilli-as-ingredients-top-view-noodle-copy-space_41722-860.jpg'" alt="">
+                                        <i v-if="(Number(index) + 1) === 1" class="fa fa-star fa-lg pt-3 pl-3" style="color: gold"></i>
+                                        <i v-if="(Number(index) + 1) === 2" class="fa fa-star fa-lg pt-3 pl-3" style="color: silver"></i>
+                                        <i v-if="(Number(index) + 1) === 3" class="fa fa-star fa-lg pt-3 pl-3" style="color: #cd7f32"></i>
+                                        <i v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3" class="far fa-star fa-lg pt-3 pl-3" style="color: white"></i>&nbsp;<span class="font-weight-bold">{{Number(index) + 1}}</span>
+                                        <span v-if="(Number(index) + 1) === 1">st</span>
+                                        <span v-if="(Number(index) + 1) === 2">nd</span>
+                                        <span v-if="(Number(index) + 1) === 3">rd</span>
+                                        <span v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3">th</span>
+                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.rating_menu.name}}</p>
                                         <p class="rating mx-2 mb-0 white-text">
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating_menu.rating)"></i>
                                         </p>
-                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                        <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                                    </a>
-                                </div>
-                                <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                    <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
-                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                        <p class="rating mx-2 mb-0 white-text">
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
+                                        <span v-if="item.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.rating_menu.price).toLocaleString('id')}}</span> <span  v-if="item.rating_menu.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
+                                        <p v-if="item.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.rating_menu.priceSale).toLocaleString('id')}}</p>
+                                        <p v-else class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.rating_menu.price).toLocaleString('id')}}</p>
+                                        <p class="text-truncate pr-1">
+                                            <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> {{item.rating_menu.caffes.caffe_name}} - {{item.rating_menu.caffes.caffe_address}}
                                         </p>
-                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                        <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                                    </a>
-                                </div>
-                                <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                    <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
-                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                        <p class="rating mx-2 mb-0 white-text">
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                            <i class="lnr lnr-star text-warning"></i>
-                                        </p>
-                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                        <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
                                     </a>
                                 </div>
                             </div>
                             <br>
-                            <div class="row">
+                            <div class="row pb-4" style="background: rgba(0,0,0,0.1)" v-if="nextBeveragesRecomendation">
                                 <div class="col text-center">
-                                    <a href="" class="btn btn-primary see-more-btn">See More...</a>
+                                    <a href="#beveragesRecomendation" class="btn btn-primary see-more-btn" v-on:click="nextRecomendation(2)">See More...</a>
                                 </div>
                             </div>
                         </div>
@@ -1082,17 +1006,23 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="container">
+                        <div class="container" v-if="detailDialog.rating_menu">
                             <div class="row">
-                                <div class="col-4 px-0">
-                                    <img src="./assets/img/logo-icon/noodles.svg" class="img-fluid img-thumbnail" style="width: 10rem; height: 10rem" alt="">
+                                <div class="col-lg-4 col-md-4 px-0 d-flex justify-content-center">
+                                    <img :src="detailDialog.rating_menu.pictures ? imageUrl + detailDialog.rating_menu.pictures : 'https://image.freepik.com/free-photo/close-up-coffee-cup-decorated-with-coffee-beans-placed-wooden-serving-board_141793-2026.jpg'" class="img-fluid img-thumbnail" style="width: 10rem; height: 10rem" alt="">
                                 </div>
-                                <div class="col-8 text-gold">
-                                    <p>Noodles</p>
-                                    <p><i class="fas fa-store"></i> KFC</p>
-                                    <p><i class="fas fa-map-marked-alt"></i> Medan</p>
-                                    <p>Categories : <a class="link-categories-gold" href="./noodles.html">Noodles</a></p>
-                                    <p>Calories : 2000 calories</p>
+                                <div class="col-lg-8 col-md-8 text-gold">
+                                    <p class="pt-3">{{detailDialog.rating_menu.name}}</p>
+                                    <p><a href="#" v-on:click="openThisCafe(detailDialog.rating_menu.caffes.id)" style="text-decoration: none; color: #f4d58d"><i class="fas fa-store" ></i> {{detailDialog.rating_menu.caffes ? detailDialog.rating_menu.caffes.caffe_name : ''}}</a></p>
+                                    <p><a :href="detailDialog.rating_menu.caffes ? detailDialog.rating_menu.caffes.googleMapLink : '#'" target="_blank" style="text-decoration: none; color: #f4d58d"><i class="fas fa-map-marked-alt"></i> {{detailDialog.rating_menu.caffes ? detailDialog.rating_menu.caffes.caffe_address : ''}}</a></p>
+                                    <p>Categories : <a class="link-categories-gold" href="./noodles.html">{{searchCategory(detailDialog.rating_menu.category)}}</a></p>
+                                    <p>Description : {{detailDialog.rating_menu.description}}s</p>
+                                    <b>Price : </b>
+                                    <p>
+                                        <span v-if="detailDialog.rating_menu.isSale === '1'" class="mx-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(detailDialog.rating_menu.price).toLocaleString('id')}}</span> <span v-if="detailDialog.rating_menu.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
+                                    </p>
+                                    <p v-if="detailDialog.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="margin-top: -20px">Rp. {{Number(detailDialog.rating_menu.priceSale).toLocaleString('id')}}</p>
+                                    <p v-else class="mx-2 mb-2 font-weight-bolder" style="margin-top: -20px">Rp. {{Number(detailDialog.rating_menu.price).toLocaleString('id')}}</p>
                                 </div>
                             </div>
                             <h6 class="text-gold">Review <small>(scroll to see more)</small></h6>
@@ -1100,25 +1030,15 @@
                             <br>
                             <div class="row">
                                 <div class="col">
-                                    <button type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
-                                    <br>
-                                    <br>
+                                    <button v-if="letReview" type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
+                                    <br v-if="letReview">
+                                    <br v-if="letReview">
                                     <div class="review-box review-box-mak-mik">
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                                        <div v-for="item in detailDialog.rating_menu.reviews">
+                                            <div class="review-single">
+                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> {{defineBedgeReviewer(item.users.voted_by) ? defineBedgeReviewer(item.users.voted_by).name : ''}} Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1139,17 +1059,23 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="container">
+                        <div class="container" v-if="detailDialog.rating_menu">
                             <div class="row">
-                                <div class="col-4 px-0">
-                                    <img src="./assets/img/logo-icon/hot_chocolatte.svg" class="img-fluid img-thumbnail" style="width: 10rem; height: 10rem" alt="">
+                                <div class="col-lg-4 col-md-4 px-0 d-flex justify-content-center">
+                                    <img :src="detailDialog.rating_menu.pictures ? imageUrl + detailDialog.rating_menu.pictures : 'https://image.freepik.com/free-photo/close-up-coffee-cup-decorated-with-coffee-beans-placed-wooden-serving-board_141793-2026.jpg'" class="img-fluid img-thumbnail" style="width: 10rem; height: 10rem" alt="">
                                 </div>
-                                <div class="col-8 text-gold">
-                                    <p>Hot Chocolatte</p>
-                                    <p><i class="fas fa-store"></i> KFC</p>
-                                    <p><i class="fas fa-map-marked-alt"></i> Medan</p>
-                                    <p>Categories : <a class="link-categories-gold" href="./hot_chocolatte.html">Hot Chocolatte</a></p>
-                                    <p>Calories : 2000 calories</p>
+                                <div class="col-lg-8 col-md-8 text-gold">
+                                    <p class="pt-3">{{detailDialog.rating_menu.name}}</p>
+                                    <p><a href="#" v-on:click="openThisCafe(detailDialog.rating_menu.caffes.id)" style="text-decoration: none; color: #f4d58d"><i class="fas fa-store" ></i> {{detailDialog.rating_menu.caffes ? detailDialog.rating_menu.caffes.caffe_name : ''}}</a></p>
+                                    <p><a :href="detailDialog.rating_menu.caffes ? detailDialog.rating_menu.caffes.googleMapLink : '#'" target="_blank" style="text-decoration: none; color: #f4d58d"><i class="fas fa-map-marked-alt"></i> {{detailDialog.rating_menu.caffes ? detailDialog.rating_menu.caffes.caffe_address : ''}}</a></p>
+                                    <p>Categories : <a class="link-categories-gold" href="./noodles.html">{{searchCategory(detailDialog.rating_menu.category)}}</a></p>
+                                    <p>Description : {{detailDialog.rating_menu.description}}s</p>
+                                    <b>Price : </b>
+                                    <p>
+                                        <span v-if="detailDialog.rating_menu.isSale === '1'" class="mx-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(detailDialog.rating_menu.price).toLocaleString('id')}}</span> <span v-if="detailDialog.rating_menu.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
+                                    </p>
+                                    <p v-if="detailDialog.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="margin-top: -20px">Rp. {{Number(detailDialog.rating_menu.priceSale).toLocaleString('id')}}</p>
+                                    <p v-else class="mx-2 mb-2 font-weight-bolder" style="margin-top: -20px">Rp. {{Number(detailDialog.rating_menu.price).toLocaleString('id')}}</p>
                                 </div>
                             </div>
                             <h6 class="text-gold">Review <small>(scroll to see more)</small></h6>
@@ -1157,25 +1083,15 @@
                             <br>
                             <div class="row">
                                 <div class="col">
-                                    <button type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
-                                    <br>
-                                    <br>
-                                    <div class="review-box">
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                                    <button v-if="letReview" type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
+                                    <br v-if="letReview">
+                                    <br v-if="letReview">
+                                    <div class="review-box review-box-mak-mik">
+                                        <div v-for="item in detailDialog.rating_menu.reviews">
+                                            <div class="review-single">
+                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> {{defineBedgeReviewer(item.users.voted_by) ? defineBedgeReviewer(item.users.voted_by).name : ''}} Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1301,6 +1217,60 @@
                             </button>
                             <button v-else type="submit" class="btn btn-review text-gold">Save</button>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="detailSponsore" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content modal-register">
+                    <div class="modal-header">
+                        <h6 class="modal-title text-navy-blue" id="staticBackdropLabel">Sponsored</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-4 px-0">
+                                    <img :src="detailDialog.pictures ? imageUrl + detailDialog.pictures : './assets/img/logo-icon/hot_chocolatte.svg'" class="img-fluid img-thumbnail" style="width: 10rem; height: 10rem" alt="">
+                                </div>
+                                <div class="col-8 text-gold">
+                                    <p>{{detailDialog.name}}</p>
+                                    <p><a href="#" v-on:click="openThisCafe(detailDialog.caffes.id)" style="text-decoration: none; color: #f4d58d"><i class="fas fa-store" ></i> {{detailDialog.caffes ? detailDialog.caffes.caffe_name : ''}}</p></a>
+                                    <p><a :href="detailDialog.caffes ? detailDialog.caffes.googleMapLink : '#'" target="_blank" style="text-decoration: none; color: #f4d58d"><i class="fas fa-map-marked-alt"></i> {{detailDialog.caffes ? detailDialog.caffes.caffe_address : ''}}</a></p>
+                                    <p>Categories : <a class="link-categories-gold" href="./noodles.html">{{searchCategory(detailDialog.category)}}</a></p>
+                                    <p>Description : {{detailDialog.description}}s</p>
+                                    <b>Price : </b>
+                                    <p>
+                                        <span v-if="detailDialog.isSale === '1'" class="mx-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(detailDialog.price).toLocaleString('id')}}</span> <span v-if="detailDialog.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
+                                    </p>
+                                    <p v-if="detailDialog.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="margin-top: -20px">Rp. {{Number(detailDialog.priceSale).toLocaleString('id')}}</p>
+                                    <p v-else class="mx-2 mb-2 font-weight-bolder" style="margin-top: -20px">Rp. {{Number(detailDialog.price).toLocaleString('id')}}</p>
+                                </div>
+                            </div>
+                            <h6 class="text-gold">Review <small>(scroll to see more)</small></h6>
+                            <div class="garis"></div>
+                            <br>
+                            <div class="row">
+                                <div class="col" v-if="detailDialog.caffes">
+                                    <button v-if="isLogin && (detailDialog.caffes.owner.id !== profile.id)" type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
+                                    <br v-if="isLogin">
+                                    <br v-if="isLogin">
+                                    <div class="review-box review-box-mak-mik" v-if="detailDialog.reviews">
+                                        <div v-for="item in detailDialog.reviews">
+                                            <div class="review-single">
+                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black;">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> Intermediate Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

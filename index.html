@@ -133,7 +133,7 @@
                             </div>
                             <div class="user-info text-gold">
                                 <span class="user-name"><strong>{{profileUser.name}}</strong></span>
-                                <span class="user-role"><i class="fas fa-star"></i> Intermediate</span>
+                                <span class="user-role"><i class="fas fa-star"></i>  {{defineBedge() ?  defineBedge().name : ''}}</span>
                                 <span class="user-role">Reviewer</span>
                                 <span class="user-status">
                                     <i class="fa fa-circle"></i>
@@ -562,7 +562,7 @@
                         <div class="user-info text-gold">
                             <span class="user-name">{{profileUser.name}}
                             </span>
-                            <span class="user-role"><i class="fas fa-star"></i> Intermediate Reviewer</span>
+                            <span class="user-role"><i class="fas fa-star"></i>  {{defineBedge() ?  defineBedge().name : ''}}</span>
                             <span class="user-status">
                                 <i class="fa fa-circle"></i>
                                 <span>Online</span>
@@ -1054,60 +1054,7 @@
                                     <div class="review-box review-box-mak-mik" v-if="detailDialog.reviews">
                                         <div v-for="item in detailDialog.reviews">
                                             <div class="review-single">
-                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> Intermediate Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
-                                                <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Modal -->
-        <div class="modal fade" id="detailSponsore" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content modal-register">
-                    <div class="modal-header">
-                        <h6 class="modal-title text-navy-blue" id="staticBackdropLabel">Sponsored</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-4 px-0">
-                                    <img :src="detailDialog.pictures ? imageUrl + detailDialog.pictures : './assets/img/logo-icon/hot_chocolatte.svg'" class="img-fluid img-thumbnail" style="width: 10rem; height: 10rem" alt="">
-                                </div>
-                                <div class="col-8 text-gold">
-                                    <p>{{detailDialog.name}}</p>
-                                    <p><a href="#" v-on:click="openThisCafe(detailDialog.caffes.id)" style="text-decoration: none; color: #f4d58d"><i class="fas fa-store" ></i> {{detailDialog.caffes ? detailDialog.caffes.caffe_name : ''}}</p></a>
-                                    <p><a :href="detailDialog.caffes ? detailDialog.caffes.googleMapLink : '#'" target="_blank" style="text-decoration: none; color: #f4d58d"><i class="fas fa-map-marked-alt"></i> {{detailDialog.caffes ? detailDialog.caffes.caffe_address : ''}}</a></p>
-                                    <p>Categories : <a class="link-categories-gold" href="./noodles.html">{{searchCategory(detailDialog.category)}}</a></p>
-                                    <p>Description : {{detailDialog.description}}s</p>
-                                    <b>Price : </b>
-                                    <p>
-                                        <span v-if="detailDialog.isSale === '1'" class="mx-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(detailDialog.price).toLocaleString('id')}}</span> <span v-if="detailDialog.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
-                                    </p>
-                                    <p v-if="detailDialog.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="margin-top: -20px">Rp. {{Number(detailDialog.priceSale).toLocaleString('id')}}</p>
-                                    <p v-else class="mx-2 mb-2 font-weight-bolder" style="margin-top: -20px">Rp. {{Number(detailDialog.price).toLocaleString('id')}}</p>
-                                </div>
-                            </div>
-                            <h6 class="text-gold">Review <small>(scroll to see more)</small></h6>
-                            <div class="garis"></div>
-                            <br>
-                            <div class="row">
-                                <div class="col" v-if="detailDialog.caffes">
-                                    <button v-if="isLogin && (detailDialog.caffes.owner.id !== profile.id)" type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
-                                    <br v-if="isLogin">
-                                    <br v-if="isLogin">
-                                    <div class="review-box review-box-mak-mik" v-if="detailDialog.reviews">
-                                        <div v-for="item in detailDialog.reviews">
-                                            <div class="review-single">
-                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black;">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> Intermediate Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> {{defineBedgeReviewer(item.users.voted_by) ? defineBedgeReviewer(item.users.voted_by).name : ''}} Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
                                                 <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
                                             </div>
                                         </div>
@@ -1161,7 +1108,7 @@
                                     <div class="review-box review-box-mak-mik" v-if="detailDialog.reviews">
                                         <div v-for="item in detailDialog.reviews">
                                             <div class="review-single">
-                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> Intermediate Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i>  {{defineBedge() ?  defineBedge().name : ''}}</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
                                                 <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
                                             </div>
                                         </div>
@@ -1174,6 +1121,60 @@
             </div>
         </div>
     
+        
+        <!-- Modal -->
+        <div class="modal fade" id="detailSponsore" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content modal-register">
+                    <div class="modal-header">
+                        <h6 class="modal-title text-navy-blue" id="staticBackdropLabel">Sponsored</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-4 px-0">
+                                    <img :src="detailDialog.pictures ? imageUrl + detailDialog.pictures : './assets/img/logo-icon/hot_chocolatte.svg'" class="img-fluid img-thumbnail" style="width: 10rem; height: 10rem" alt="">
+                                </div>
+                                <div class="col-8 text-gold">
+                                    <p>{{detailDialog.name}}</p>
+                                    <p><a href="#" v-on:click="openThisCafe(detailDialog.caffes.id)" style="text-decoration: none; color: #f4d58d"><i class="fas fa-store" ></i> {{detailDialog.caffes ? detailDialog.caffes.caffe_name : ''}}</p></a>
+                                    <p><a :href="detailDialog.caffes ? detailDialog.caffes.googleMapLink : '#'" target="_blank" style="text-decoration: none; color: #f4d58d"><i class="fas fa-map-marked-alt"></i> {{detailDialog.caffes ? detailDialog.caffes.caffe_address : ''}}</a></p>
+                                    <p>Categories : <a class="link-categories-gold" href="./noodles.html">{{searchCategory(detailDialog.category)}}</a></p>
+                                    <p>Description : {{detailDialog.description}}s</p>
+                                    <b>Price : </b>
+                                    <p>
+                                        <span v-if="detailDialog.isSale === '1'" class="mx-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(detailDialog.price).toLocaleString('id')}}</span> <span v-if="detailDialog.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
+                                    </p>
+                                    <p v-if="detailDialog.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="margin-top: -20px">Rp. {{Number(detailDialog.priceSale).toLocaleString('id')}}</p>
+                                    <p v-else class="mx-2 mb-2 font-weight-bolder" style="margin-top: -20px">Rp. {{Number(detailDialog.price).toLocaleString('id')}}</p>
+                                </div>
+                            </div>
+                            <h6 class="text-gold">Review <small>(scroll to see more)</small></h6>
+                            <div class="garis"></div>
+                            <br>
+                            <div class="row">
+                                <div class="col" v-if="detailDialog.caffes">
+                                    <button v-if="letReview" type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
+                                    <br v-if="letReview">
+                                    <br v-if="letReview">
+                                    <div class="review-box review-box-mak-mik" v-if="detailDialog.reviews">
+                                        <div v-for="item in detailDialog.reviews">
+                                            <div class="review-single">
+                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black;">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i>  {{defineBedge() ?  defineBedge().name : ''}}</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Modal write review -->
         <div class="modal fade" id="writeReview" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="writeReviewMobileLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">

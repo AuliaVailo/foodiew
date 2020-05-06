@@ -149,12 +149,20 @@ new Vue({
                         result.caffes = this.profile.caffe
                         if (res.data.data.type === '1') {
                             console.log('food', result)
-                            this.trending_foods.data.push(result)
+                            if(this.trending_foods.length === 0) {
+                                this.getFoods()
+                            } else {
+                                this.trending_foods.data.push(result)
+                            }
                         }
 
                         if (res.data.data.type === '2') {
                             console.log('baverages', result)
-                            this.trending_baverages.data.push(result)
+                            if(this.trending_baverages.length === 0) {
+                                this.getBeverages()
+                            } else {
+                                this.trending_baverages.data.push(result)
+                            }
                         }
                         var form = document.getElementById('add-Food')
                         form.reset()
@@ -219,7 +227,7 @@ new Vue({
             this.imageToUpload = file
         },
         getFoods: function () {
-            let url = this.url + '/api/foods/1/type'
+            let url = this.url + '/api/foods/1/type/' + this.profile.caffe.id
             // let token = 'Bearer' + localStorage.getItem('token')
             let header = {
                 // headers: {
@@ -289,7 +297,7 @@ new Vue({
                 })
         },
         getBeverages: function () {
-            let url = this.url + '/api/foods/2/type'
+            let url = this.url + '/api/foods/2/type/' + this.profile.caffe.id
             // let token = 'Bearer' + localStorage.getItem('token')
             let header = {
                 // headers: {

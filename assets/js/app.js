@@ -51,28 +51,31 @@ new Vue({
         address: '',
         nextCafe: '',
         erroMessage: '',
-        promos: []
+        promos: [],
+        badgeReff: []
     },
     computed: {
         profileUser: function () {
-            let firstname = this.profile.members.first_name
-            let midname = this.profile.members.mid_name
-            let lastname = this.profile.members.last_name
-            if (firstname === null) {
-                firstname = ''
+            if (this.profile) {
+                let firstname = this.profile.members.first_name
+                let midname = this.profile.members.mid_name
+                let lastname = this.profile.members.last_name
+                if (firstname === null) {
+                    firstname = ''
+                }
+                if (midname === null) {
+                    midname = ''
+                }
+                if (lastname === null) {
+                    lastname = ''
+                }
+                let name = firstname + ' ' + midname + ' ' + lastname
+                name = name.trim()
+                if (name === '') {
+                    name = this.profile.email
+                }
+                this.profile.name = name
             }
-            if (midname === null) {
-                midname = ''
-            }
-            if (lastname === null) {
-                lastname = ''
-            }
-            let name = firstname + ' ' + midname + ' ' + lastname
-            name = name.trim()
-            if (name === '') {
-                name = this.profile.email
-            }
-            this.profile.name = name
             return this.profile
         }
     },
@@ -100,6 +103,7 @@ new Vue({
         this.getFoods()
         this.getBeverages()
         this.gotoRandomPromo()
+        this.getBadgeReff()
     },
     methods: {
         register: function () {
@@ -365,7 +369,7 @@ new Vue({
             }, 3000);
         },
         setDetail: function(id, type) {
-            console.log(id, type)
+            console.log('se detail', id, type)
             const that = this
             let array = []
 
@@ -381,18 +385,23 @@ new Vue({
                 return el.id === id
             })
 
+            
             if (result.length > 0) {
                 this.detailDialog = result[0]
-                if (localStorage.getItem('token')) {
+                console.log('detail dialog : ', this.detailDialog, this.profile)
+                if (localStorage.getItem('token') && this.isLogin) {
                     if (this.detailDialog.caffes.user_id === this.profile.id) {
                         this.letReview = 0
+                        this.detailDialog.letReview = 0
                     } else {
                         this.letReview = 1
+                        this.detailDialog.letReview = 1
                     }
                 } else {
                     this.letReview = 0
+                    this.detailDialog.letReview = 0
                 }
-                console.log(this.detailDialog, this.detailDialog.caffes.user_id, this.profile.id, this.letReview)
+                // console.log(this.detailDialog, this.detailDialog.caffes.user_id, this.profile.id, this.letReview)
             }
         },
         searchCategory: function(id) {
@@ -486,7 +495,7 @@ new Vue({
                         this.generalErrorMessage = res.data.message
                         $('#generalModal').modal('show')
                         // add review to state
-                        this.detailDialog.reviews.push(res.data.data)
+                        // this.detailDialog.reviews.push(res.data.data)
                         if (this.detailDialog.type === '1') { // food
                             let objIndex = this.trending_foods.data.findIndex((obj => obj.id === this.detailDialog.id))
                             this.trending_foods.data[objIndex].reviews.push(res.data.data)
@@ -967,6 +976,67 @@ new Vue({
         openDetailSponsore: function(item) {
             this.detailDialog = item
             $('#detailSponsore').modal('show')
+        },
+        getBadgeReff: async function() {
+            let res = await axios.get( this.url + '/api/badge/')
+            if(res.status === 200) {
+                this.badgeReff = res.data.data
+                localStorage.setItem('bedgeReff', JSON.stringify(this.badgeReff))
+            }
+        },
+        defineBedge: function() {
+            let bedgeReff = JSON.parse(localStorage.getItem('bedgeReff'))
+            let totalVoting = this.profileUser.voted_by.length
+            let maxLengtReff = bedgeReff.length
+            for (let i = 0; i < maxLengtReff; i++) {
+                let data = bedgeReff[i]
+                let bedges = []
+                if (data.id === 1) {
+                    let start = 0
+                    let end = data.max_vote
+                    bedges = (totalVoting >= start && totalVoting <= end) ? data : []
+                    console.log(start, end, bedges)
+                    return bedges
+                } else if (data.id === maxLengtReff) {
+                    let end = data.max_vote
+                    bedges = (totalVoting >= end) ? data : []
+                    console.log(end, bedges)
+                    return bedges
+                } else {
+                    let start = bedgeReff[i -1].max_vote
+                    let end = data.max_vote
+                    bedges = (totalVoting >= start && totalVoting <= end) ? data : []
+                    console.log(start, end, bedges)
+                    return bedges
+                }
+            }
+        },
+        defineBedgeReviewer: function(voted_by) {
+            let bedgeReff = JSON.parse(localStorage.getItem('bedgeReff'))
+            let totalVoting = voted_by.length
+            let maxLengtReff = bedgeReff.length
+            for (let i = 0; i < maxLengtReff; i++) {
+                let data = bedgeReff[i]
+                let bedges = []
+                if (data.id === 1) {
+                    let start = 0
+                    let end = data.max_vote
+                    bedges = (totalVoting >= start && totalVoting <= end) ? data : []
+                    console.log(start, end, bedges)
+                    return bedges
+                } else if (data.id === maxLengtReff) {
+                    let end = data.max_vote
+                    bedges = (totalVoting >= end) ? data : []
+                    console.log(end, bedges)
+                    return bedges
+                } else {
+                    let start = bedgeReff[i -1].max_vote
+                    let end = data.max_vote
+                    bedges = (totalVoting >= start && totalVoting <= end) ? data : []
+                    console.log(start, end, bedges)
+                    return bedges
+                }
+            }
         }
     }
 })

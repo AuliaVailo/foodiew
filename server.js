@@ -39,6 +39,10 @@ app.get('/contact-us', function(req, res){
     res.sendFile(__dirname + '/contact-us.html');
 });
 
+app.get('/my-voucher', function(req, res){
+    res.sendFile(__dirname + '/my-voucher.html');
+});
+
 http.listen(process.env.PORT, function() {
     console.log('listening on http://localhost:' + process.env.PORT)
 })
