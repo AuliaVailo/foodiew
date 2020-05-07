@@ -102,7 +102,7 @@
                     <img :src="profile.members.profile_pictures ? profileUrl + profile.members.profile_pictures : './assets/img/Profile_dummy.svg'" alt="" class="img-thumbnail img-circle">
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" style="font-size: .85rem;">
-                    <a class="dropdown-item" href="./mycafe"><i class="fas fa-user"></i> &nbsp;My Cafe</a>
+                    <a v-if="isLogin && profile.caffe !== null" class="dropdown-item" href="./mycafe"><i class="fas fa-user"></i> &nbsp;My Cafe</a>
                     <a class="dropdown-item" v-on:click="signout"><i class="fas fa-power-off"></i> &nbsp;Logout</a>
                 </div>
             </div>
@@ -130,7 +130,7 @@
                                         <i class="fas fa-cog text-navy-blue pr-0"></i>
                                     </a>
                                     <a :href="'mailto:' + profileUser.email" target="_blank" class="label-sidebar">
-                                        <i class="fas fa-envelope text-navy-blue"></i>&nbsp;
+                                        <i class="fas fa-envelope text-navy-blue"></i>
                                     </a>
                                 </span>
                             </div>
@@ -174,7 +174,7 @@
                                     </ul>
                                 </li>
                                 <li class="sidebar-dropdown">
-                                    <a href="./promo.html">
+                                    <a href="./promo">
                                         <i class="fas fa-tags text-gold"></i>
                                         <span class="menu-text text-gold">Promo</span>
                                     </a>
@@ -541,7 +541,7 @@
                         <div class="user-info text-gold">
                             <span class="user-name">{{profileUser.name}}</strong>
                             </span>
-                            <span class="user-role"><i class="fas fa-star"></i> Intermediate Reviewer</span>
+                            <span class="user-role"><i class="fas fa-star"></i> {{defineBedge() ?  defineBedge().name : ''}} Reviewer</span>
                             <span class="user-status">
                                 <i class="fa fa-circle"></i>
                                 <span>Online</span>
@@ -550,7 +550,7 @@
                                 <a href="#" class="label-sidebar mr-1" data-toggle="modal" data-target="#settingModal">
                                     <i class="fas fa-cog text-navy-blue"></i>
                                 </a>
-                                <a href="./profile" class="label-sidebar">
+                                <a :href="'mailto:' + profileUser.email" target="_blank" class="label-sidebar">
                                     <i class="fas fa-envelope text-navy-blue"></i>
                                 </a>
                             </span>
@@ -587,38 +587,52 @@
                                     <span class="menu-text text-gold">Profile</span>
                                 </a>
                             </li>
-                            <li class="sidebar-dropdown">
-                                <a href="./mycafe">
+                            <li class="sidebar-dropdown" v-if="isLogin && profile.caffe !== null">
+                                <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">
                                     <i class="fas fa-store text-gold"></i>
                                     <span class="menu-text text-gold">My Cafe</span>
                                 </a>
+                                <ul class="collapse list-unstyled pl-3" id="pageSubmenu">
+                                    <li>
+                                        <a href="./mycafe">
+                                            <i class="fas fa-store text-gold"></i>
+                                            Cafe Profile
+                                        </a>
+                                    </li>
+                                    <!-- <li>
+                                        <a href="#" data-toggle="modal" data-target="#addFood">
+                                            <i class="fas fa-utensils text-gold"></i>
+                                            Add Menu
+                                        </a>
+                                    </li> -->
+                                </ul>
                             </li>
                             <li class="sidebar-dropdown">
-                                <a href="./promo.html">
+                                <a href="./promo">
                                     <i class="fas fa-tags text-gold"></i>
                                     <span class="menu-text text-gold">Promo</span>
                                 </a>
                             </li>
                             <li class="sidebar-dropdown">
-                                <a href="./halloffame.html">
+                                <a href="./halloffame">
                                     <i class="fas fa-trophy text-gold"></i>
                                     <span class="menu-text text-gold">Hall of Fame</span>
                                 </a>
                             </li>
                             <li class="sidebar-dropdown">
-                                <a href="./contact-us.html">
+                                <a href="./contact-us">
                                     <i class="fas fa-2x fa-envelope text-gold"></i>
                                     <span class="menu-text text-gold">Contact Us</span>
                                 </a>
                             </li>
                             <li class="sidebar-dropdown">
-                                <a href="./contact-us.html">
+                                <a href="./contact-us">
                                     <i class="fas fa-2x fa-shield-alt text-gold"></i>
                                     <span class="menu-text text-gold">Privacy Policy</span>
                                 </a>
                             </li>
                             <li class="sidebar-dropdown">
-                                <a href="./contact-us.html">
+                                <a href="./contact-us">
                                     <i class="fas fa-2x fa-book text-gold"></i>
                                     <span class="menu-text text-gold">T & C</span>
                                 </a>
@@ -663,7 +677,7 @@
                         <img :src="profile.members.profile_pictures ? profileUrl + profile.members.profile_pictures : './assets/img/Profile_dummy.svg'" alt="" class="img-thumbnail img-circle">
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" style="font-size: .85rem;">
-                        <a class="dropdown-item" href="./mycafe"><i class="fas fa-user"></i> &nbsp;My Cafe</a>
+                        <a v-if="isLogin && profile.caffe !== null" class="dropdown-item" href="./mycafe"><i class="fas fa-user"></i> &nbsp;My Cafe</a>
                         <a class="dropdown-item" href="#" v-on:click="signout"><i class="fas fa-power-off"></i> Logout</a>
                     </div>
                 </div>
@@ -687,14 +701,14 @@
                             </a>
                         </div>
                         <div class="col-3">
-                            <a class="text-gold" href="./promo.html" style="cursor: pointer">
+                            <a class="text-gold" href="./promo" style="cursor: pointer">
                                 <i class="fas fa-tags fa-2x"></i>
                                 <br>
                                 <span class="nav-bawah">Promo</span>
                             </a>
                         </div>
                         <div class="col-3">
-                            <a class="text-gold" href="./halloffame.html" style="cursor: pointer">
+                            <a class="text-gold" href="./halloffame" style="cursor: pointer">
                                 <i class="fas fa-trophy fa-2x"></i>
                                 <br>
                                 <span class="nav-bawah">HoF</span>
@@ -724,7 +738,7 @@
                                 <span class="h5 d-block mb-0" style="font-size: 1rem">{{profileUser.name}}</span>
                                 <span class="h6" style="font-size: .75rem">{{(profileUser.user_name === null) ? profileUser.email : '@' + profileUser.user}}</span>
                                 <br>
-                                <a href="#" data-toggle="modal" data-target="#staticBackdrop2" role="button" class="text-navy-blue px-2 py-1 btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem;"><i class="fas fa-star"></i> Intermediate Reviewer</a>
+                                <img :src="defineBedge() ? './assets/img/badges/' + defineBedge().id + '.png' : './assets/img/badges/1.png'" width="30%" alt=""><a href="#" data-toggle="modal" data-target="#aaa" role="button" class="text-navy-blue px-2 py-1 btn-profile" style="font-size: 1rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem;"><i class="fas fa-star"></i> {{defineBedge() ?  defineBedge().name : ''}}</a>
                                 <br>
                                 <!-- Modal -->
                                 <div class="modal fade" id="staticBackdrop2" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -737,10 +751,11 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <h6>Intermediate I Reviewer</h6>
+                                                <img :src="defineBedge() ? './assets/img/badges/' + defineBedge().id + '.png' : './assets/img/badges/1.png'" width="20%" alt="">
+                                                <h6>{{defineBedge() ?  defineBedge().name : ''}}</h6>
                                                 <div class="progress position-relative">
-                                                    <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="11" aria-valuemin="0" aria-valuemax="100" style="width: 11%"></div>
-                                                    <small class="justify-content-center d-flex position-absolute w-100 text-navy-blue">27789 votes</small>
+                                                    <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="11" aria-valuemin="0" aria-valuemax="100" :style="'width: ' + defineBedge() ? 'width: ' +  defineBedge().percentage + '%' : '100%'"></div>
+                                                    <small class="justify-content-center d-flex position-absolute w-100 text-navy-blue">{{profileUser.voted_by.length}} votes ({{defineBedge() ? defineBedge().percentage + '%' : '0%' }})</small>
                                                 </div>
                                                 <!-- CARA NGODING WIDTHNYA -->
                                                 <!--
@@ -749,7 +764,7 @@
                                                 -->
                                                 <br>
                                                 <!-- <h6>Current Vote: 27789 Vote.</h6> -->
-                                                <h6>Next level : Intermediate II Reviewer at 50000 votes</h6>
+                                                <h6>Next level : {{defineBedge() ?  defineBedge().nextLevel.name : ''}} at {{defineBedge() ?  defineBedge().end : ''}} votes <br><small>Need {{defineBedge() ?  Number(defineBedge().end) - Number(profileUser.voted_by.length) : 0 }} votes to reach next emblem</small></h6>
                                             </div>
                                         </div>
                                     </div>
@@ -760,11 +775,23 @@
                                         <i class="fas fa-tags"></i> Voucher
                                     </a>
                                     <a href="./my-voucher.html" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem;">
-                                        <i class="far fa-thumbs-up"></i> Vote
+                                        <i class="far fa-thumbs-up"></i> &nbsp;<b> {{Number(profileUser.voted_by.length).toLocaleString('id')}}</b> &nbsp; Vote
                                     </a>
                                 </div>
                             </div>
-                            <div class="col-3 col-lg-2 text-gold">
+                            <div class="col-3 col-lg-2 text-gold" v-if="profile.caffe === null">
+                                <div class="d-flex justify-content-center my-cafe">
+                                    <a href="./mycafe" class="text-gold" style="font-size: 1rem">
+                                        <img src="./assets/img/My Cafe.png" style="width: 3.5rem;">
+                                    </a>
+                                </div>
+                                <div class="d-flex justify-content-center my-cafe">
+                                    <a href="#" class="text-gold bashirah" style="font-size: 1.5rem; line-height: .75rem;" data-toggle="modal" data-target="#registerCafe">
+                                        Open Cafe
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-3 col-lg-2 text-gold" v-else>
                                 <div class="d-flex justify-content-center my-cafe">
                                     <a href="./mycafe" class="text-gold" style="font-size: 1rem">
                                         <img src="./assets/img/My Cafe.png" style="width: 3.5rem;">
@@ -793,59 +820,31 @@
                             </div>
                         </div>
                         <br>
-                        <div class="row text-center">
-                            <div class="col choice-label" style="color: gold">1st</div>
-                            <div class="col choice-label" style="color: silver">2nd</div>
-                            <div class="col choice-label" style="color: #cd7f32">3rd</div>
-                        </div>
-                        <div class="row">
-                            <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                <a href="./mycafe" class="text-white">
-                                    <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                    <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
+                        <div class="row d-flex justify-content-center" v-if="cafeRecomendation">
+                            <div v-for="(item, index) in cafeRecomendation" class="col-5 px-0 card-cafe my-2" style="font-size: .8rem">
+                                <a href="#" v-on:click="openThisCafe(item.caffe_id)" class="text-white">
+                                    <img class="img-fluid" :src="item.rating_cafe.caffe_pictures ? imageUrl + item.rating_cafe.caffe_pictures : './assets/img/cafe.svg'" alt="">
+                                    <i v-if="(Number(index) + 1) === 1" class="fa fa-star fa-lg pt-3 pl-3" style="color: gold"></i>
+                                    <i v-if="(Number(index) + 1) === 2" class="fa fa-star fa-lg pt-3 pl-3" style="color: silver"></i>
+                                    <i v-if="(Number(index) + 1) === 3" class="fa fa-star fa-lg pt-3 pl-3" style="color: #cd7f32"></i>
+                                    <i v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3" class="far fa-star fa-lg pt-3 pl-3" style="color: white"></i>&nbsp;<span class="font-weight-bold">{{Number(index) + 1}}</span>
+                                    <span v-if="(Number(index) + 1) === 1">st</span>
+                                    <span v-if="(Number(index) + 1) === 2">nd</span>
+                                    <span v-if="(Number(index) + 1) === 3">rd</span>
+                                    <span v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3">th</span>
+                                    <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.rating_cafe.caffe_name}}</p>
                                     <p class="rating mx-2 mb-0 white-text">
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
+                                        <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating_cafe.rating)"></i><span class="mx-2 mb-2 font-weight-bolder">({{Number(item.rating_cafe.rating).toLocaleString('id')}})</span>
                                     </p>
-                                    <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
+                                    <p class="text-truncate pr-1 pb-2"><i class="mx-2 mb-2 fas fa-map-marker-alt"></i>{{item.rating_cafe.caffe_address}}</p>
                                 </a>
                             </div>
-                            <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                <a href="./mycafe" class="text-white">
-                                    <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                    <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                    <p class="rating mx-2 mb-0 white-text">
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                    </p>
-                                    <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                </a>
-                            </div>
-                            <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                <a href="./mycafe" class="text-white">
-                                    <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                    <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                    <p class="rating mx-2 mb-0 white-text">
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                    </p>
-                                    <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                </a>
-                            </div>
+                            <br>
                         </div>
                         <br>
-                        <div class="row">
+                        <div class="row" v-if="nextCafeRecomendation">
                             <div class="col text-center">
-                                <a href="" class="btn btn-primary see-more-btn">See More...</a>
+                                <a href="#cafeRecomendation" v-on:click="nextRecomendation(0)" class="btn btn-primary see-more-btn">See More...</a>
                             </div>
                         </div>
                         <!--  -->
@@ -861,61 +860,34 @@
                                 <div class="garis"></div>
                             </div>
                         </div>
-                        <div class="row text-center" style="background: rgba(0,0,0,0.1)">
-                            <div class="col choice-label" style="color: gold">1st</div>
-                            <div class="col choice-label" style="color: silver">2nd</div>
-                            <div class="col choice-label" style="color: #cd7f32">3rd</div>
-                        </div>
-                        <div class="row pb-4" style="background: rgba(0,0,0,0.1)">
-                            <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
-                                    <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                    <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
+                        <div class="row pb-4 d-flex justify-content-center" style="background: rgba(0,0,0,0.1)"  v-if="foodRecomendation">
+                            <div v-for="(item, index) in foodRecomendation"  class="col-5 px-0 card-cafe my-2" style="font-size: .8rem">
+                                <a href="#" role="button" data-toggle="modal" data-target="#detailFood" v-on:click="setDetail(item.foodBaverages_id, 1)">
+                                    <img class="img-fluid" :src="item.rating_menu.pictures ? imageUrl + item.rating_menu.pictures : 'https://image.freepik.com/free-photo/cup-instant-noodles-placed-napery-with-chilli-as-ingredients-top-view-noodle-copy-space_41722-860.jpg'" alt="">
+                                    <i v-if="(Number(index) + 1) === 1" class="fa fa-star fa-lg pt-3 pl-3" style="color: gold"></i>
+                                    <i v-if="(Number(index) + 1) === 2" class="fa fa-star fa-lg pt-3 pl-3" style="color: silver"></i>
+                                    <i v-if="(Number(index) + 1) === 3" class="fa fa-star fa-lg pt-3 pl-3" style="color: #cd7f32"></i>
+                                    <i v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3" class="far fa-star fa-lg pt-3 pl-3" style="color: white"></i>&nbsp;<span class="font-weight-bold">{{Number(index) + 1}}</span>
+                                    <span v-if="(Number(index) + 1) === 1">st</span>
+                                    <span v-if="(Number(index) + 1) === 2">nd</span>
+                                    <span v-if="(Number(index) + 1) === 3">rd</span>
+                                    <span v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3">th</span>
+                                    <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.rating_menu.name}}</p>
                                     <p class="rating mx-2 mb-0 white-text">
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
+                                        <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating_menu.rating)"></i>
                                     </p>
-                                    <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                    <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                                </a>
-                            </div>
-                            <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
-                                    <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                    <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                    <p class="rating mx-2 mb-0 white-text">
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
+                                    <span v-if="item.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.rating_menu.price).toLocaleString('id')}}</span> <span  v-if="item.rating_menu.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
+                                    <p v-if="item.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.rating_menu.priceSale).toLocaleString('id')}}</p>
+                                    <p v-else class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.rating_menu.price).toLocaleString('id')}}</p>
+                                    <p class="text-truncate pr-1">
+                                        <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> {{item.rating_menu.caffes.caffe_name}} - {{item.rating_menu.caffes.caffe_address}}
                                     </p>
-                                    <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                    <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                                </a>
-                            </div>
-                            <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
-                                    <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                    <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                    <p class="rating mx-2 mb-0 white-text">
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                    </p>
-                                    <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                    <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
                                 </a>
                             </div>
                         </div>
-                        <div class="row pb-4" style="background: rgba(0,0,0,0.1)">
+                        <div class="row pb-4" style="background: rgba(0,0,0,0.1)" v-if="nextFoodRecomendation">
                             <div class="col text-center">
-                                <a href="" class="btn btn-primary see-more-btn">See More...</a>
+                                <a href="#foodRecomendation" class="btn btn-primary see-more-btn" v-on:click="nextRecomendation(1)">See More...</a>
                             </div>
                         </div>
                         <!--  -->
@@ -932,62 +904,34 @@
                             </div>
                         </div>
                         <br>
-                        <div class="row text-center">
-                            <div class="col choice-label" style="color: gold">1st</div>
-                            <div class="col choice-label" style="color: silver">2nd</div>
-                            <div class="col choice-label" style="color: #cd7f32">3rd</div>
-                        </div>
-                        <div class="row">
-                            <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
-                                    <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                    <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
+                        <div class="row pb-4 d-flex justify-content-center" style="background: rgba(0,0,0,0.1)"  v-if="foodRecomendation">
+                            <div v-for="(item, index) in beveragesRecomendation"  class="col-5 px-0 card-cafe my-2" style="font-size: .8rem">
+                                <a href="#" role="button" data-toggle="modal" data-target="#detailFood" v-on:click="setDetail(item.foodBaverages_id, 2)">
+                                    <img class="img-fluid" :src="item.rating_menu.pictures ? imageUrl + item.rating_menu.pictures : 'https://image.freepik.com/free-photo/cup-instant-noodles-placed-napery-with-chilli-as-ingredients-top-view-noodle-copy-space_41722-860.jpg'" alt="">
+                                    <i v-if="(Number(index) + 1) === 1" class="fa fa-star fa-lg pt-3 pl-3" style="color: gold"></i>
+                                    <i v-if="(Number(index) + 1) === 2" class="fa fa-star fa-lg pt-3 pl-3" style="color: silver"></i>
+                                    <i v-if="(Number(index) + 1) === 3" class="fa fa-star fa-lg pt-3 pl-3" style="color: #cd7f32"></i>
+                                    <i v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3" class="far fa-star fa-lg pt-3 pl-3" style="color: white"></i>&nbsp;<span class="font-weight-bold">{{Number(index) + 1}}</span>
+                                    <span v-if="(Number(index) + 1) === 1">st</span>
+                                    <span v-if="(Number(index) + 1) === 2">nd</span>
+                                    <span v-if="(Number(index) + 1) === 3">rd</span>
+                                    <span v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3">th</span>
+                                    <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.rating_menu.name}}</p>
                                     <p class="rating mx-2 mb-0 white-text">
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
+                                        <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating_menu.rating)"></i>
                                     </p>
-                                    <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                    <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                                </a>
-                            </div>
-                            <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
-                                    <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                    <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                    <p class="rating mx-2 mb-0 white-text">
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
+                                    <span v-if="item.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.rating_menu.price).toLocaleString('id')}}</span> <span  v-if="item.rating_menu.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
+                                    <p v-if="item.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.rating_menu.priceSale).toLocaleString('id')}}</p>
+                                    <p v-else class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.rating_menu.price).toLocaleString('id')}}</p>
+                                    <p class="text-truncate pr-1">
+                                        <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> {{item.rating_menu.caffes.caffe_name}} - {{item.rating_menu.caffes.caffe_address}}
                                     </p>
-                                    <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                    <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                                </a>
-                            </div>
-                            <div class="col px-0 card-cafe" style="font-size: .8rem">
-                                <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
-                                    <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                    <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                    <p class="rating mx-2 mb-0 white-text">
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                    </p>
-                                    <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                    <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
                                 </a>
                             </div>
                         </div>
-                        <br>
-                        <div class="row">
+                        <div class="row pb-4" style="background: rgba(0,0,0,0.1)" v-if="nextBeveragesRecomendation">
                             <div class="col text-center">
-                                <a href="" class="btn btn-primary see-more-btn">See More...</a>
+                                <a href="#beveragesRecomendation" class="btn btn-primary see-more-btn" v-on:click="nextRecomendation(2)">See More...</a>
                             </div>
                         </div>
                     </div>
@@ -1179,22 +1123,22 @@
                                 <span v-if="firstNameError" class="help-block" style="color: #F4D58D">{{firstNameError}}</span>
                             </div>
                             <div :class="midNameError ? 'form-label-group has-error' : 'form-label-group '">
-                                <input type="text" id="inputMidName" name="inputMidName" class="form-control" placeholder="Midle Name" v-model="midName" required>
+                                <input type="text" id="inputMidName" name="inputMidName" class="form-control" placeholder="Midle Name" v-model="midName" >
                                 <label for="inputMidName">Midle Name</label>
                                 <span v-if="midNameError" class="help-block" style="color: #F4D58D">{{midNameError}}</span>
                             </div>
                             <div :class="latNameError ? 'form-label-group has-error' : 'form-label-group '">
-                                <input type="text" id="inputLastName" name="inputLastName" class="form-control" placeholder="Last Name" v-model="lastName" required>
+                                <input type="text" id="inputLastName" name="inputLastName" class="form-control" placeholder="Last Name" v-model="lastName" >
                                 <label for="inputLastName">Last Name</label>
                                 <span v-if="latNameError" class="help-block" style="color: #F4D58D">{{latNameError}}</span>
                             </div>
                             <div :class="placeOfBirthError ? 'form-label-group has-error' : 'form-label-group '">
-                                <input type="text" id="inputplaceOfBirth" name="inputplaceOfBirth" class="form-control" placeholder="Place of Birth" v-model="placeOfBirth" required>
+                                <input type="text" id="inputplaceOfBirth" name="inputplaceOfBirth" class="form-control" placeholder="Place of Birth" v-model="placeOfBirth" >
                                 <label for="inputplaceOfBirth">Place of Birth</label>
                                 <span v-if="placeOfBirthError" class="help-block" style="color: #F4D58D">{{placeOfBirthError}}</span>
                             </div>
                             <div :class="dateOfBirthError ? 'form-label-group has-error' : 'form-label-group '">
-                                <input type="date" id="inputdateOfBirth" name="inputdateOfBirth" class="form-control" placeholder="Date of Birth" v-model="dateOfBirth" required>
+                                <input type="date" id="inputdateOfBirth" name="inputdateOfBirth" class="form-control" placeholder="Date of Birth" v-model="dateOfBirth" >
                                 <label for="inputdateOfBirth">Place of Birth</label>
                                 <span v-if="dateOfBirthError" class="help-block" style="color: #F4D58D">{{dateOfBirthError}}</span>
                             </div>
@@ -1207,7 +1151,7 @@
                             </div>
                             <div :class="addressError ? 'form-label-group has-error' : 'form-label-group '">
                                 <!-- <label for="inputCafeAddress text-light">Cafe Address</label> -->
-                                <textarea class="form-control" id="inputAddress" name="inputAddress" style="height: 75px;" v-model="address" placeholder="Address" required></textarea>
+                                <textarea class="form-control" id="inputAddress" name="inputAddress" style="height: 75px;" v-model="address" placeholder="Address" ></textarea>
                                 <span v-if="addressError" class="help-block" style="color: #F4D58D">{{addressError}}</span>
                             </div>
                             <button v-if="isLoading" type="submit" class="btn btn-review text-gold">

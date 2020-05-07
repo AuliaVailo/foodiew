@@ -372,7 +372,7 @@ new Vue({
                 this.detailDialog = result[0]
                 console.log('detail dialog : ', this.detailDialog, this.profile)
                 if (localStorage.getItem('token') && this.isLogin) {
-                    if (this.detailDialog.rating_menu.caffes.user_id === this.profile.id) {
+                    if (this.detailDialog.user_id === this.profile.id) {
                         this.letReview = 0
                         this.detailDialog.letReview = 0
                     } else {
@@ -711,6 +711,48 @@ new Vue({
                         $('#generalModal').modal('hide')
                     }, 3000);
                 })
+        },
+        openThisProfile: function(id) {
+            if (id == this.profile.id) {
+                window.location.replace('/profile')
+            } else {
+                let url = this.url + '/api/users/' + id
+                let token = 'Bearer ' + localStorage.getItem('token')
+                let header = {
+                    headers: {
+                        'Authorization': `${token}`,
+                    }
+                }
+                axios.get(url, header)
+                    .then((res) => {
+                        console.log(res)
+                        localStorage.setItem('profile-user', JSON.stringify(res.data.data))
+                        localStorage.setItem('route', 'profile-user:' + id)
+                        window.location.replace('/profile-user')
+                    })
+                    .catch((err) => {
+                        this.isLoading = false
+                        const that = this
+                        if (err.response !== undefined) {
+                            if(err.response.status === 401){
+                                this.generalErrorMessage = 'Your session is expired, please login...'
+                                $('#generalModal').modal('show')
+                                setTimeout(() => {
+                                    $('#generalModal').modal('hide')
+                                    that.signout()
+                                }, 3000);
+                            } else {
+                                this.generalErrorMessage = err.response.statusText
+                            }
+                        } else {
+                            this.generalErrorMessage = err
+                        }
+                        $('#generalModal').modal('show')
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                        }, 3000);
+                    })
+            }
         },
     }
 })
