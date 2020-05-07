@@ -774,19 +774,19 @@
                                     <a href="./my-voucher.html" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem;">
                                         <i class="fas fa-tags"></i> Voucher
                                     </a>
-                                    <a href="./my-voucher.html" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem;">
+                                    <a href="#" v-on:click="vote()" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem;">
                                         <i class="far fa-thumbs-up"></i> &nbsp;<b> {{Number(profileUser.voted_by.length).toLocaleString('id')}}</b> &nbsp; Vote
                                     </a>
                                 </div>
                             </div>
                             <div class="col-3 col-lg-2 text-gold" v-if="profile.caffe === null">
                                 <div class="d-flex justify-content-center my-cafe">
-                                    <a href="./mycafe" class="text-gold" style="font-size: 1rem">
+                                    <a href="#" class="text-gold" style="font-size: 1rem" data-toggle="modal" data-target="#registerCafe2">
                                         <img src="./assets/img/My Cafe.png" style="width: 3.5rem;">
                                     </a>
                                 </div>
                                 <div class="d-flex justify-content-center my-cafe">
-                                    <a href="#" class="text-gold bashirah" style="font-size: 1.5rem; line-height: .75rem;" data-toggle="modal" data-target="#registerCafe">
+                                    <a href="#" class="text-gold bashirah" style="font-size: 1.5rem; line-height: .75rem;" data-toggle="modal" data-target="#registerCafe2">
                                         Open Cafe
                                     </a>
                                 </div>
@@ -801,6 +801,49 @@
                                     <a href="./mycafe" class="text-gold bashirah" style="font-size: 1.5rem; line-height: .75rem;">
                                     My Cafe
                                     </a>
+                                </div>
+                            </div>
+                            <!-- Modal Open Cafe-->
+                            <div class="modal fade" id="registerCafe2" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content modal-register">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-navy-blue" id="staticBackdropLabel">Open New Cafe</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">                
+                                            <form class="form-signup" v-on:submit.prevent="registerCafe">
+                                                <div :class="cafenameError ? 'form-label-group has-error' : 'form-label-group '">
+                                                    <input type="test" id="inputCafeName" name="inputCafeName" class="form-control" placeholder="Cafe Name" v-model="cafeName" required>
+                                                    <label for="inputCafeName">Caffe Name*</label>
+                                                    <span v-if="cafenameError" class="help-block" style="color: #F4D58D">{{cafenameError}}</span>
+                                                </div>
+                                                <div :class="cafeAddressError ? 'form-label-group has-error' : 'form-label-group '">
+                                                    <!-- <label for="inputCafeAddress text-light">Cafe Address</label> -->
+                                                    <textarea class="form-control" id="inputCafeAddress" name="inputCafeAddress" style="height: 150px;" v-model="cafeAddress" placeholder="Cafe Address*" required></textarea>
+                                                    <span v-if="cafeAddressError" class="help-block" style="color: #F4D58D">{{cafeAddressError}}</span>
+                                                </div>
+                                                <div :class="locationErrorLink ? 'form-label-group has-error' : 'form-label-group '">
+                                                    <input type="text" id="inputLocation" name="inputLocation" class="form-control" placeholder="Location" v-model="locationLink" required data-toggle="tooltip" data-placement="top" title="Copy google map share link here">
+                                                    <label for="inputLocation">Google Location Link</label>
+                                                    <span v-if="locationErrorLink" class="help-block" style="color: #F4D58D">{{locationErrorLink}}</span>
+                                                </div>
+                                                <div :class="locationErrorMap ? 'form-label-group has-error' : 'form-label-group '">
+                                                    <input type="text" id="inputLocation" name="inputLocation" class="form-control" placeholder="Location" v-model="locationMap" required data-toggle="tooltip" data-placement="top" title="Copy google map iframe html here">
+                                                    <label for="inputLocation">Goole Location Map</label>
+                                                    <span v-if="locationErrorMap" class="help-block" style="color: #F4D58D">{{locationErrorMap}}</span>
+                                                </div>
+                                                <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                                                    <div class="spinner-border spinner-border-sm text-light" role="status">
+                                                        <span class="sr-only">Loading...</span>
+                                                    </div>
+                                                </button>
+                                                <button v-else type="submit" class="btn btn-review text-gold">Open My Cafe</button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1207,9 +1250,50 @@
                                     <div class="review-box review-box-mak-mik" v-if="detailDialog.reviews">
                                         <div v-for="item in detailDialog.reviews">
                                             <div class="review-single">
-                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black;">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> Intermediate Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black;">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> {{defineBedgeReviewer(item.users.voted_by)}}</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
                                                 <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="vouter" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content modal-register">
+                    <div class="modal-header">
+                        <h6 class="modal-title text-navy-blue" id="staticBackdropLabel">Vote</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row pb-3">
+                                <div class="col">
+                                    <form class="form-inline my-lg-0 ml-auto">
+                                        <div class="input-group col-12">
+                                            <input type="text" class="form-control search-menu text-navy-blue" placeholder="Search Reviewer..." v-model="search">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text text-navy-blue">
+                                                    <i class="fa fa-search text-navy-blue" aria-hidden="true"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="review-box review-box-mak-mik">
+                                    <div v-for="item in searchReviewer">
+                                        <div class="review-single">
+                                            <p><a href="#" v-on:click="openThisProfile(item.voter.id)" style="text-decoration: none; color: black;">@ {{item.voter.user_name ? item.voter.user_name : item.voter.email}}</a> - <small><i class="fas fa-star"></i> {{defineBedgeReviewer(item.voter.voted_by).name}} Reviewer</small></p>
                                         </div>
                                     </div>
                                 </div>

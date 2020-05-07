@@ -48,6 +48,7 @@ new Vue({
         beveragesRecomendation: [],
         nextBeveragesRecomendation: '',
         letReview: 1,
+        search: ''
     },
     computed: {
         profileUser: function () {
@@ -70,6 +71,18 @@ new Vue({
             }
             this.profile.name = name
             return this.profile
+        },
+        searchReviewer: function () {
+            return this.profileUser.voted_by.filter(item => {
+                if (!this.search) return this.profileUser.voted_by
+                return (
+                    item.voter.user_name.toLowerCase().includes(this.search.toLowerCase()) || 
+                    item.voter.email.toLowerCase().includes(this.search.toLowerCase()) || 
+                    item.voter.members.first_name.toLowerCase().includes(this.search.toLowerCase()) || 
+                    item.voter.members.mid_name.toLowerCase().includes(this.search.toLowerCase()) || 
+                    item.voter.members.last_name.toLowerCase().includes(this.search.toLowerCase())
+                    )
+            })
         }
     },
     created () {
@@ -713,6 +726,7 @@ new Vue({
                 })
         },
         openThisProfile: function(id) {
+            console.log(id)
             if (id == this.profile.id) {
                 window.location.replace('/profile')
             } else {
@@ -754,6 +768,9 @@ new Vue({
                     })
             }
         },
+        vote: function () {
+            $('#vouter').modal('show')
+        }
     }
 })
 
