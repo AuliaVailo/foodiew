@@ -57,79 +57,501 @@
                 font-size: 3.5rem;
             }
         }
+
+        [v-cloak] > * { display:none }
+        [v-cloak]::before { 
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 1;
+            width: 80px;
+            height: 80px;
+            margin: -75px 0 0 -75px;
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #F4D58D;
+            width: 50px;
+            height: 50px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+        @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+        }
+
+        @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 
 <body class="bg-profile">
-    <header class="navbar navbar-expand-lg navbar-dark navbar-dark-alt dsk-navbar sticky-top desktop-only">
+    <div id="app" v-cloak>
+        <header class="navbar navbar-expand-lg navbar-dark navbar-dark-alt dsk-navbar sticky-top desktop-only">
 
-        <a class="navbar-brand text-white font-weight-bolder" style="font-size: .9rem;" href="#">
-            <img src="./assets/img/Foodiew_samping_gold.png" alt="" style="width: 6rem;" class="top-logo-nav">
-        </a>
-        <a class="navbar-brand mr-1" href="#">
-            <img src="./assets/img/app-store.png" alt="" style="width: 6rem;" class="top-logo-nav">
-        </a>
-        <a class="navbar-brand" href="#">
-            <img src="./assets/img/google-play.png" alt="" style="width: 6rem;" class="">
-        </a>
-        <!-- <img src="./assets/img/Foodiew_samping_gold.png" alt="" style="width: 6rem;" class="top-logo-nav"> -->
-        <form class="form-inline my-lg-0 ml-auto">
-            <div class="input-group">
-                <input type="text" class="form-control search-menu text-navy-blue" placeholder="Search...">
-                <div class="input-group-append">
-                    <span class="input-group-text text-navy-blue">
-                        <i class="fa fa-search text-navy-blue" aria-hidden="true"></i>
-                    </span>
+            <a class="navbar-brand text-white font-weight-bolder" style="font-size: .9rem;" href="#">
+                <img src="./assets/img/Foodiew_samping_gold.png" alt="" style="width: 6rem;" class="top-logo-nav">
+            </a>
+            <a class="navbar-brand mr-1" href="#">
+                <img src="./assets/img/app-store.png" alt="" style="width: 6rem;" class="top-logo-nav">
+            </a>
+            <a class="navbar-brand" href="#">
+                <img src="./assets/img/google-play.png" alt="" style="width: 6rem;" class="">
+            </a>
+            <!-- <img src="./assets/img/Foodiew_samping_gold.png" alt="" style="width: 6rem;" class="top-logo-nav"> -->
+            <form class="form-inline my-lg-0 ml-auto">
+                <div class="input-group">
+                    <input type="text" class="form-control search-menu text-navy-blue" placeholder="Search...">
+                    <div class="input-group-append">
+                        <span class="input-group-text text-navy-blue">
+                            <i class="fa fa-search text-navy-blue" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                </div>
+            </form>
+            <div class="dropdown dropdown-notif">
+                <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav" type="button" id="notificationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <!-- <i class="fas fa-bell"></i> <span class="badge badge-pill badge-warning">99</span> -->
+                    <i class="fas fa-bell"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationMenu" style="font-size: .85rem;">
+                    <!-- <a class="dropdown-item" href="#"><i class="fas fa-power-off"></i> Notif</a> -->
+                    <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 1</a>
+                    <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 2</a>
+                    <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 3</a>
                 </div>
             </div>
-        </form>
-        <div class="dropdown dropdown-notif">
-            <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav" type="button" id="notificationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <!-- <i class="fas fa-bell"></i> <span class="badge badge-pill badge-warning">99</span> -->
-                <i class="fas fa-bell"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationMenu" style="font-size: .85rem;">
-                <!-- <a class="dropdown-item" href="#"><i class="fas fa-power-off"></i> Notif</a> -->
-                <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 1</a>
-                <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 2</a>
-                <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 3</a>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img src="./assets/img/Profile_dummy.svg" alt="" class="img-thumbnail img-circle">
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" style="font-size: .85rem;">
+                    <a class="dropdown-item" href="#"><i class="fas fa-power-off"></i> Logout</a>
+                </div>
+            </div>
+    
+        </header>
+        <div class="container-fluid desktop-only">
+            <div class="row flex-xl-nowrap default-theme border-radius-on">
+                <div class="col-md-3 col-xl-2 dsk-sidebar sidebar-wrapper">
+                    <div class="sidebar-content">
+                        <!-- sidebar-header  -->
+                        <div class="sidebar-item sidebar-header d-flex flex-nowrap">
+                            <div class="user-pic">
+                                <img class="img-responsive img-rounded" src="./assets/img/Profile_dummy.svg" alt="User picture">
+                            </div>
+                            <div class="user-info text-gold">
+                                <span class="user-name"><strong>Adli</strong></span>
+                                <span class="user-role"><i class="fas fa-star"></i> Intermediate</span>
+                                <span class="user-role">Reviewer</span>
+                                <span class="user-status">
+                                    <i class="fa fa-circle"></i>
+                                    <span>Online</span>
+                                </span>
+                                <span class="mt-2">
+                                    <a href="./profile.html" class="label-sidebar text-center mr-1">
+                                        &nbsp;<i class="fas fa-cog text-navy-blue pr-0"></i>
+                                    </a>
+                                    <a href="./profile.html" class="label-sidebar">
+                                        &nbsp;<i class="fas fa-envelope text-navy-blue"></i>&nbsp;
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- sidebar-menu  -->
+                        <div class=" sidebar-item sidebar-menu">
+                            <ul>
+                                <li class="header-menu">
+                                    <span class="text-gold">Menu</span>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="./index.html">
+                                        <i class="fas fa-chart-line text-gold"></i>
+                                        <span class="menu-text text-gold">Trending</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="./profile.html">
+                                        <i class="fas fa-user text-gold"></i>
+                                        <span class="menu-text text-gold">Profile</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="./promo.html">
+                                        <i class="fas fa-tags text-gold"></i>
+                                        <span class="menu-text text-gold">Promo</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="./halloffame.html">
+                                        <i class="fas fa-trophy text-gold"></i>
+                                        <span class="menu-text text-gold">Hall of Fame</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="./contact-us.html">
+                                        <i class="fas fa-2x fa-envelope text-gold"></i>
+                                        <span class="menu-text text-gold">Contact Us</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="./contact-us.html">
+                                        <i class="fas fa-2x fa-shield-alt text-gold"></i>
+                                        <span class="menu-text text-gold">Privacy Policy</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-dropdown">
+                                    <a href="./contact-us.html">
+                                        <i class="fas fa-2x fa-book text-gold"></i>
+                                        <span class="menu-text text-gold">T & C</span>
+                                    </a>
+                                </li>
+                                <li class="header-menu">
+                                    <span class="text-gold">Follow Us!</span>
+                                </li>
+                                <div class="social-media">
+                                    <a href="#" style="margin-left: 1.25rem;">
+                                        <i class="fab fa-2x fa-facebook-square text-gold"></i>
+                                    </a>
+                                    <a href="#">
+                                        <i class="fab fa-2x fa-instagram text-gold"></i>
+                                    </a>
+                                    <a href="#">
+                                        <i class="fab fa-2x fa-youtube-square text-gold"></i>
+                                    </a>
+                                </div>
+                            </ul>
+                        </div>
+                        <!-- sidebar-menu  -->
+                    </div>
+                    <!-- sidebar-footer  -->
+                    <div class="sidebar-footer">
+                        <div>
+                            <a href="javascript:void(0)" class="text-gold">
+                                &copy;2020, Foodiew.
+                            </a>
+                        </div>
+                    </div>
+                </div>
+    
+                <nav class="d-none d-xl-block col-xl-2 dsk-sidebar-right text-white text-center">
+                    <h6 class="text-gold">Sponsored</h6>
+                    <div class="garis-promoted"></div>
+                    <br>
+                    <h6>Cafe</h6>
+                    <div class="row">
+                        <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem">
+                            <a href="./profile_cafe.html">
+                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
+                                <p class="mx-2 mt-2 pb-2 font-weight-bolder">Dopamine Cafe</p>
+                            </a>
+                        </div>
+                    </div>
+                    <br>
+                    <h6>Food</h6>
+                    <div class="row">
+                        <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem">
+                            <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
+                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
+                                <p class="mx-2 mt-2 mb-0 font-weight-bolder">Food</p>
+                                <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
+                            </a>
+                        </div>
+                    </div>
+                    <br>
+                    <h6>Beverages</h6>
+                    <div class="row">
+                        <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem">
+                            <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
+                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
+                                <p class="mx-2 mt-2 mb-0 font-weight-bolder">Beverages</p>
+                                <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+    
+                <main class="col-md-9 col-xl-8 py-md-3 pl-md-3 dsk-content">
+    
+                    <section id="information-panel">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col text-center">
+                                    <i class="fas fa-trophy fa-4x text-gold"></i>
+                                    <br><br>
+                                    <span class="h6 text-white">All-time favourites</span>
+                                    <br>
+                                    <span class="h6 text-white">Hall of Fame</span>
+                                    <br>
+                                    <!-- <img src="./assets/img/Foodiew_samping_gold.png" class="img-fluid" style="width: 40%;"> -->
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+    
+                    <section id="user-recommendation" style="padding-bottom: 5rem;">
+                        <div class="container">
+                            <div class="row my-0">
+                                <div class="col d-flex justify-content-center">
+                                    <div class="garis"></div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col d-flex justify-content-between">
+                                    <p class="text-gold label-hof">
+                                        <i class="fas fa-map-marker-alt"></i> Medan
+                                    </p>
+                                    <p class="label-hof">
+                                        <a href="./categories_list.html" class="text-gold">Categories</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row mb-0">
+                                <div class="col">
+                                    <p class="text-navy-blue mb-0 h4">Cafe</p>
+                                </div>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col choice-label" style="color: gold">1st</div>
+                                <div class="col choice-label" style="color: silver">2nd</div>
+                                <div class="col choice-label" style="color: #cd7f32">3rd</div>
+                            </div>
+                            <div class="row">
+                                <div class="col px-0 card-cafe" style="font-size: .8rem">
+                                    <a href="./profile_cafe.html" class="text-white">
+                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
+                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
+                                        <p class="rating mx-2 mb-0 white-text">
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                        </p>
+                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
+                                    </a>
+                                </div>
+                                <div class="col px-0 card-cafe" style="font-size: .8rem">
+                                    <a href="./profile_cafe.html" class="text-white">
+                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
+                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
+                                        <p class="rating mx-2 mb-0 white-text">
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                        </p>
+                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
+                                    </a>
+                                </div>
+                                <div class="col px-0 card-cafe" style="font-size: .8rem">
+                                    <a href="./profile_cafe.html" class="text-white">
+                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
+                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
+                                        <p class="rating mx-2 mb-0 white-text">
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                        </p>
+                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col text-center">
+                                    <a href="" class="btn btn-primary see-more-btn">See More...</a>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row mb-0">
+                                <div class="col">
+                                    <p class="text-navy-blue mb-0 h4">Food</p>
+                                </div>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col choice-label" style="color: gold">1st</div>
+                                <div class="col choice-label" style="color: silver">2nd</div>
+                                <div class="col choice-label" style="color: #cd7f32">3rd</div>
+                            </div>
+                            <div class="row">
+                                <div class="col px-0 card-cafe" style="font-size: .8rem">
+                                    <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
+                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
+                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
+                                        <p class="rating mx-2 mb-0 white-text">
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                        </p>
+                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
+                                        <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
+                                    </a>
+                                </div>
+                                <div class="col px-0 card-cafe" style="font-size: .8rem">
+                                    <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
+                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
+                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
+                                        <p class="rating mx-2 mb-0 white-text">
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                        </p>
+                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
+                                        <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
+                                    </a>
+                                </div>
+                                <div class="col px-0 card-cafe" style="font-size: .8rem">
+                                    <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
+                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
+                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
+                                        <p class="rating mx-2 mb-0 white-text">
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                        </p>
+                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
+                                        <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
+                                    </a>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col text-center">
+                                    <a href="" class="btn btn-primary see-more-btn">See More...</a>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row mb-0">
+                                <div class="col">
+                                    <p class="text-navy-blue mb-0 h4">Beverages</p>
+                                </div>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col choice-label" style="color: gold">1st</div>
+                                <div class="col choice-label" style="color: silver">2nd</div>
+                                <div class="col choice-label" style="color: #cd7f32">3rd</div>
+                            </div>
+                            <div class="row">
+                                <div class="col px-0 card-cafe" style="font-size: .8rem">
+                                    <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
+                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
+                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
+                                        <p class="rating mx-2 mb-0 white-text">
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                        </p>
+                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
+                                        <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
+                                    </a>
+                                </div>
+                                <div class="col px-0 card-cafe" style="font-size: .8rem">
+                                    <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
+                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
+                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
+                                        <p class="rating mx-2 mb-0 white-text">
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                        </p>
+                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
+                                        <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
+                                    </a>
+                                </div>
+                                <div class="col px-0 card-cafe" style="font-size: .8rem">
+                                    <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
+                                        <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
+                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
+                                        <p class="rating mx-2 mb-0 white-text">
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                            <i class="lnr lnr-star text-warning"></i>
+                                        </p>
+                                        <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
+                                        <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
+                                    </a>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col text-center">
+                                    <a href="" class="btn btn-primary see-more-btn">See More...</a>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                    </section>
+    
+                </main>
             </div>
         </div>
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src="./assets/img/Profile_dummy.svg" alt="" class="img-thumbnail img-circle">
-            </button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" style="font-size: .85rem;">
-                <a class="dropdown-item" href="#"><i class="fas fa-power-off"></i> Logout</a>
-            </div>
-        </div>
-
-    </header>
-    <div class="container-fluid desktop-only">
-        <div class="row flex-xl-nowrap default-theme border-radius-on">
-            <div class="col-md-3 col-xl-2 dsk-sidebar sidebar-wrapper">
+        <div class="page-wrapper default-theme border-radius-on mobile-only">
+            <nav id="sidebar" class="sidebar-wrapper">
                 <div class="sidebar-content">
+                    <!-- sidebar-brand  -->
+                    <div class="sidebar-item sidebar-brand justify-content-between">
+                        <a href="#">
+                            <img src="./assets/img/Foodiew_samping_gold.png" class="img-fluid" style="width: 84px;">
+                        </a>
+                        <a id="toggle-sidebar2" class="text-gold" href="#">
+                            <i class="fas fa-arrow-left"></i>
+                        </a>
+                    </div>
                     <!-- sidebar-header  -->
                     <div class="sidebar-item sidebar-header d-flex flex-nowrap">
                         <div class="user-pic">
                             <img class="img-responsive img-rounded" src="./assets/img/Profile_dummy.svg" alt="User picture">
                         </div>
                         <div class="user-info text-gold">
-                            <span class="user-name"><strong>Adli</strong></span>
-                            <span class="user-role"><i class="fas fa-star"></i> Intermediate</span>
-                            <span class="user-role">Reviewer</span>
+                            <span class="user-name">Muhammad <strong>Adli</strong>
+                            </span>
+                            <span class="user-role"><i class="fas fa-star"></i> Intermediate Reviewer</span>
                             <span class="user-status">
                                 <i class="fa fa-circle"></i>
                                 <span>Online</span>
                             </span>
                             <span class="mt-2">
-                                <a href="./profile.html" class="label-sidebar text-center mr-1">
-                                    &nbsp;<i class="fas fa-cog text-navy-blue pr-0"></i>
+                                <a href="./profile.html" class="label-sidebar mr-1">
+                                    <i class="fas fa-cog text-navy-blue"></i>
                                 </a>
                                 <a href="./profile.html" class="label-sidebar">
-                                    &nbsp;<i class="fas fa-envelope text-navy-blue"></i>&nbsp;
+                                    <i class="fas fa-envelope text-navy-blue"></i>
                                 </a>
                             </span>
+                        </div>
+                    </div>
+                    <!-- sidebar-search  -->
+                    <div class="sidebar-item sidebar-search">
+                        <div>
+                            <div class="input-group text-gold">
+                                <input type="text" class="form-control search-menu text-gold" placeholder="Search...">
+                                <div class="input-group-append">
+                                    <span class="input-group-text text-gold">
+                                    <i class="fa fa-search text-gold" aria-hidden="true"></i>
+                                </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- sidebar-menu  -->
@@ -180,20 +602,6 @@
                                     <span class="menu-text text-gold">T & C</span>
                                 </a>
                             </li>
-                            <li class="header-menu">
-                                <span class="text-gold">Follow Us!</span>
-                            </li>
-                            <div class="social-media">
-                                <a href="#" style="margin-left: 1.25rem;">
-                                    <i class="fab fa-2x fa-facebook-square text-gold"></i>
-                                </a>
-                                <a href="#">
-                                    <i class="fab fa-2x fa-instagram text-gold"></i>
-                                </a>
-                                <a href="#">
-                                    <i class="fab fa-2x fa-youtube-square text-gold"></i>
-                                </a>
-                            </div>
                         </ul>
                     </div>
                     <!-- sidebar-menu  -->
@@ -201,52 +609,83 @@
                 <!-- sidebar-footer  -->
                 <div class="sidebar-footer">
                     <div>
-                        <a href="javascript:void(0)" class="text-gold">
-                            &copy;2020, Foodiew.
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <nav class="d-none d-xl-block col-xl-2 dsk-sidebar-right text-white text-center">
-                <h6 class="text-gold">Sponsored</h6>
-                <div class="garis-promoted"></div>
-                <br>
-                <h6>Cafe</h6>
-                <div class="row">
-                    <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem">
-                        <a href="./profile_cafe.html">
-                            <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                            <p class="mx-2 mt-2 pb-2 font-weight-bolder">Dopamine Cafe</p>
-                        </a>
-                    </div>
-                </div>
-                <br>
-                <h6>Food</h6>
-                <div class="row">
-                    <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem">
-                        <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
-                            <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                            <p class="mx-2 mt-2 mb-0 font-weight-bolder">Food</p>
-                            <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                        </a>
-                    </div>
-                </div>
-                <br>
-                <h6>Beverages</h6>
-                <div class="row">
-                    <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem">
-                        <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
-                            <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                            <p class="mx-2 mt-2 mb-0 font-weight-bolder">Beverages</p>
-                            <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
+                        <a href="./index.html" class="text-gold">
+                            <i class="fa fa-power-off"></i> Logout
                         </a>
                     </div>
                 </div>
             </nav>
-
-            <main class="col-md-9 col-xl-8 py-md-3 pl-md-3 dsk-content">
-
+    
+            <nav class="navbar navbar-expand-lg navbar-dark navbar-dark-alt sticky-top">
+    
+                <a id="toggle-sidebar" class="navbar-brand text-white mr-auto font-weight-bolder" style="font-size: .9rem;" href="#">
+                    <i class="fas fa-bars"></i>
+                </a>
+                <img src="./assets/img/Foodiew_samping_gold.png" alt="" style="width: 6rem;" class="top-logo-nav">
+                <!-- <a class="navbar-brand text-white ml-auto font-weight-bolder" style="font-size: .9rem;" href="./profile.html">
+                    <img src="./assets/img/Profile_dummy.svg" alt="" class="img-thumbnail img-circle">
+                </a> -->
+                <div class="dropdown dropdown-notif" style="padding-top: .5rem; margin-left: 2.25rem;">
+                    <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav btn-transparent" type="button" id="notificationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <!-- <i class="fas fa-bell"></i> <span class="badge badge-pill badge-warning">99</span> -->
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationMenu" style="font-size: .85rem;">
+                        <!-- <a class="dropdown-item" href="#"><i class="fas fa-power-off"></i> Notif</a> -->
+                        <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 1</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 2</a>
+                        <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 3</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav btn-transparent" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding-left: 0px;padding-right: 0px">
+                        <img src="./assets/img/Profile_dummy.svg" alt="" class="img-thumbnail img-circle">
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" style="font-size: .85rem;">
+                        <a class="dropdown-item" href="#"><i class="fas fa-power-off"></i> Logout</a>
+                    </div>
+                </div>
+            </nav>
+    
+            <nav class="navbar navbar-expand-md navbar-light fixed-bottom bottom-nav">
+                <div class="container">
+                    <div class="row text-center" style="margin-left: 11vw;">
+                        <div class="col-3">
+                            <a class="text-gold" href="./index.html" style="cursor: pointer">
+                                <i class="fas fa-chart-line fa-2x"></i>
+                                <br>
+                                <span class="nav-bawah">Trends</span>
+                            </a>
+                        </div>
+                        <div class="col-3">
+                            <a class="text-gold" href="./profile.html" style="cursor: pointer">
+                                <i class="fas fa-user fa-2x"></i>
+                                <br>
+                                <span class="nav-bawah">Profil</span>
+                            </a>
+                        </div>
+                        <div class="col-3">
+                            <a class="text-gold" href="./promo.html" style="cursor: pointer">
+                                <i class="fas fa-tags fa-2x"></i>
+                                <br>
+                                <span class="nav-bawah">Promo</span>
+                            </a>
+                        </div>
+                        <div class="col-3">
+                            <a class="text-gold" href="./halloffame.html" style="cursor: pointer">
+                                <i class="fas fa-trophy fa-2x"></i>
+                                <br>
+                                <span class="nav-bawah">HoF</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+    
+            <main class="page-content">
+    
+                <div class="overlay" id="overlay"></div>
+    
                 <section id="information-panel">
                     <div class="container">
                         <div class="row">
@@ -262,7 +701,7 @@
                         </div>
                     </div>
                 </section>
-
+    
                 <section id="user-recommendation" style="padding-bottom: 5rem;">
                     <div class="container">
                         <div class="row my-0">
@@ -473,468 +912,59 @@
                         <br>
                     </div>
                 </section>
-
+    
             </main>
         </div>
-    </div>
-    <div class="page-wrapper default-theme border-radius-on mobile-only">
-        <nav id="sidebar" class="sidebar-wrapper">
-            <div class="sidebar-content">
-                <!-- sidebar-brand  -->
-                <div class="sidebar-item sidebar-brand justify-content-between">
-                    <a href="#">
-                        <img src="./assets/img/Foodiew_samping_gold.png" class="img-fluid" style="width: 84px;">
-                    </a>
-                    <a id="toggle-sidebar2" class="text-gold" href="#">
-                        <i class="fas fa-arrow-left"></i>
-                    </a>
-                </div>
-                <!-- sidebar-header  -->
-                <div class="sidebar-item sidebar-header d-flex flex-nowrap">
-                    <div class="user-pic">
-                        <img class="img-responsive img-rounded" src="./assets/img/Profile_dummy.svg" alt="User picture">
+    
+        <!-- Modal -->
+        <div class="modal fade" id="detailFood" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content modal-register">
+                    <div class="modal-header">
+                        <h6 class="modal-title text-navy-blue" id="staticBackdropLabel">Details</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="user-info text-gold">
-                        <span class="user-name">Muhammad <strong>Adli</strong>
-                        </span>
-                        <span class="user-role"><i class="fas fa-star"></i> Intermediate Reviewer</span>
-                        <span class="user-status">
-                            <i class="fa fa-circle"></i>
-                            <span>Online</span>
-                        </span>
-                        <span class="mt-2">
-                            <a href="./profile.html" class="label-sidebar mr-1">
-                                <i class="fas fa-cog text-navy-blue"></i>
-                            </a>
-                            <a href="./profile.html" class="label-sidebar">
-                                <i class="fas fa-envelope text-navy-blue"></i>
-                            </a>
-                        </span>
-                    </div>
-                </div>
-                <!-- sidebar-search  -->
-                <div class="sidebar-item sidebar-search">
-                    <div>
-                        <div class="input-group text-gold">
-                            <input type="text" class="form-control search-menu text-gold" placeholder="Search...">
-                            <div class="input-group-append">
-                                <span class="input-group-text text-gold">
-                                <i class="fa fa-search text-gold" aria-hidden="true"></i>
-                            </span>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-4 px-0">
+                                    <img src="./assets/img/logo-icon/noodles.svg" class="img-fluid img-thumbnail" style="width: 10rem; height: 10rem" alt="">
+                                </div>
+                                <div class="col-8 text-gold">
+                                    <p>Noodles</p>
+                                    <p><i class="fas fa-store"></i> KFC</p>
+                                    <p><i class="fas fa-map-marked-alt"></i> Medan</p>
+                                    <p>Categories : <a class="link-categories-gold" href="./noodles.html">Noodles</a></p>
+                                    <p>Calories : 2000 calories</p>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- sidebar-menu  -->
-                <div class=" sidebar-item sidebar-menu">
-                    <ul>
-                        <li class="header-menu">
-                            <span class="text-gold">Menu</span>
-                        </li>
-                        <li class="sidebar-dropdown">
-                            <a href="./index.html">
-                                <i class="fas fa-chart-line text-gold"></i>
-                                <span class="menu-text text-gold">Trending</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-dropdown">
-                            <a href="./profile.html">
-                                <i class="fas fa-user text-gold"></i>
-                                <span class="menu-text text-gold">Profile</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-dropdown">
-                            <a href="./promo.html">
-                                <i class="fas fa-tags text-gold"></i>
-                                <span class="menu-text text-gold">Promo</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-dropdown">
-                            <a href="./halloffame.html">
-                                <i class="fas fa-trophy text-gold"></i>
-                                <span class="menu-text text-gold">Hall of Fame</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-dropdown">
-                            <a href="./contact-us.html">
-                                <i class="fas fa-2x fa-envelope text-gold"></i>
-                                <span class="menu-text text-gold">Contact Us</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-dropdown">
-                            <a href="./contact-us.html">
-                                <i class="fas fa-2x fa-shield-alt text-gold"></i>
-                                <span class="menu-text text-gold">Privacy Policy</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-dropdown">
-                            <a href="./contact-us.html">
-                                <i class="fas fa-2x fa-book text-gold"></i>
-                                <span class="menu-text text-gold">T & C</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- sidebar-menu  -->
-            </div>
-            <!-- sidebar-footer  -->
-            <div class="sidebar-footer">
-                <div>
-                    <a href="./index.html" class="text-gold">
-                        <i class="fa fa-power-off"></i> Logout
-                    </a>
-                </div>
-            </div>
-        </nav>
-
-        <nav class="navbar navbar-expand-lg navbar-dark navbar-dark-alt sticky-top">
-
-            <a id="toggle-sidebar" class="navbar-brand text-white mr-auto font-weight-bolder" style="font-size: .9rem;" href="#">
-                <i class="fas fa-bars"></i>
-            </a>
-            <img src="./assets/img/Foodiew_samping_gold.png" alt="" style="width: 6rem;" class="top-logo-nav">
-            <!-- <a class="navbar-brand text-white ml-auto font-weight-bolder" style="font-size: .9rem;" href="./profile.html">
-                <img src="./assets/img/Profile_dummy.svg" alt="" class="img-thumbnail img-circle">
-            </a> -->
-            <div class="dropdown dropdown-notif" style="padding-top: .5rem; margin-left: 2.25rem;">
-                <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav btn-transparent" type="button" id="notificationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <!-- <i class="fas fa-bell"></i> <span class="badge badge-pill badge-warning">99</span> -->
-                    <i class="fas fa-bell"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationMenu" style="font-size: .85rem;">
-                    <!-- <a class="dropdown-item" href="#"><i class="fas fa-power-off"></i> Notif</a> -->
-                    <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 1</a>
-                    <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 2</a>
-                    <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 3</a>
-                </div>
-            </div>
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav btn-transparent" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding-left: 0px;padding-right: 0px">
-                    <img src="./assets/img/Profile_dummy.svg" alt="" class="img-thumbnail img-circle">
-                </button>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" style="font-size: .85rem;">
-                    <a class="dropdown-item" href="#"><i class="fas fa-power-off"></i> Logout</a>
-                </div>
-            </div>
-        </nav>
-
-        <nav class="navbar navbar-expand-md navbar-light fixed-bottom bottom-nav">
-            <div class="container">
-                <div class="row text-center" style="margin-left: 11vw;">
-                    <div class="col-3">
-                        <a class="text-gold" href="./index.html" style="cursor: pointer">
-                            <i class="fas fa-chart-line fa-2x"></i>
-                            <br>
-                            <span class="nav-bawah">Trends</span>
-                        </a>
-                    </div>
-                    <div class="col-3">
-                        <a class="text-gold" href="./profile.html" style="cursor: pointer">
-                            <i class="fas fa-user fa-2x"></i>
-                            <br>
-                            <span class="nav-bawah">Profil</span>
-                        </a>
-                    </div>
-                    <div class="col-3">
-                        <a class="text-gold" href="./promo.html" style="cursor: pointer">
-                            <i class="fas fa-tags fa-2x"></i>
-                            <br>
-                            <span class="nav-bawah">Promo</span>
-                        </a>
-                    </div>
-                    <div class="col-3">
-                        <a class="text-gold" href="./halloffame.html" style="cursor: pointer">
-                            <i class="fas fa-trophy fa-2x"></i>
-                            <br>
-                            <span class="nav-bawah">HoF</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        <main class="page-content">
-
-            <div class="overlay" id="overlay"></div>
-
-            <section id="information-panel">
-                <div class="container">
-                    <div class="row">
-                        <div class="col text-center">
-                            <i class="fas fa-trophy fa-4x text-gold"></i>
-                            <br><br>
-                            <span class="h6 text-white">All-time favourites</span>
-                            <br>
-                            <span class="h6 text-white">Hall of Fame</span>
-                            <br>
-                            <!-- <img src="./assets/img/Foodiew_samping_gold.png" class="img-fluid" style="width: 40%;"> -->
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="user-recommendation" style="padding-bottom: 5rem;">
-                <div class="container">
-                    <div class="row my-0">
-                        <div class="col d-flex justify-content-center">
+                            <h6 class="text-gold">Review <small>(scroll to see more)</small></h6>
                             <div class="garis"></div>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col d-flex justify-content-between">
-                            <p class="text-gold label-hof">
-                                <i class="fas fa-map-marker-alt"></i> Medan
-                            </p>
-                            <p class="label-hof">
-                                <a href="./categories_list.html" class="text-gold">Categories</a>
-                            </p>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row mb-0">
-                        <div class="col">
-                            <p class="text-navy-blue mb-0 h4">Cafe</p>
-                        </div>
-                    </div>
-                    <div class="row text-center">
-                        <div class="col choice-label" style="color: gold">1st</div>
-                        <div class="col choice-label" style="color: silver">2nd</div>
-                        <div class="col choice-label" style="color: #cd7f32">3rd</div>
-                    </div>
-                    <div class="row">
-                        <div class="col px-0 card-cafe" style="font-size: .8rem">
-                            <a href="./profile_cafe.html" class="text-white">
-                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                <p class="rating mx-2 mb-0 white-text">
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                </p>
-                                <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                            </a>
-                        </div>
-                        <div class="col px-0 card-cafe" style="font-size: .8rem">
-                            <a href="./profile_cafe.html" class="text-white">
-                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                <p class="rating mx-2 mb-0 white-text">
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                </p>
-                                <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                            </a>
-                        </div>
-                        <div class="col px-0 card-cafe" style="font-size: .8rem">
-                            <a href="./profile_cafe.html" class="text-white">
-                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                <p class="rating mx-2 mb-0 white-text">
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                </p>
-                                <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                            </a>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col text-center">
-                            <a href="" class="btn btn-primary see-more-btn">See More...</a>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row mb-0">
-                        <div class="col">
-                            <p class="text-navy-blue mb-0 h4">Food</p>
-                        </div>
-                    </div>
-                    <div class="row text-center">
-                        <div class="col choice-label" style="color: gold">1st</div>
-                        <div class="col choice-label" style="color: silver">2nd</div>
-                        <div class="col choice-label" style="color: #cd7f32">3rd</div>
-                    </div>
-                    <div class="row">
-                        <div class="col px-0 card-cafe" style="font-size: .8rem">
-                            <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
-                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                <p class="rating mx-2 mb-0 white-text">
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                </p>
-                                <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                            </a>
-                        </div>
-                        <div class="col px-0 card-cafe" style="font-size: .8rem">
-                            <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
-                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                <p class="rating mx-2 mb-0 white-text">
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                </p>
-                                <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                            </a>
-                        </div>
-                        <div class="col px-0 card-cafe" style="font-size: .8rem">
-                            <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
-                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                <p class="rating mx-2 mb-0 white-text">
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                </p>
-                                <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                            </a>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col text-center">
-                            <a href="" class="btn btn-primary see-more-btn">See More...</a>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row mb-0">
-                        <div class="col">
-                            <p class="text-navy-blue mb-0 h4">Beverages</p>
-                        </div>
-                    </div>
-                    <div class="row text-center">
-                        <div class="col choice-label" style="color: gold">1st</div>
-                        <div class="col choice-label" style="color: silver">2nd</div>
-                        <div class="col choice-label" style="color: #cd7f32">3rd</div>
-                    </div>
-                    <div class="row">
-                        <div class="col px-0 card-cafe" style="font-size: .8rem">
-                            <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
-                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                <p class="rating mx-2 mb-0 white-text">
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                </p>
-                                <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                            </a>
-                        </div>
-                        <div class="col px-0 card-cafe" style="font-size: .8rem">
-                            <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
-                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                <p class="rating mx-2 mb-0 white-text">
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                </p>
-                                <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                            </a>
-                        </div>
-                        <div class="col px-0 card-cafe" style="font-size: .8rem">
-                            <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
-                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                <p class="mx-2 mt-2 mb-0 font-weight-bolder">Dopamine Cafe</p>
-                                <p class="rating mx-2 mb-0 white-text">
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                    <i class="lnr lnr-star text-warning"></i>
-                                </p>
-                                <p class="mx-2 mb-2 font-weight-bolder">(73)</p>
-                                <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                            </a>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col text-center">
-                            <a href="" class="btn btn-primary see-more-btn">See More...</a>
-                        </div>
-                    </div>
-                    <br>
-                </div>
-            </section>
-
-        </main>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="detailFood" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content modal-register">
-                <div class="modal-header">
-                    <h6 class="modal-title text-navy-blue" id="staticBackdropLabel">Details</h6>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-4 px-0">
-                                <img src="./assets/img/logo-icon/noodles.svg" class="img-fluid img-thumbnail" style="width: 10rem; height: 10rem" alt="">
-                            </div>
-                            <div class="col-8 text-gold">
-                                <p>Noodles</p>
-                                <p><i class="fas fa-store"></i> KFC</p>
-                                <p><i class="fas fa-map-marked-alt"></i> Medan</p>
-                                <p>Categories : <a class="link-categories-gold" href="./noodles.html">Noodles</a></p>
-                                <p>Calories : 2000 calories</p>
-                            </div>
-                        </div>
-                        <h6 class="text-gold">Review <small>(scroll to see more)</small></h6>
-                        <div class="garis"></div>
-                        <br>
-                        <div class="row">
-                            <div class="col">
-                                <button type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
-                                <br>
-                                <br>
-                                <div class="review-box review-box-mak-mik">
-                                    <div class="review-single">
-                                        <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                        <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                    </div>
-                                    <div class="review-single">
-                                        <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                        <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                    </div>
-                                    <div class="review-single">
-                                        <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                        <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                    </div>
-                                    <div class="review-single">
-                                        <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                        <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                            <br>
+                            <div class="row">
+                                <div class="col">
+                                    <button type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
+                                    <br>
+                                    <br>
+                                    <div class="review-box review-box-mak-mik">
+                                        <div class="review-single">
+                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
+                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                                        </div>
+                                        <div class="review-single">
+                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
+                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                                        </div>
+                                        <div class="review-single">
+                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
+                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                                        </div>
+                                        <div class="review-single">
+                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
+                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -943,55 +973,55 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="detailDrink" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content modal-register">
-                <div class="modal-header">
-                    <h6 class="modal-title text-navy-blue" id="staticBackdropLabel">Details</h6>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-4 px-0">
-                                <img src="./assets/img/logo-icon/hot_chocolatte.svg" class="img-fluid img-thumbnail" style="width: 10rem; height: 10rem" alt="">
+        <!-- Modal -->
+        <div class="modal fade" id="detailDrink" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content modal-register">
+                    <div class="modal-header">
+                        <h6 class="modal-title text-navy-blue" id="staticBackdropLabel">Details</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-4 px-0">
+                                    <img src="./assets/img/logo-icon/hot_chocolatte.svg" class="img-fluid img-thumbnail" style="width: 10rem; height: 10rem" alt="">
+                                </div>
+                                <div class="col-8 text-gold">
+                                    <p>Hot Chocolatte</p>
+                                    <p><i class="fas fa-store"></i> KFC</p>
+                                    <p><i class="fas fa-map-marked-alt"></i> Medan</p>
+                                    <p>Categories : <a class="link-categories-gold" href="./hot_chocolatte.html">Hot Chocolatte</a></p>
+                                    <p>Calories : 2000 calories</p>
+                                </div>
                             </div>
-                            <div class="col-8 text-gold">
-                                <p>Hot Chocolatte</p>
-                                <p><i class="fas fa-store"></i> KFC</p>
-                                <p><i class="fas fa-map-marked-alt"></i> Medan</p>
-                                <p>Categories : <a class="link-categories-gold" href="./hot_chocolatte.html">Hot Chocolatte</a></p>
-                                <p>Calories : 2000 calories</p>
-                            </div>
-                        </div>
-                        <h6 class="text-gold">Review <small>(scroll to see more)</small></h6>
-                        <div class="garis"></div>
-                        <br>
-                        <div class="row">
-                            <div class="col">
-                                <button type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
-                                <br>
-                                <br>
-                                <div class="review-box">
-                                    <div class="review-single">
-                                        <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                        <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                    </div>
-                                    <div class="review-single">
-                                        <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                        <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                    </div>
-                                    <div class="review-single">
-                                        <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                        <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                    </div>
-                                    <div class="review-single">
-                                        <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                        <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                            <h6 class="text-gold">Review <small>(scroll to see more)</small></h6>
+                            <div class="garis"></div>
+                            <br>
+                            <div class="row">
+                                <div class="col">
+                                    <button type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
+                                    <br>
+                                    <br>
+                                    <div class="review-box">
+                                        <div class="review-single">
+                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
+                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                                        </div>
+                                        <div class="review-single">
+                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
+                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                                        </div>
+                                        <div class="review-single">
+                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
+                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                                        </div>
+                                        <div class="review-single">
+                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
+                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1000,29 +1030,29 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Modal write review -->
-    <div class="modal fade" id="writeReview" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="writeReviewMobileLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-navy-blue" id="writeReviewMobileLabel">Nama Food / Beverages</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-                </div>
-                <div class="modal-body">
-                    <form action="POST">
-                        <div class="form-group text-navy-blue">
-                            <label for="exampleFormControlTextarea1">Add your review</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <!-- <button type="button" class="btn btn-secondary btn-close-review" data-dismiss="modal">Close</button> -->
-                    <button type="button" class="btn btn-review text-gold">Submit Review</button>
+    
+        <!-- Modal write review -->
+        <div class="modal fade" id="writeReview" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="writeReviewMobileLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-navy-blue" id="writeReviewMobileLabel">Nama Food / Beverages</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="POST">
+                            <div class="form-group text-navy-blue">
+                                <label for="exampleFormControlTextarea1">Add your review</label>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <button type="button" class="btn btn-secondary btn-close-review" data-dismiss="modal">Close</button> -->
+                        <button type="button" class="btn btn-review text-gold">Submit Review</button>
+                    </div>
                 </div>
             </div>
         </div>
