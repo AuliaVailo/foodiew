@@ -56,7 +56,8 @@ new Vue({
     },
     computed: {
         profileUser: function () {
-            if (this.profile) {
+            if (this.profile.members) {
+                console.log(this.profile)
                 let firstname = this.profile.members.first_name
                 let midname = this.profile.members.mid_name
                 let lastname = this.profile.members.last_name
@@ -369,7 +370,6 @@ new Vue({
             }, 3000);
         },
         setDetail: function(id, type) {
-            console.log('se detail', id, type)
             const that = this
             let array = []
 
@@ -385,10 +385,8 @@ new Vue({
                 return el.id === id
             })
 
-            
-            if (result.length > 0) {
+            if (result.length) {
                 this.detailDialog = result[0]
-                console.log('detail dialog : ', this.detailDialog, this.profile)
                 if (localStorage.getItem('token') && this.isLogin) {
                     if (this.detailDialog.caffes.user_id === this.profile.id) {
                         this.letReview = 0

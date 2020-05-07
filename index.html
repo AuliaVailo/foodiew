@@ -1136,7 +1136,7 @@
                                     <div class="review-box review-box-mak-mik" v-if="detailDialog.reviews">
                                         <div v-for="item in detailDialog.reviews">
                                             <div class="review-single">
-                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i>  {{defineBedge() ?  defineBedge().name : ''}}</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i>  {{defineBedgeReviewer(item.users.voted_by) ?  defineBedgeReviewer(item.users.voted_by).name : ''}}</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
                                                 <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
                                             </div>
                                         </div>
@@ -1191,7 +1191,7 @@
                                     <div class="review-box review-box-mak-mik" v-if="detailDialog.reviews">
                                         <div v-for="item in detailDialog.reviews">
                                             <div class="review-single">
-                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black;">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i>  {{defineBedge() ?  defineBedge().name : ''}}</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black;">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i>  {{defineBedgeReviewer(item.users.voted_by) ?  defineBedgeReviewer(item.users.voted_by).name : ''}}</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
                                                 <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
                                             </div>
                                         </div>
