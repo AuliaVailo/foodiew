@@ -270,10 +270,10 @@
                     <br>
                     <div v-if="promos">
                         <div v-for="item in promos">
-                            <h6 v-if="item.details.type === '1'">Food</h6>
-                            <h6 v-if="item.details.type === '2'">Beverages</h6>
-                            <h6 v-if="item.details.type !== '2' && item.details.type !== '1'">Cafe</h6>
-                            <div class="row" v-if="item.details.type === '1' || item.details.type === '2'">
+                            <h6 v-if="item.type === '1'">Food</h6>
+                            <h6 v-if="item.type === '2'">Beverages</h6>
+                            <h6 v-if="item.type !== '2' && item.type !== '1'">Cafe</h6>
+                            <div class="row" v-if="item.type === '1' || item.type === '2'">
                                 <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem; min-height: 170px;">
                                     <a href="#" v-on:click="openDetailSponsore(item.details)">
                                         <img class="img-fluid" :src="item.details.pictures ? imageUrl + item.details.pictures : './assets/img/Header.jpg'" alt="">
