@@ -348,7 +348,6 @@ new Vue({
             let url = 'https://ipapi.co/json'
             axios.get(url)
                 .then((res) => {
-                    console.log(res)
                     this.location = res.data
                     this.location.countryCode = res.data.country_code
                     localStorage.setItem('myLocation', JSON.stringify(res.data))
@@ -984,7 +983,14 @@ new Vue({
             $('#detailSponsore').modal('show')
         },
         getBadgeReff: function() {
-            axios.get( this.url + '/api/badge/')
+            let url = this.url + '/api/badge/'
+            // let token = 'Bearer' + localStorage.getItem('token')
+            let header = {
+                // headers: {
+                //     'Authorization': `${token}`,
+                // }
+            }
+            axios.get(url, header)
             .then((res) => {
                 if(res.status === 200) {
                     this.badgeReff = res.data.data
