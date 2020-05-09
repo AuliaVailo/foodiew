@@ -345,11 +345,12 @@ new Vue({
                 })
         },
         getLocationIp: function () {
-            let url = 'http://ip-api.com/json/'
+            let url = 'https://ipapi.co/json'
             axios.get(url)
                 .then((res) => {
-                    // console.log(res)
+                    console.log(res)
                     this.location = res.data
+                    this.location.countryCode = res.data.country_code
                     localStorage.setItem('myLocation', JSON.stringify(res.data))
                 })
                 .catch((err) => {
