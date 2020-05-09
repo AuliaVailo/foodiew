@@ -35,7 +35,47 @@ new Vue({
         formDelete: [],
         formUpdate: [],
         nextBeverages: null,
-        nextFoods: null
+        nextFoods: null,
+        promos: [],
+        letReview: 1,
+        rate: 0,
+        review: '',
+        short: 1,
+        usernameError: '',
+        firstNameError: '',
+        midNameError: '',
+        latNameError: '',
+        placeOfBirthError: '',
+        dateOfBirthError: '',
+        genderError: '',
+        addressError: '',
+        emailError: '',
+        username: '',
+        email: '',
+        firstName: '',
+        midName: '',
+        lastName: '',
+        placeOfBirth: '',
+        dateOfBirth: '',
+        gender: '',
+        address: '',
+        erroMessage: '',
+        cafeName: '',
+        cafeAddress: '',
+        gmapLink: '',
+        gmapLocation: '',
+        cafePictures: '',
+        status: '',
+        emailCafe: '',
+        phone: '',
+        errorcafeName: '',
+        errorcafeAddress: '',
+        errorgmapLink: '',
+        errorgmapLocation: '',
+        errorcafePictures: '',
+        errorstatus: '',
+        erroremailCafe: '',
+        errorphone: '',
     },
     computed: {
         food: function () {
@@ -75,6 +115,25 @@ new Vue({
             this.isLogin = 1
             if (localStorage.getItem('profile')) {
                 this.profile = JSON.parse(localStorage.getItem('profile'))
+                this.username = this.profile.user_name
+                this.email = this.profile.members.email
+                this.firstName = this.profile.members.first_name
+                this.midName = this.profile.members.mid_name
+                this.lastName = this.profile.members.last_name
+                this.placeOfBirth = this.profile.members.place_of_birth
+                this.dateOfBirth = this.profile.members.date_of_birth
+                this.gender = this.profile.members.gender
+                this.address = this.profile.members.address
+
+                // data cafe
+                this.cafeName = this.profile.caffe.caffe_name
+                this.cafeAddress = this.profile.caffe.caffe_address
+                this.gmapLink = this.profile.caffe.googleMapLink
+                this.gmapLocation = this.profile.caffe.googleMapHTML
+                this.cafePictures = this.profile.caffe.caffe_pictures
+                this.status = this.profile.caffe.status
+                this.emailCafe = this.profile.caffe.email
+                this.phone = this.profile.caffe.phone
             } else {
                 this.getProfile()
             }
@@ -84,6 +143,7 @@ new Vue({
         console.log(this.profile)
         this.getFoods()
         this.getBeverages()
+        this.gotoRandomPromo()
     },
     methods: {
 
@@ -208,6 +268,15 @@ new Vue({
                 .then((res) => {
                     this.profile = res.data.data
                     localStorage.setItem('profile', JSON.stringify(this.profile))
+                    this.username = this.profile.user_name
+                    this.email = this.profile.members.email
+                    this.firstName = this.profile.members.first_name
+                    this.midName = this.profile.members.mid_name
+                    this.lastName = this.profile.members.last_name
+                    this.placeOfBirth = this.profile.members.place_of_birth
+                    this.dateOfBirth = this.profile.members.date_of_birth
+                    this.gender = this.profile.members.gender
+                    this.address = this.profile.members.address
                 })
                 .catch((err) => {
                     if (err.response !== undefined) {
@@ -226,8 +295,13 @@ new Vue({
             this.imagePreview = URL.createObjectURL(file);
             this.imageToUpload = file
         },
+        shortData: function () {
+            console.log('short', this.short)
+            this.getFoods()
+            this.getBeverages()
+        },
         getFoods: function () {
-            let url = this.url + '/api/foods/1/type/' + this.profile.caffe.id
+            let url = this.url + '/api/foods/1/type/' + this.profile.caffe.id + '/' + this.short
             // let token = 'Bearer' + localStorage.getItem('token')
             let header = {
                 // headers: {
@@ -297,7 +371,7 @@ new Vue({
                 })
         },
         getBeverages: function () {
-            let url = this.url + '/api/foods/2/type/' + this.profile.caffe.id
+            let url = this.url + '/api/foods/2/type/' + this.profile.caffe.id + '/' + this.short
             // let token = 'Bearer' + localStorage.getItem('token')
             let header = {
                 // headers: {
@@ -324,7 +398,6 @@ new Vue({
                 })
         },
         setDetail: function(id, type) {
-            console.log(id, type)
             const that = this
             let array = []
 
@@ -340,8 +413,21 @@ new Vue({
                 return el.id === id
             })
 
-            if (result.length > 0) {
+            if (result.length) {
                 this.detailDialog = result[0]
+                if (localStorage.getItem('token') && this.isLogin) {
+                    if (this.detailDialog.caffes.user_id === this.profile.id) {
+                        this.letReview = 0
+                        this.detailDialog.letReview = 0
+                    } else {
+                        this.letReview = 1
+                        this.detailDialog.letReview = 1
+                    }
+                } else {
+                    this.letReview = 0
+                    this.detailDialog.letReview = 0
+                }
+                // console.log(this.detailDialog, this.detailDialog.caffes.user_id, this.profile.id, this.letReview)
             }
         },
         searchCategory: function(id) {
@@ -566,7 +652,607 @@ new Vue({
                         $('#generalModal').modal('hide')
                     }, 3000);
                 })
-        }
+        },
+        gotoRandomPromo: function() {
+            let url = this.url + '/api/sponsore'
+            axios.get(url)
+                .then((res) => {
+                    this.promos = res.data.data
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        openDetailSponsore: function(item) {
+            this.detailDialog = item
+            if (this.detailDialog.caffes.user_id === this.profile.id) {
+                this.letReview = 0
+                this.detailDialog.letReview = 0
+            } else {
+                this.letReview = 1
+                this.detailDialog.letReview = 1
+            }
+            $('#detailSponsore').modal('show')
+        },
+        defineBedgeReviewer: function(voted_by) {
+            let bedgeReff = JSON.parse(localStorage.getItem('bedgeReff'))
+            let totalVoting = voted_by.length
+            let maxLengtReff = bedgeReff.length
+            for (let i = 0; i < maxLengtReff; i++) {
+                let data = bedgeReff[i]
+                let bedges = []
+                if (data.id === 1) {
+                    let start = 0
+                    let end = data.max_vote
+                    bedges = (totalVoting >= start && totalVoting <= end) ? data : []
+                    return bedges
+                } else if (data.id === maxLengtReff) {
+                    let end = data.max_vote
+                    bedges = (totalVoting >= end) ? data : []
+                    return bedges
+                } else {
+                    let start = bedgeReff[i -1].max_vote
+                    let end = data.max_vote
+                    bedges = (totalVoting >= start && totalVoting <= end) ? data : []
+                    return bedges
+                }
+            }
+        },
+        addReview: function () {
+            this.isLoading = true
+            let url = this.url + '/api/foods/reviews'
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`,
+                }
+            }
+            let payload = {
+                id: this.detailDialog.id,
+                rate: this.rate,
+                review: this.review,
+            }
+            axios.post(url, payload, header)
+                .then((res) => {
+                    console.log(res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.generalErrorMessage = res.data.message
+                        $('#generalModal').modal('show')
+                        // add review to state
+                        // this.detailDialog.reviews.push(res.data.data)
+                        if (this.detailDialog.type === '1') { // food
+                            let objIndex = this.trending_foods.data.findIndex((obj => obj.id === this.detailDialog.id))
+                            this.trending_foods.data[objIndex].reviews.push(res.data.data)
+                        }
+
+                        if (this.detailDialog.type === '2') { // food
+                            let objIndex = this.trending_baverages.data.findIndex((obj => obj.id === this.detailDialog.id))
+                            this.trending_baverages.data[objIndex].reviews.push(res.data.data)
+                        }
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                            $('#writeReview').modal('hide')
+                            this.rate = 0
+                            this.review = ''
+                        }, 1000);
+                    }
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                $('#writeReview').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else if (err.response.status === 500){
+                            this.generalErrorMessage = err.response.data.message
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                $('#writeReview').modal('hide')
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        openThisCafe: function(id) {
+            let url = this.url + '/api/caffes/' + id
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`,
+                }
+            }
+            axios.get(url, header)
+                .then((res) => {
+                    console.log(res)
+                    localStorage.setItem('profile-cafe', JSON.stringify(res.data.data))
+                    localStorage.setItem('route', 'profile-cafe:' + id)
+                    window.location.replace('/profile-cafe')
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        changeProfile: function (e) {
+            const { maxSize } = this
+            let imageFile = e.target.files[0]
+            console.log(imageFile)
+            let formData = new FormData()
+            let size = imageFile.size / maxSize / maxSize
+            if (!imageFile.type.match('image.*')) {
+                // check whether the upload is an image
+                this.generalErrorMessage = 'Please choose an image file'
+                this.erroMessage = this.generalErrorMessage
+                $('#generalModal').modal('show')
+                return
+            } else if (size>1) {
+                // check whether the size is greater than the size limit
+                this.generalErrorMessage = 'Your file is too big! Please select an image under 1MB'
+                this.erroMessage = this.generalErrorMessage
+                $('#generalModal').modal('show')
+                return
+            } else {
+                // Append file into FormData and turn file into image URL
+                formData.append('pictures[0]', imageFile);
+            }
+
+            this.isLoading = true
+            let url = this.url + '/api/users/changeProfile'
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`,
+                    'Content-type': `multipart/form-data`
+                }
+            }
+
+            let payload = formData
+            console.log('payload', payload)
+            axios.post(url, payload, header)
+                .then((res) => {
+                    console.log(res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.generalErrorMessage = res.data.message
+                        $('#generalModal').modal('show')
+                        this.profile.members.profile_pictures = res.data.data.profile_pictures
+                        localStorage.setItem('profile', JSON.stringify(this.profile))
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                        }, 500);
+                    }
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        updateProfile: function () {
+            this.isLoading = true
+            let url = this.url + '/api/users/'
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`
+                }
+            }
+
+            let payload = {
+                user_name: this.username,
+                email: this.email,
+                first_name: this.firstName,
+                mid_name: this.midName,
+                last_name: this.lastName,
+                place_of_birth: this.placeOfBirth,
+                date_of_birth: this.dateOfBirth,
+                gender: this.gender,
+                address: this.address
+            }
+            
+            axios.put(url, payload, header)
+                .then((res) => {
+                    console.log(res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.generalErrorMessage = res.data.message
+                        $('#generalModal').modal('show')
+                        this.profile.user_name = res.data.data.user_name
+                        this.profile.members.user_name = res.data.data.user_name
+                        this.profile.members.email = res.data.data.email
+                        this.profile.members.first_name = res.data.data.first_name
+                        this.profile.members.mid_name = res.data.data.mid_name
+                        this.profile.members.last_name = res.data.data.last_name
+                        this.profile.members.place_of_birth = res.data.data.place_of_birth
+                        this.profile.members.date_of_birth = res.data.data.date_of_birth
+                        this.profile.members.gender = res.data.data.gender
+                        this.profile.members.address = res.data.data.address
+                        
+                        localStorage.setItem('profile', JSON.stringify(this.profile))
+
+                        this.username = this.profile.user_name
+                        this.email = this.profile.members.email
+                        this.firstName = this.profile.members.first_name
+                        this.midName = this.profile.members.mid_name
+                        this.lastName = this.profile.members.last_name
+                        this.placeOfBirth = this.profile.members.place_of_birth
+                        this.dateOfBirth = this.profile.members.date_of_birth
+                        this.gender = this.profile.members.gender
+                        this.address = this.profile.members.address
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                            $('#settingModal').modal('hide')
+                        }, 500);
+                    }
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        changeProfileCafe: function (e) {
+            const { maxSize } = this
+            let imageFile = e.target.files[0]
+            console.log(imageFile)
+            let formData = new FormData()
+            let size = imageFile.size / maxSize / maxSize
+            if (!imageFile.type.match('image.*')) {
+                // check whether the upload is an image
+                this.generalErrorMessage = 'Please choose an image file'
+                this.erroMessage = this.generalErrorMessage
+                $('#generalModal').modal('show')
+                return
+            } else if (size>1) {
+                // check whether the size is greater than the size limit
+                this.generalErrorMessage = 'Your file is too big! Please select an image under 1MB'
+                this.erroMessage = this.generalErrorMessage
+                $('#generalModal').modal('show')
+                return
+            } else {
+                // Append file into FormData and turn file into image URL
+                formData.append('pictures[0]', imageFile);
+            }
+
+            this.isLoading = true
+            let url = this.url + '/api/caffes/changeProfile'
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`,
+                    'Content-type': `multipart/form-data`
+                }
+            }
+
+            let payload = formData
+            axios.post(url, payload, header)
+                .then((res) => {
+                    console.log(res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.generalErrorMessage = res.data.message
+                        $('#generalModal').modal('show')
+                        this.profile.caffe.caffe_pictures = res.data.data.caffe_pictures
+                        localStorage.setItem('profile', JSON.stringify(this.profile))
+                        this.cafePictures = this.profile.caffe.caffe_pictures
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                        }, 500);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        updateProfileCafe: function () {
+            this.isLoading = true
+            let url = this.url + '/api/caffes/'
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`
+                }
+            }
+
+            let payload = {
+                caffe_name: this.cafeName,
+                caffe_address: this.cafeAddress,
+                googlemaphtml: this.gmapLocation,
+                googlemaplink: this.gmapLink,
+                phone: this.phone,
+                email: this.emailCafe,
+                status: this.status
+            }
+            
+            axios.put(url, payload, header)
+                .then((res) => {
+                    console.log('Update Profile Cafe : ', res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.generalErrorMessage = res.data.message
+                        $('#generalModal').modal('show')
+                        this.profile.caffe.caffe_name = res.data.data.caffe_name
+                        this.profile.caffe.caffe_address = res.data.data.caffe_address
+                        this.profile.caffe.googleMapLink = res.data.data.googleMapLink
+                        this.profile.caffe.googleMapHTML = res.data.data.googleMapHTML
+                        this.profile.caffe.caffe_pictures = res.data.data.caffe_pictures
+                        this.profile.caffe.status = res.data.data.status
+                        this.profile.caffe.email = res.data.data.email
+                        this.profile.caffe.phone = res.data.data.phone
+                        
+                        localStorage.setItem('profile', JSON.stringify(this.profile))
+
+                        this.cafeName = this.profile.caffe.caffe_name
+                        this.cafeAddress = this.profile.caffe.caffe_address
+                        this.gmapLink = this.profile.caffe.googleMapLink
+                        this.gmapLocation = this.profile.caffe.googleMapHTML
+                        this.cafePictures = this.profile.caffe.caffe_pictures
+                        this.status = this.profile.caffe.status
+                        this.email = this.profile.caffe.email
+                        this.phone = this.profile.caffe.phone
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                            $('#settingCafe').modal('hide')
+                        }, 500);
+                    }
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        changeStatus: function () {
+            this.isLoading = true
+            let statusProfile = this.profile.caffe.status
+            let status = 0
+            console.log(statusProfile)
+            if (statusProfile === 'close') {
+                status = 1
+            }
+            console.log(statusProfile, status)
+            let url = this.url + '/api/caffes/' + status + '/status'
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`
+                }
+            }
+
+            let payload = {
+                
+            }
+            
+            axios.put(url, payload, header)
+                .then((res) => {
+                    console.log('Update Status Cafe : ', res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.profile.caffe.status = res.data.data.status
+                        
+                        localStorage.setItem('profile', JSON.stringify(this.profile))
+
+                        this.status = this.profile.caffe.status
+                    }
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        defineBedge: function() {
+            let bedgeReff = JSON.parse(localStorage.getItem('bedgeReff'))
+            let totalVoting = this.profileUser.voted_by.length
+            let maxLengtReff = bedgeReff.length
+            for (let i = 0; i < maxLengtReff; i++) {
+                let data = bedgeReff[i]
+                let bedges = []
+                if (data.id === 1) {
+                    let start = 0
+                    let end = data.max_vote
+                    bedges = (totalVoting >= start && totalVoting <= end) ? data : []
+                    return bedges
+                } else if (data.id === maxLengtReff) {
+                    let end = data.max_vote
+                    bedges = (totalVoting >= end) ? data : []
+                    return bedges
+                } else {
+                    let start = bedgeReff[i -1].max_vote
+                    let end = data.max_vote
+                    bedges = (totalVoting >= start && totalVoting <= end) ? data : []
+                    return bedges
+                }
+            }
+        },
+        countRating: function (reviews) {
+            let total = reviews.length
+            let rate = 0
+            let allRate = reviews.map(el => {
+                rate = rate + el.rating
+                return rate
+            })
+            return rate / total
+        },
+        openThisProfile: function(id) {
+            let url = this.url + '/api/users/' + id
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`,
+                }
+            }
+            axios.get(url, header)
+                .then((res) => {
+                    console.log(res)
+                    localStorage.setItem('profile-user', JSON.stringify(res.data.data))
+                    localStorage.setItem('route', 'profile-user:' + id)
+                    window.location.replace('/profile-user')
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
     }
 })
 

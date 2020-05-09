@@ -40,7 +40,8 @@ new Vue({
         caffeId: '',
         cafeReview: '',
         cafeRate: 0,
-        reviewId: ''
+        reviewId: '',
+        short: 1
     },
     computed: {
         food: function () {
@@ -272,8 +273,13 @@ new Vue({
             this.imagePreview = URL.createObjectURL(file);
             this.imageToUpload = file
         },
+        shortData: function () {
+            console.log('short', this.short)
+            this.getFoods()
+            this.getBeverages()
+        },
         getFoods: function () {
-            let url = this.url + '/api/foods/1/type/' + this.caffeId
+            let url = this.url + '/api/foods/1/type/' + this.caffeId + '/' + this.short
             // let token = 'Bearer' + localStorage.getItem('token')
             let header = {
                 // headers: {
@@ -343,7 +349,7 @@ new Vue({
                 })
         },
         getBeverages: function () {
-            let url = this.url + '/api/foods/2/type/' + this.caffeId
+            let url = this.url + '/api/foods/2/type/' + this.caffeId + '/' + this.short
             // let token = 'Bearer' + localStorage.getItem('token')
             let header = {
                 // headers: {
@@ -531,6 +537,17 @@ new Vue({
                         $('#generalModal').modal('hide')
                     }, 3000);
                 })
+        },
+        openDetailSponsore: function(item) {
+            this.detailDialog = item
+            if (this.detailDialog.caffes.user_id === this.profile.id) {
+                this.letReview = 0
+                this.detailDialog.letReview = 0
+            } else {
+                this.letReview = 1
+                this.detailDialog.letReview = 1
+            }
+            $('#detailSponsore').modal('show')
         },
     }
 })

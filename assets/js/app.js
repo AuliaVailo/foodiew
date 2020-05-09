@@ -385,17 +385,21 @@ new Vue({
                 return el.id === id
             })
 
-            if (result.length) {
+            if (result.length > 0) {
+                console.log('ok')
                 this.detailDialog = result[0]
                 if (localStorage.getItem('token') && this.isLogin) {
                     if (this.detailDialog.caffes.user_id === this.profile.id) {
+                        console.log('tidak boleh')
                         this.letReview = 0
                         this.detailDialog.letReview = 0
                     } else {
+                        console.log('boleh')
                         this.letReview = 1
                         this.detailDialog.letReview = 1
                     }
                 } else {
+                    console.log('tidak boleh')
                     this.letReview = 0
                     this.detailDialog.letReview = 0
                 }
@@ -973,6 +977,13 @@ new Vue({
         },
         openDetailSponsore: function(item) {
             this.detailDialog = item
+            if (this.detailDialog.caffes.user_id === this.profile.id) {
+                this.letReview = 0
+                this.detailDialog.letReview = 0
+            } else {
+                this.letReview = 1
+                this.detailDialog.letReview = 1
+            }
             $('#detailSponsore').modal('show')
         },
         getBadgeReff: async function() {

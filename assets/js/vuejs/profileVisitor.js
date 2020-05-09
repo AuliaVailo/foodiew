@@ -507,6 +507,13 @@ new Vue({
         },
         openDetailSponsore: function(item) {
             this.detailDialog = item
+            if (this.detailDialog.caffes.user_id === this.profile.id) {
+                this.letReview = 0
+                this.detailDialog.letReview = 0
+            } else {
+                this.letReview = 1
+                this.detailDialog.letReview = 1
+            }
             $('#detailSponsore').modal('show')
         },
         openThisCafe: function(id) {

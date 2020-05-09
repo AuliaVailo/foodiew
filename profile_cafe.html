@@ -85,6 +85,9 @@
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
         }
+        iframe {
+            width: 100%;
+        }
     </style>
 </head>
 
@@ -146,18 +149,18 @@
                             </div>
                             <div class="user-info text-gold">
                                 <span class="user-name"><strong>{{profileUser.name}}</strong></span>
-                                <span class="user-role"><i class="fas fa-star"></i> Intermediate</span>
+                                <span class="user-role"><i class="fas fa-star"></i> {{defineBedge() ?  defineBedge().name : ''}}</span>
                                 <span class="user-role">Reviewer</span>
                                 <span class="user-status">
                                     <i class="fa fa-circle"></i>
                                     <span>Online</span>
                                 </span>
                                 <span class="mt-2">
-                                    <a href="./profile" class="label-sidebar text-center mr-1">
-                                        &nbsp;<i class="fas fa-cog text-navy-blue pr-0"></i>
+                                    <a href="#" class="label-sidebar text-center mr-1"  data-toggle="modal" data-target="#settingModal">
+                                        <i class="fas fa-cog text-navy-blue pr-0"></i>
                                     </a>
-                                    <a href="./profile" class="label-sidebar">
-                                        &nbsp;<i class="fas fa-envelope text-navy-blue"></i>&nbsp;
+                                    <a :href="'mailto:' + profileUser.email" target="_blank" class="label-sidebar">
+                                        <i class="fas fa-envelope text-navy-blue"></i>
                                     </a>
                                 </span>
                             </div>
@@ -201,31 +204,31 @@
                                     </ul>
                                 </li>
                                 <li class="sidebar-dropdown">
-                                    <a href="./promo.html">
+                                    <a href="./promo">
                                         <i class="fas fa-tags text-gold"></i>
                                         <span class="menu-text text-gold">Promo</span>
                                     </a>
                                 </li>
                                 <li class="sidebar-dropdown">
-                                    <a href="./halloffame.html">
+                                    <a href="./halloffame">
                                         <i class="fas fa-trophy text-gold"></i>
                                         <span class="menu-text text-gold">Hall of Fame</span>
                                     </a>
                                 </li>
                                 <li class="sidebar-dropdown">
-                                    <a href="./contact-us.html">
+                                    <a href="./contact-us">
                                         <i class="fas fa-2x fa-envelope text-gold"></i>
                                         <span class="menu-text text-gold">Contact Us</span>
                                     </a>
                                 </li>
                                 <li class="sidebar-dropdown">
-                                    <a href="./contact-us.html">
+                                    <a href="./contact-us">
                                         <i class="fas fa-2x fa-shield-alt text-gold"></i>
                                         <span class="menu-text text-gold">Privacy Policy</span>
                                     </a>
                                 </li>
                                 <li class="sidebar-dropdown">
-                                    <a href="./contact-us.html">
+                                    <a href="./contact-us">
                                         <i class="fas fa-2x fa-book text-gold"></i>
                                         <span class="menu-text text-gold">T & C</span>
                                     </a>
@@ -262,35 +265,28 @@
                     <h6 class="text-gold">Sponsored</h6>
                     <div class="garis-promoted"></div>
                     <br>
-                    <h6>Cafe</h6>
-                    <div class="row">
-                        <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem">
-                            <a href="./profile_cafe.html">
-                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                <p class="mx-2 mt-2 pb-2 font-weight-bolder">Dopamine Cafe</p>
-                            </a>
-                        </div>
-                    </div>
-                    <br>
-                    <h6>Food</h6>
-                    <div class="row">
-                        <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem">
-                            <a href="#" role="button" data-toggle="modal" data-target="#detailFood">
-                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                <p class="mx-2 mt-2 mb-0 font-weight-bolder">Food</p>
-                                <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                            </a>
-                        </div>
-                    </div>
-                    <br>
-                    <h6>Beverages</h6>
-                    <div class="row">
-                        <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem">
-                            <a href="#" role="button" data-toggle="modal" data-target="#detailDrink">
-                                <img class="img-fluid" src="./assets/img/Header.jpg" alt="">
-                                <p class="mx-2 mt-2 mb-0 font-weight-bolder">Beverages</p>
-                                <i class="mx-2 mb-2 fas fa-map-marker-alt"></i> KFC
-                            </a>
+                    <div v-if="promos">
+                        <div v-for="item in promos">
+                            <h6 v-if="item.details.type === '1'">Food</h6>
+                            <h6 v-if="item.details.type === '2'">Beverages</h6>
+                            <h6 v-if="item.details.type !== '2' && item.details.type !== '1'">Cafe</h6>
+                            <div class="row" v-if="item.details.type === '1' || item.details.type === '2'">
+                                <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem; min-height: 170px;">
+                                    <a href="#" v-on:click="openDetailSponsore(item.details)">
+                                        <img class="img-fluid" :src="item.details.pictures ? imageUrl + item.details.pictures : './assets/img/Header.jpg'" alt="">
+                                        <p class="mx-2 mt-2 pb-2 font-weight-bolder">{{item.details.name}}</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row" v-else>
+                                <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem; min-height: 170px">
+                                    <a href="#" v-on:click="openThisCafe(item.details.id)">
+                                        <img class="img-fluid" :src="item.details.caffe_pictures ? profileUrl + item.details.caffe_pictures : './assets/img/cafe.svg'" alt="">
+                                        <p class="mx-2 mt-2 pb-2 font-weight-bolder">{{item.details.caffe_name}}</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <br>
                         </div>
                     </div>
                 </nav>
@@ -313,67 +309,31 @@
                                     <a :href="profile.caffe.googleMapLink" target="_blank" class="h6 d-inline-block text-truncate" style="font-size: .75rem; max-width: 200px; text-decoration: none; color: #f4d58d"><i class="fas fa-map-marker-alt"></i> {{profile.caffe.caffe_address}}</a>
                                     <br>
                                     <p class="rating mx-2 mb-0 text-gold">
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i>
-                                        <i class="lnr lnr-star text-warning"></i> (73)
+                                        <i class="lnr lnr-star text-warning" v-for="n in countRating(profile.caffe.reviews)"></i>&nbsp;({{countRating(profile.caffe.reviews)}})
                                     </p>
                                     <div class="addon" style="margin-top: 1rem !important">
-                                        <a :href="telfon" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem;">
-                                            <i class="fas fa-phone"></i> Reservation
+                                        <a href="#" class="label-sidebar" style="text-decoration: none; color: black;" v-on:click="changeStatus()">
+                                            <i class="fas fa-home text-navy-blue pr-0"></i></i>&nbsp;{{profile.caffe.status.charAt(0).toUpperCase() + profile.caffe.status.slice(1)}}
                                         </a>
+                                        &nbsp;&nbsp;
+                                        <a href="#" class="label-sidebar" data-toggle="modal" data-target="#settingCafe" style="text-decoration: none; color: black;">
+                                            <i class="fas fa-cog text-navy-blue pr-0"></i></i>&nbsp;Settings
+                                        </a>
+                                        <!-- <a :href="telfon" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem;">
+                                            <i class="fas fa-phone"></i> Reservation
+                                        </a> -->
                                     </div>
                                 </div>
                                 <div class="col-3 col-lg-6 text-gold">
                                     <div class="review-header d-flex justify-content-between mb-2" style="font-size: 1rem;">
                                         <span class="pt-1">Review <small>(scroll down to see more)</small></span>
-                                        <!-- <span><i class="far fa-edit"></i> Write your review</span> -->
-                                        <!-- Button trigger modal -->
-                                        <button v-if="route !== 'mycafe'" type="button" class="btn btn-primary btn-review text-gold" data-toggle="modal" data-target="#writeReviewDesktop"><i class="far fa-edit"></i> Write your review</button>
-    
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="writeReviewDesktop" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title text-navy-blue" id="staticBackdropLabel">McDonalds Cafe</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form action="POST">
-                                                            <div class="form-group text-navy-blue">
-                                                                <label for="exampleFormControlTextarea1">Add your review</label>
-                                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <!-- <button type="button" class="btn btn-secondary btn-close-review" data-dismiss="modal">Close</button> -->
-                                                        <button type="button" class="btn btn-review text-gold">Posting Review</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
-                                    <div class="review-box">
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                                    <div class="review-box" v-if="profileUser.caffe.reviews">
+                                        <div v-for="item in profileUser.caffe.reviews">
+                                            <div class="review-single">
+                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black;">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i>  {{defineBedgeReviewer(item.users.voted_by) ?  defineBedgeReviewer(item.users.voted_by).name : ''}}</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><em>"{{item.review}}" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -387,7 +347,7 @@
                                 <div class="col d-flex justify-content-between">
                                     <span class="h4 text-navy-blue mb-0">Menu</span>
                                     <span class="text-navy-blue mb-0 dropdown-sort" style="font-size: .85rem;">Sort by :
-                                    <select class="custom-select dropdown-sort-child" style="font-size: .65rem;">
+                                    <select class="custom-select dropdown-sort-child" style="font-size: .65rem;" v-model="short" v-on:change="shortData()">
                                         <option selected value="1">Most Popular</option>
                                         <option value="2">Recommendation</option>
                                         <option value="3">Ratings</option>
@@ -499,16 +459,16 @@
                         <div class="user-info text-gold">
                             <span class="user-name">Muhammad <strong>Adli</strong>
                             </span>
-                            <span class="user-role"><i class="fas fa-star"></i> Intermediate Reviewer</span>
+                            <span class="user-role"><i class="fas fa-star"></i> {{defineBedge() ?  defineBedge().name : ''}} Reviewer</span>
                             <span class="user-status">
                                 <i class="fa fa-circle"></i>
                                 <span>Online</span>
                             </span>
                             <span class="mt-2">
-                                <a href="./profile" class="label-sidebar mr-1">
-                                    <i class="fas fa-cog text-navy-blue"></i>
+                                <a href="#" class="label-sidebar text-center mr-1"  data-toggle="modal" data-target="#settingModal">
+                                    <i class="fas fa-cog text-navy-blue pr-0"></i>
                                 </a>
-                                <a href="./profile" class="label-sidebar">
+                                <a :href="'mailto:' + profileUser.email" target="_blank" class="label-sidebar">
                                     <i class="fas fa-envelope text-navy-blue"></i>
                                 </a>
                             </span>
@@ -824,7 +784,7 @@
                             <div class="col d-flex justify-content-between">
                                 <span class="h4 text-navy-blue mb-0">Menu</span>
                                 <span class="text-navy-blue mb-0 dropdown-sort" style="font-size: .85rem;">Sort by :
-                                <select class="custom-select dropdown-sort-child" style="font-size: .65rem;">
+                                <select class="custom-select dropdown-sort-child" style="font-size: .65rem;" v-model="short" v-on:change="shortData()">
                                     <option selected value="1">Most Popular</option>
                                     <option value="2">Recommendation</option>
                                     <option value="3">Ratings</option>
@@ -945,25 +905,13 @@
                             <br>
                             <div class="row">
                                 <div class="col">
-                                    <button type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
                                     <br>
-                                    <br>
-                                    <div class="review-box review-box-mak-mik">
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                                    <div class="review-box review-box-mak-mik" v-if="detailDialog.reviews">
+                                        <div v-for="item in detailDialog.reviews">
+                                            <div class="review-single">
+                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> {{defineBedgeReviewer(item.users.voted_by) ? defineBedgeReviewer(item.users.voted_by).name : ''}} Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1002,56 +950,18 @@
                             <br>
                             <div class="row">
                                 <div class="col">
-                                    <button type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
                                     <br>
-                                    <br>
-                                    <div class="review-box">
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
-                                        </div>
-                                        <div class="review-single">
-                                            <p>Adli - <small><i class="fas fa-star"></i> Intermediate Reviewer</small></p>
-                                            <p><em>"Makanannya enak kali bah" ( <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i> )</em></p>
+                                    <div class="review-box review-box-mak-mik" v-if="detailDialog.reviews">
+                                        <div v-for="item in detailDialog.reviews">
+                                            <div class="review-single">
+                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> {{defineBedgeReviewer(item.users.voted_by) ? defineBedgeReviewer(item.users.voted_by).name : ''}} Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-        <!-- Modal write review -->
-        <div class="modal fade" id="writeReview" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="writeReviewMobileLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title text-navy-blue" id="writeReviewMobileLabel">Nama Food / Beverages</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="POST">
-                            <div class="form-group text-navy-blue">
-                                <label for="exampleFormControlTextarea1">Add your review</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <!-- <button type="button" class="btn btn-secondary btn-close-review" data-dismiss="modal">Close</button> -->
-                        <button type="button" class="btn btn-review text-gold">Submit Review</button>
                     </div>
                 </div>
             </div>
@@ -1237,6 +1147,102 @@
             </div>
         </div>
 
+        <!-- Modal -->
+        <div class="modal fade" id="detailSponsore" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content modal-register">
+                    <div class="modal-header">
+                        <h6 class="modal-title text-navy-blue" id="staticBackdropLabel">Sponsored</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-4 px-0">
+                                    <img :src="detailDialog.pictures ? imageUrl + detailDialog.pictures : './assets/img/logo-icon/hot_chocolatte.svg'" class="img-fluid img-thumbnail" style="width: 10rem; height: 10rem" alt="">
+                                </div>
+                                <div class="col-8 text-gold">
+                                    <p>{{detailDialog.name}}</p>
+                                    <p><a href="#" v-on:click="openThisCafe(detailDialog.caffes.id)" style="text-decoration: none; color: #f4d58d"><i class="fas fa-store" ></i> {{detailDialog.caffes ? detailDialog.caffes.caffe_name : ''}}</p></a>
+                                    <p><a :href="detailDialog.caffes ? detailDialog.caffes.googleMapLink : '#'" target="_blank" style="text-decoration: none; color: #f4d58d"><i class="fas fa-map-marked-alt"></i> {{detailDialog.caffes ? detailDialog.caffes.caffe_address : ''}}</a></p>
+                                    <p>Categories : <a class="link-categories-gold" href="./noodles.html">{{searchCategory(detailDialog.category)}}</a></p>
+                                    <p>Description : {{detailDialog.description}}s</p>
+                                    <b>Price : </b>
+                                    <p>
+                                        <span v-if="detailDialog.isSale === '1'" class="mx-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(detailDialog.price).toLocaleString('id')}}</span> <span v-if="detailDialog.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
+                                    </p>
+                                    <p v-if="detailDialog.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="margin-top: -20px">Rp. {{Number(detailDialog.priceSale).toLocaleString('id')}}</p>
+                                    <p v-else class="mx-2 mb-2 font-weight-bolder" style="margin-top: -20px">Rp. {{Number(detailDialog.price).toLocaleString('id')}}</p>
+                                </div>
+                            </div>
+                            <h6 class="text-gold">Review <small>(scroll to see more)</small></h6>
+                            <div class="garis"></div>
+                            <br>
+                            <div class="row">
+                                <div class="col" v-if="detailDialog.caffes">
+                                    <button v-if="letReview" type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
+                                    <br v-if="letReview">
+                                    <br v-if="letReview">
+                                    <div class="review-box review-box-mak-mik" v-if="detailDialog.reviews">
+                                        <div v-for="item in detailDialog.reviews">
+                                            <div class="review-single">
+                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black;">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i>  {{defineBedgeReviewer(item.users.voted_by) ?  defineBedgeReviewer(item.users.voted_by).name : ''}}</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal write review -->
+        <div class="modal fade" id="writeReview" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="writeReviewMobileLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-navy-blue" id="writeReviewMobileLabel">{{detailDialog.name}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="POST" v-on:submit.prevent="addReview">
+                            <div class="form-group text-navy-blue">
+                                <label for="exampleFormControlTextarea1">Ratings</label>
+                                <select class="custom-select" name="selectRating" style="font-family: 'Font Awesome 5 Free'" v-model="rate">
+                                        <option value="0" selected>Select your rating</option>
+                                        <option value="1" style="font-family: 'Font Awesome 5 Free'">&#xf005;</option>
+                                        <option value="2" style="font-family: 'Font Awesome 5 Free'">&#xf005;&#xf005;</option>
+                                        <option value="3" style="font-family: 'Font Awesome 5 Free'">&#xf005;&#xf005;&#xf005;</option>
+                                        <option value="4" style="font-family: 'Font Awesome 5 Free'">&#xf005;&#xf005;&#xf005;&#xf005;</option>
+                                        <option value="5" style="font-family: 'Font Awesome 5 Free'">&#xf005;&#xf005;&#xf005;&#xf005;&#xf005;</option>
+                                    </select>
+                            </div>
+                            <div class="form-group text-navy-blue">
+                                <label for="exampleFormControlTextarea1">Add your review</label>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="review"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <button type="button" class="btn btn-secondary btn-close-review" data-dismiss="modal">Close</button> -->
+                        <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                            <div class="spinner-border spinner-border-sm text-light" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </button>
+                        <button v-else type="button" class="btn btn-review text-gold" v-on:click="addReview">Submit Review</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Modal for alert -->
         <div id="generalModal" class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -1251,6 +1257,158 @@
                   <p>{{generalErrorMessage}}</p>
                 </div>
               </div>
+            </div>
+        </div>
+
+        <!-- Modal Setting-->
+        <div class="modal fade" id="settingModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true" v-if="isLogin">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content modal-register">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-navy-blue" id="staticBackdropLabel">Profile Settings</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"> 
+                        <img :src="(profile.members.profile_pictures !== null) ? profileUrl + profile.members.profile_pictures : './assets/img/Profile_dummy.svg'" class="img-fluid mx-auto d-block pb-3" width="50%" alt="">
+                        <div class="alert alert-danger" role="alert" v-if="erroMessage">
+                            {{erroMessage}}
+                        </div>
+                        <div class="pb-3">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input form-control" id="imageFile" multiple v-on:change="changeProfile" ref="imageFile">
+                                <label class="custom-file-label" for="imageFile">Choose file</label>
+                            </div>
+                        </div>
+                        <form class="form-signup" v-on:submit.prevent="updateProfile">
+                            <div :class="usernameError ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="text" id="inputUsername" name="inputUsername" class="form-control" placeholder="Menu Name" v-model="username" required>
+                                <label for="inputUsername">User Name</label>
+                                <span v-if="usernameError" class="help-block" style="color: #F4D58D">{{usernameError}}</span>
+                            </div>
+                            <div :class="emailError ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email" v-model="email" required>
+                                <label for="inputEmail">Email</label>
+                                <span v-if="emailError" class="help-block" style="color: #F4D58D">{{emailError}}</span>
+                            </div>
+                            <div :class="firstNameError ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="text" id="inputFirstName" name="inputFirstName" class="form-control" placeholder="First Name" v-model="firstName" required>
+                                <label for="inputFirstName">First Name</label>
+                                <span v-if="firstNameError" class="help-block" style="color: #F4D58D">{{firstNameError}}</span>
+                            </div>
+                            <div :class="midNameError ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="text" id="inputMidName" name="inputMidName" class="form-control" placeholder="Midle Name" v-model="midName">
+                                <label for="inputMidName">Midle Name</label>
+                                <span v-if="midNameError" class="help-block" style="color: #F4D58D">{{midNameError}}</span>
+                            </div>
+                            <div :class="latNameError ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="text" id="inputLastName" name="inputLastName" class="form-control" placeholder="Last Name" v-model="lastName">
+                                <label for="inputLastName">Last Name</label>
+                                <span v-if="latNameError" class="help-block" style="color: #F4D58D">{{latNameError}}</span>
+                            </div>
+                            <div :class="placeOfBirthError ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="text" id="inputplaceOfBirth" name="inputplaceOfBirth" class="form-control" placeholder="Place of Birth" v-model="placeOfBirth" required>
+                                <label for="inputplaceOfBirth">Place of Birth</label>
+                                <span v-if="placeOfBirthError" class="help-block" style="color: #F4D58D">{{placeOfBirthError}}</span>
+                            </div>
+                            <div :class="dateOfBirthError ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="date" id="inputdateOfBirth" name="inputdateOfBirth" class="form-control" placeholder="Date of Birth" v-model="dateOfBirth" required>
+                                <label for="inputdateOfBirth">Place of Birth</label>
+                                <span v-if="dateOfBirthError" class="help-block" style="color: #F4D58D">{{dateOfBirthError}}</span>
+                            </div>
+                            <div :class="genderError ? 'form-label-group has-error' : 'form-label-group '">
+                                <select name="inputType" id="inputType" class="form-control" v-model="gender">
+                                    <option value="1">MALE</option>
+                                    <option value="0">FEMALE</option>
+                                </select>
+                                <span v-if="genderError" class="help-block" style="color: #F4D58D">{{genderError}}</span>
+                            </div>
+                            <div :class="addressError ? 'form-label-group has-error' : 'form-label-group '">
+                                <!-- <label for="inputCafeAddress text-light">Cafe Address</label> -->
+                                <textarea class="form-control" id="inputAddress" name="inputAddress" style="height: 75px;" v-model="address" placeholder="Address" required></textarea>
+                                <span v-if="addressError" class="help-block" style="color: #F4D58D">{{addressError}}</span>
+                            </div>
+                            <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                                <div class="spinner-border spinner-border-sm text-light" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </button>
+                            <button v-else type="submit" class="btn btn-review text-gold">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Setting-->
+        <div class="modal fade" id="settingCafe" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true" v-if="isLogin">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content modal-register">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-navy-blue" id="staticBackdropLabel">Cafe Settings</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"> 
+                        <img :src="(profile.caffe.caffe_pictures !== null) ? profileUrl + profile.caffe.caffe_pictures : './assets/img/cafe.svg'" class="img-fluid mx-auto d-block pb-3" width="50%" alt="" style="background-color: white;">
+                        <div class="alert alert-danger" role="alert" v-if="erroMessage">
+                            {{erroMessage}}
+                        </div>
+                        <div class="pb-3 pt-3">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input form-control" id="imageFile" multiple v-on:change="changeProfileCafe" ref="imageFile">
+                                <label class="custom-file-label" for="imageFile">Choose file</label>
+                            </div>
+                        </div>
+                        <form class="form-signup" v-on:submit.prevent="updateProfileCafe">
+                            <div :class="errorcafeName ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="text" id="inputCafeName" name="inputCafeName" class="form-control" placeholder="Cafe Name" v-model="cafeName" required>
+                                <label for="inputCafeName">Cafe Name</label>
+                                <span v-if="errorcafeName" class="help-block" style="color: #F4D58D">{{errorcafeName}}</span>
+                            </div>
+                            <div :class="errorstatus ? 'form-label-group has-error' : 'form-label-group '">
+                                <select name="status" id="status" class="form-control" v-model="status">
+                                    <option value="close">Closed</option>
+                                    <option value="open">Open</option>
+                                </select>
+                                <span v-if="errorstatus" class="help-block" style="color: #F4D58D">{{errorstatus}}</span>
+                            </div>
+                            <div :class="erroremailCafe ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email" v-model="emailCafe">
+                                <label for="inputEmail">Email</label>
+                                <span v-if="erroremailCafe" class="help-block" style="color: #F4D58D">{{erroremailCafe}}</span>
+                            </div>
+                            <div :class="errorphone ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="text" id="inputPhone" name="inputPhone" class="form-control" placeholder="Phone" v-model="phone">
+                                <label for="inputPhone">Phone</label>
+                                <span v-if="errorphone" class="help-block" style="color: #F4D58D">{{errorphone}}</span>
+                            </div>
+                            <div :class="errorcafeAddress ? 'form-label-group has-error' : 'form-label-group '">
+                                <textarea type="text" id="inputCafeAddress" name="inputCafeAddress" class="form-control" placeholder="Address" v-model="cafeAddress"></textarea>
+                                <span v-if="errorcafeAddress" class="help-block" style="color: #F4D58D">{{errorcafeAddress}}</span>
+                            </div>
+                            <div :class="errorgmapLink ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="text" id="inputLink" name="inputLink" class="form-control" placeholder="Google Location Link" v-model="gmapLink">
+                                <label for="inputLink">Google Location Link</label>
+                                <span v-if="errorgmapLink" class="help-block" style="color: #F4D58D">{{errorgmapLink}}</span>
+                            </div>
+                            <div :class="errorgmapLocation ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="text" id="inputMap" name="inputMap" class="form-control" placeholder="Google Location Map" v-model="gmapLocation">
+                                <label for="inputMap">Goole Location Map</label>
+                                <span v-if="errorgmapLocation" class="help-block" style="color: #F4D58D">{{errorgmapLocation}}</span>
+                            </div>
+                            <div v-html="gmapLocation"></div>
+                            <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                                <div class="spinner-border spinner-border-sm text-light" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </button>
+                            <button v-else type="submit" class="btn btn-review text-gold">Save</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
