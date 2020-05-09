@@ -983,7 +983,7 @@ new Vue({
             $('#detailSponsore').modal('show')
         },
         getBadgeReff: function() {
-            let url = this.url + '/api/badge/'
+            let url = this.url + '/api/badge'
             // let token = 'Bearer' + localStorage.getItem('token')
             let header = {
                 // headers: {
