@@ -57,7 +57,7 @@ new Vue({
     computed: {
         profileUser: function () {
             if (this.profile.members) {
-                console.log(this.profile)
+                // console.log(this.profile)
                 let firstname = this.profile.members.first_name
                 let midname = this.profile.members.mid_name
                 let lastname = this.profile.members.last_name
@@ -135,7 +135,7 @@ new Vue({
             }
             axios.post(url, payload, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = res.data.message
@@ -199,7 +199,7 @@ new Vue({
             }
             axios.post(url, payload, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = "Sign-in Success..."
@@ -245,7 +245,7 @@ new Vue({
             }
             axios.get(url, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.profile = res.data.data
                     localStorage.setItem('profile', JSON.stringify(this.profile))
                     window.location.replace('/')
@@ -348,7 +348,7 @@ new Vue({
             let url = 'http://ip-api.com/json/'
             axios.get(url)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.location = res.data
                     localStorage.setItem('myLocation', JSON.stringify(res.data))
                 })
@@ -367,7 +367,7 @@ new Vue({
             setTimeout(() => {
                 $('#generalModal').modal('hide')
                 $('#sign-in2').modal('show')
-            }, 3000);
+            }, 1000);
         },
         setDetail: function(id, type) {
             const that = this
@@ -386,20 +386,16 @@ new Vue({
             })
 
             if (result.length > 0) {
-                console.log('ok')
                 this.detailDialog = result[0]
                 if (localStorage.getItem('token') && this.isLogin) {
                     if (this.detailDialog.caffes.user_id === this.profile.id) {
-                        console.log('tidak boleh')
                         this.letReview = 0
                         this.detailDialog.letReview = 0
                     } else {
-                        console.log('boleh')
                         this.letReview = 1
                         this.detailDialog.letReview = 1
                     }
                 } else {
-                    console.log('tidak boleh')
                     this.letReview = 0
                     this.detailDialog.letReview = 0
                 }
@@ -491,7 +487,7 @@ new Vue({
             }
             axios.post(url, payload, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = res.data.message
@@ -547,7 +543,7 @@ new Vue({
                 })
         },
         confirmDeleteReveiw: function(reviewId, type, menuId) {
-            console.log(reviewId, type, menuId)
+            // console.log(reviewId, type, menuId)
             this.reviewId = reviewId
             this.type = type
             this.menuId = menuId
@@ -569,7 +565,7 @@ new Vue({
             }
             axios.delete(url, header, payload )
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = "Delete Success..."
@@ -636,7 +632,7 @@ new Vue({
             }
             axios.get(url, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     localStorage.setItem('profile-cafe', JSON.stringify(res.data.data))
                     localStorage.setItem('route', 'profile-cafe:' + id)
                     window.location.replace('/profile-cafe')
@@ -674,7 +670,7 @@ new Vue({
             }
             axios.get(url, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     localStorage.setItem('profile-user', JSON.stringify(res.data.data))
                     localStorage.setItem('route', 'profile-user:' + id)
                     window.location.replace('/profile-user')
@@ -707,7 +703,7 @@ new Vue({
             axios.get(url)
                 .then((res) => {
                     this.promos = res.data.data
-                    console.log(this.promos)
+                    // console.log(this.promos)
                 })
                 .catch((err) => {
                     this.isLoading = false
@@ -770,7 +766,7 @@ new Vue({
         changeProfile: function (e) {
             const { maxSize } = this
             let imageFile = e.target.files[0]
-            console.log(imageFile)
+            // console.log(imageFile)
             let formData = new FormData()
             let size = imageFile.size / maxSize / maxSize
             if (!imageFile.type.match('image.*')) {
@@ -801,10 +797,10 @@ new Vue({
             }
 
             let payload = formData
-            console.log('payload', payload)
+            // console.log('payload', payload)
             axios.post(url, payload, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = res.data.message
@@ -863,7 +859,7 @@ new Vue({
             
             axios.put(url, payload, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = res.data.message
@@ -949,7 +945,7 @@ new Vue({
             }
             axios.post(url, payload, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = res.data.message
@@ -1004,18 +1000,18 @@ new Vue({
                     let start = 0
                     let end = data.max_vote
                     bedges = (totalVoting >= start && totalVoting <= end) ? data : []
-                    console.log(start, end, bedges)
+                    // console.log(start, end, bedges)
                     return bedges
                 } else if (data.id === maxLengtReff) {
                     let end = data.max_vote
                     bedges = (totalVoting >= end) ? data : []
-                    console.log(end, bedges)
+                    // console.log(end, bedges)
                     return bedges
                 } else {
                     let start = bedgeReff[i -1].max_vote
                     let end = data.max_vote
                     bedges = (totalVoting >= start && totalVoting <= end) ? data : []
-                    console.log(start, end, bedges)
+                    // console.log(start, end, bedges)
                     return bedges
                 }
             }
@@ -1031,18 +1027,18 @@ new Vue({
                     let start = 0
                     let end = data.max_vote
                     bedges = (totalVoting >= start && totalVoting <= end) ? data : []
-                    console.log(start, end, bedges)
+                    // console.log(start, end, bedges)
                     return bedges
                 } else if (data.id === maxLengtReff) {
                     let end = data.max_vote
                     bedges = (totalVoting >= end) ? data : []
-                    console.log(end, bedges)
+                    // console.log(end, bedges)
                     return bedges
                 } else {
                     let start = bedgeReff[i -1].max_vote
                     let end = data.max_vote
                     bedges = (totalVoting >= start && totalVoting <= end) ? data : []
-                    console.log(start, end, bedges)
+                    // console.log(start, end, bedges)
                     return bedges
                 }
             }

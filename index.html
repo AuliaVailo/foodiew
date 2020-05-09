@@ -639,7 +639,7 @@
                                     <span class="menu-text text-gold">Trending</span>
                                 </a>
                             </li>
-                            <li class="sidebar-dropdown">
+                            <li class="sidebar-dropdown" v-if="isLogin">
                                 <a href="./profile">
                                     <i class="fas fa-user text-gold"></i>
                                     <span class="menu-text text-gold">Profile</span>
@@ -1185,7 +1185,7 @@
                             <br>
                             <div class="row">
                                 <div class="col" v-if="detailDialog.caffes">
-                                    <button v-if="letReview" type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
+                                    <button v-if="letReview && isLogin" type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
                                     <br v-if="letReview">
                                     <br v-if="letReview">
                                     <div class="review-box review-box-mak-mik" v-if="detailDialog.reviews">

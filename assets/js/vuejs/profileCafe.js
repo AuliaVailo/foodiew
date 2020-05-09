@@ -76,6 +76,11 @@ new Vue({
         errorstatus: '',
         erroremailCafe: '',
         errorphone: '',
+        email: '',
+        password: '',
+        confirm_password: '',
+        passwordError: '',
+        confirmPasswordError: ''
     },
     computed: {
         food: function () {
@@ -140,7 +145,7 @@ new Vue({
         } else {
             this.signout()
         }
-        console.log(this.profile)
+        // console.log(this.profile)
         this.getFoods()
         this.getBeverages()
         this.gotoRandomPromo()
@@ -157,7 +162,7 @@ new Vue({
             const { maxSize } = this
             let imageFile = this.imageToUpload
             let formData = new FormData()
-            console.log(imageFile)
+            // console.log(imageFile)
             let size = imageFile.size / maxSize / maxSize
             if (!imageFile.type.match('image.*')) {
                 // check whether the upload is an image
@@ -191,10 +196,10 @@ new Vue({
             formData.append('description', this.description)
 
             let payload = formData
-            console.log('payload', payload)
+            // console.log('payload', payload)
             axios.post(url, payload, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = res.data.message
@@ -208,7 +213,7 @@ new Vue({
                         let result = res.data.data
                         result.caffes = this.profile.caffe
                         if (res.data.data.type === '1') {
-                            console.log('food', result)
+                            // console.log('food', result)
                             if(this.trending_foods.length === 0) {
                                 this.getFoods()
                             } else {
@@ -217,7 +222,7 @@ new Vue({
                         }
 
                         if (res.data.data.type === '2') {
-                            console.log('baverages', result)
+                            // console.log('baverages', result)
                             if(this.trending_baverages.length === 0) {
                                 this.getBeverages()
                             } else {
@@ -296,7 +301,7 @@ new Vue({
             this.imageToUpload = file
         },
         shortData: function () {
-            console.log('short', this.short)
+            // console.log('short', this.short)
             this.getFoods()
             this.getBeverages()
         },
@@ -479,7 +484,7 @@ new Vue({
             }
             axios.delete(url, header, payload )
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = "Delete Success..."
@@ -535,7 +540,7 @@ new Vue({
                 })
         },
         confirmEdit: function (id) {
-            console.log(this.food, id)
+            // console.log(this.food, id)
             let item = this.food.filter(el => {
                 return el.id === id
             })
@@ -563,14 +568,14 @@ new Vue({
                     $('#updateFood').modal('show')
                 }
             }
-            console.log(this.imagePreview)
+            // console.log(this.imagePreview)
         },
         doUpdate(id) {
             const { maxSize } = this
             let imageFile = this.imageToUpload
             let formData = new FormData()
             if (imageFile !== undefined) {
-                console.log(imageFile)
+                // console.log(imageFile)
                 let size = imageFile.size / maxSize / maxSize
                 if (size>1) {
                     // check whether the size is greater than the size limit
@@ -600,11 +605,11 @@ new Vue({
             formData.append('_method', 'PUT');
             let payload = formData
 
-            console.log(url, header, formData)
+            // console.log(url, header, formData)
             
             axios.post(url, payload, header)
                 .then((res) => {
-                    console.log(res, this.formUpdate.type, this.type)
+                    // console.log(res, this.formUpdate.type, this.type)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = res.data.message
@@ -733,7 +738,7 @@ new Vue({
             }
             axios.post(url, payload, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = res.data.message
@@ -798,7 +803,7 @@ new Vue({
             }
             axios.get(url, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     localStorage.setItem('profile-cafe', JSON.stringify(res.data.data))
                     localStorage.setItem('route', 'profile-cafe:' + id)
                     window.location.replace('/profile-cafe')
@@ -829,7 +834,7 @@ new Vue({
         changeProfile: function (e) {
             const { maxSize } = this
             let imageFile = e.target.files[0]
-            console.log(imageFile)
+            // console.log(imageFile)
             let formData = new FormData()
             let size = imageFile.size / maxSize / maxSize
             if (!imageFile.type.match('image.*')) {
@@ -860,10 +865,10 @@ new Vue({
             }
 
             let payload = formData
-            console.log('payload', payload)
+            // console.log('payload', payload)
             axios.post(url, payload, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = res.data.message
@@ -922,7 +927,7 @@ new Vue({
             
             axios.put(url, payload, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = res.data.message
@@ -981,7 +986,7 @@ new Vue({
         changeProfileCafe: function (e) {
             const { maxSize } = this
             let imageFile = e.target.files[0]
-            console.log(imageFile)
+            // console.log(imageFile)
             let formData = new FormData()
             let size = imageFile.size / maxSize / maxSize
             if (!imageFile.type.match('image.*')) {
@@ -1014,7 +1019,7 @@ new Vue({
             let payload = formData
             axios.post(url, payload, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = res.data.message
@@ -1028,7 +1033,7 @@ new Vue({
                     }
                 })
                 .catch((err) => {
-                    console.log(err)
+                    // console.log(err)
                     this.isLoading = false
                     const that = this
                     if (err.response !== undefined) {
@@ -1073,7 +1078,7 @@ new Vue({
             
             axios.put(url, payload, header)
                 .then((res) => {
-                    console.log('Update Profile Cafe : ', res)
+                    // console.log('Update Profile Cafe : ', res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = res.data.message
@@ -1130,11 +1135,11 @@ new Vue({
             this.isLoading = true
             let statusProfile = this.profile.caffe.status
             let status = 0
-            console.log(statusProfile)
+            // console.log(statusProfile)
             if (statusProfile === 'close') {
                 status = 1
             }
-            console.log(statusProfile, status)
+            // console.log(statusProfile, status)
             let url = this.url + '/api/caffes/' + status + '/status'
             let token = 'Bearer ' + localStorage.getItem('token')
             let header = {
@@ -1149,7 +1154,7 @@ new Vue({
             
             axios.put(url, payload, header)
                 .then((res) => {
-                    console.log('Update Status Cafe : ', res)
+                    // console.log('Update Status Cafe : ', res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.profile.caffe.status = res.data.data.status
@@ -1225,7 +1230,7 @@ new Vue({
             }
             axios.get(url, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     localStorage.setItem('profile-user', JSON.stringify(res.data.data))
                     localStorage.setItem('route', 'profile-user:' + id)
                     window.location.replace('/profile-user')
@@ -1252,6 +1257,185 @@ new Vue({
                         $('#generalModal').modal('hide')
                     }, 3000);
                 })
+        },
+        register: function () {
+            this.isLoading = true
+            if (this.password !== this.confirm_password) {
+                this.passwordError = 'Your password not match with Confirmation Password'
+                this.confirmPasswordError = 'Your Confirmation Password not match with Password'
+                setTimeout(() => {
+                    this.passwordError = ''
+                    this.confirmPasswordError = ''
+                }, 3000);
+                this.isLoading = false
+                return
+            }
+            // this.isLogin = 1
+            // $('#staticBackdrop').modal('hide')
+            // $('#staticBackdrop2').modal('hide')
+            let url = this.url + '/api/registration'
+            // let token = localStorage.getItem('token')
+            let header = {
+                // headers: {
+                //     'Authorization': `${token}`,
+                // }
+            }
+            let payload = {
+                email: this.email,
+                password: this.password,
+            }
+            axios.post(url, payload, header)
+                .then((res) => {
+                    // console.log(res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.generalErrorMessage = res.data.message
+                        $('#generalModal').modal('show')
+                        this.email = ''
+                        this.password = ''
+                        this.confirm_password = ''
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                            $('#staticBackdrop').modal('hide')
+                            $('#staticBackdrop2').modal('hide')
+                            window.location.reload()
+                        }, 5000);
+                    }
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    if (err.response !== undefined) {
+                        this.generalErrorMessage = err.response.data
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        signin: function () {
+            this.isLoading = true
+            
+            if (this.email === '') {
+                this.email = 'Your password not match with Confirmation Password'
+                setTimeout(() => {
+                    this.email = ''
+                }, 3000);
+                this.isLoading = false
+                return
+            }
+
+            if (this.password === '') {
+                this.passwordError = 'Your password not match with Confirmation Password'
+                setTimeout(() => {
+                    this.passwordError = ''
+                }, 3000);
+                this.isLoading = false
+                return
+            }
+            // this.isLogin = 1
+            // $('#staticBackdrop').modal('hide')
+            // $('#staticBackdrop2').modal('hide')
+            let url = this.url + '/api/login'
+            // let token = localStorage.getItem('token')
+            let header = {
+                // headers: {
+                //     'Authorization': `${token}`,
+                // }
+            }
+            let payload = {
+                username: this.email,
+                password: this.password,
+            }
+            axios.post(url, payload, header)
+                .then((res) => {
+                    // console.log(res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.generalErrorMessage = "Sign-in Success..."
+                        $('#generalModal').modal('show')
+                        localStorage.setItem('token', res.data.token)
+                        this.email = ''
+                        this.password = ''
+                        this.isLogin = 1
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                            $('#sign-in').modal('hide')
+                            $('#sign-in2').modal('hide')
+                        }, 1000);
+                        // get profile user
+                        this.getProfile()
+                        window.location.reload()
+                    }
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    if (err.response !== undefined) {
+                        this.generalErrorMessage = err.response.data
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        forgotPassword: function() {
+            this.isLoading = true
+            let url = this.url + '/api/forgot'
+            // let token = localStorage.getItem('token')
+            let header = {
+                // headers: {
+                //     'Authorization': `${token}`,
+                // }
+            }
+            let payload = {
+                email: this.email,
+                password: this.password,
+            }
+            axios.post(url, payload, header)
+                .then((res) => {
+                    // console.log(res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.generalErrorMessage = res.data.message
+                        $('#generalModal').modal('show')
+                        this.email = ''
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                            $('#forgotPassword').modal('hide')
+                            $('#forgotPassword2').modal('hide')
+                        }, 5000);
+                    }
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    if (err.response !== undefined) {
+                        this.generalErrorMessage = err.response.data
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        toProfile: function () {
+            if (this.isLogin) {
+                window.location.replace('/profile')
+                return
+            }
+
+            this.generalErrorMessage = "You need to login, to acces your Profile"
+            $('#generalModal').modal('show')
+            setTimeout(() => {
+                $('#generalModal').modal('hide')
+                $('#sign-in2').modal('show')
+            }, 1000);
         },
     }
 })

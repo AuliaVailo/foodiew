@@ -112,7 +112,7 @@
                     </div>
                 </div>
             </form>
-            <div class="dropdown dropdown-notif">
+            <div class="dropdown dropdown-notif" v-if="isLogin">
                 <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav" type="button" id="notificationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <!-- <i class="fas fa-bell"></i> <span class="badge badge-pill badge-warning">99</span> -->
                     <i class="fas fa-bell"></i>
@@ -125,7 +125,7 @@
                     <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 3</a>
                 </div>
             </div>
-            <div class="dropdown">
+            <div class="dropdown" v-if="isLogin">
                 <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img :src="profile.members.profile_pictures ? profileUrl + profile.members.profile_pictures : './assets/img/Profile_dummy.svg'" alt="" class="img-thumbnail img-circle">
                 </button>
@@ -134,14 +134,17 @@
                     <a class="dropdown-item" v-on:click="signout"><i class="fas fa-power-off"></i> &nbsp;Logout</a>
                 </div>
             </div>
-    
+            <ul class="navbar-nav" v-else>
+                <li class="nav-item"><a class="nav-link nav-link-gold" data-toggle="modal" data-target="#sign-in" role="button">Sign-in</a></li>
+                <li class="nav-item"><a class="nav-link nav-link-gold" data-toggle="modal" data-target="#staticBackdrop" role="button">Register</a></li>
+            </ul>
         </header>
         <div class="container-fluid desktop-only">
             <div class="row flex-xl-nowrap default-theme border-radius-on">
                 <div class="col-md-3 col-xl-2 dsk-sidebar sidebar-wrapper">
                     <div class="sidebar-content">
                         <!-- sidebar-header  -->
-                        <div class="sidebar-item sidebar-header d-flex flex-nowrap">
+                        <div class="sidebar-item sidebar-header d-flex flex-nowrap" v-if="isLogin">
                             <div class="user-pic">
                                 <img class="img-responsive img-rounded" :src="profile.members.profile_pictures ? profileUrl + profile.members.profile_pictures : './assets/img/Profile_dummy.svg'" alt="User picture">
                             </div>
@@ -175,7 +178,7 @@
                                         <span class="menu-text text-gold">Trending</span>
                                     </a>
                                 </li>
-                                <li class="sidebar-dropdown">
+                                <li class="sidebar-dropdown" v-if="isLogin">
                                     <a href="./profile">
                                         <i class="fas fa-user text-gold"></i>
                                         <span class="menu-text text-gold">Profile</span>
@@ -255,6 +258,121 @@
                             <a href="javascript:void(0)" class="text-gold">
                                 &copy;2020, {{title}}.
                             </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true" ref="registerModal">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content modal-register">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-navy-blue" id="staticBackdropLabel">Register Form</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center">
+                                    <img src="./assets/img/Logo_Square.png" class="img-fluid" style="width: 10rem; height: 10rem" alt="">
+                                </div>
+
+                                <form class="form-signup" v-on:submit.prevent="register">
+                                    <div :class="emailError ? 'form-label-group has-error' : 'form-label-group '">
+                                        <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email" v-model="email" required>
+                                        <label for="inputEmail">E-mail</label>
+                                        <span v-if="emailError" class="help-block" style="color: #F4D58D">{{errorEmail}}</span>
+                                    </div>
+                                    <div :class="passwordError ? 'form-label-group has-error' : 'form-label-group '">
+                                        <input type="password" id="inputPass" name="inputPass" class="form-control" placeholder="Password" v-model="password" required>
+                                        <label for="inputPass">Password</label>
+                                        <span v-if="passwordError" class="help-block" style="color: #F4D58D">{{passwordError}}</span>
+                                    </div>
+                                    <div :class="confirmPasswordError ? 'form-label-group has-error' : 'form-label-group '">
+                                        <input type="password" id="inputPassConf" name="inputPassConf" class="form-control" placeholder="Password" v-model="confirm_password" required>
+                                        <label for="inputPassConf">Confirmation Password</label>
+                                        <span v-if="confirmPasswordError" class="help-block" style="color: #F4D58D">{{confirmPasswordError}}</span>
+                                    </div>
+                                    <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                                        <div class="spinner-border spinner-border-sm text-light" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </button>
+                                    <button v-else type="submit" class="btn btn-review text-gold">Register</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Signin-->
+                <div class="modal fade" id="sign-in" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true" ref="registerModal">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content modal-register">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-navy-blue" id="staticBackdropLabel">Sign-in</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center">
+                                    <img src="./assets/img/Logo_Square.png" class="img-fluid" style="width: 10rem; height: 10rem" alt="">
+                                </div>
+
+                                <form class="form-signup" v-on:submit.prevent="signin">
+                                    <div :class="emailError ? 'form-label-group has-error' : 'form-label-group '">
+                                        <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email" v-model="email" required>
+                                        <label for="inputEmail">E-mail</label>
+                                        <span v-if="emailError" class="help-block" style="color: #F4D58D">{{errorEmail}}</span>
+                                    </div>
+                                    <div :class="passwordError ? 'form-label-group has-error' : 'form-label-group '">
+                                        <input type="password" id="inputPass" name="inputPass" class="form-control" placeholder="Password" v-model="password" required>
+                                        <label for="inputPass">Password</label>
+                                        <span v-if="passwordError" class="help-block" style="color: #F4D58D">{{passwordError}}</span>
+                                    </div>
+                                    <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                                        <div class="spinner-border spinner-border-sm text-light" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </button>
+                                    <button v-else type="submit" class="btn btn-review text-gold">Sign-in</button>
+                                    <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#forgotPassword" class="float-right" style="text-decoration: none; color: gainsboro; ">Forgot my password?</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Signin-->
+                <div class="modal fade" id="forgotPassword" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true" ref="registerModal">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content modal-register">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-navy-blue" id="staticBackdropLabel">Forgot Password</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center">
+                                    <img src="./assets/img/Logo_Square.png" class="img-fluid" style="width: 10rem; height: 10rem" alt="">
+                                </div>
+
+                                <form class="form-signup" v-on:submit.prevent="forgotPassword">
+                                    <div :class="emailError ? 'form-label-group has-error' : 'form-label-group '">
+                                        <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email" v-model="email" required>
+                                        <label for="inputEmail">E-mail</label>
+                                        <span v-if="emailError" class="help-block" style="color: #F4D58D">{{errorEmail}}</span>
+                                    </div>
+                                    <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                                        <div class="spinner-border spinner-border-sm text-light" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </button>
+                                    <button v-else type="submit" class="btn btn-review text-gold">Send</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -341,8 +459,8 @@
                                         <a href="./my-voucher" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem;">
                                             <i class="fas fa-tags"></i> Voucher
                                         </a>
-                                        <a href="#" v-on:click="vote()" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem;">
-                                            <i class="far fa-thumbs-up"></i> &nbsp;<b> {{Number(thisUser.voted_by.length).toLocaleString('id')}}</b> &nbsp; Vote
+                                        <a href="#" v-on:click="voteDesktop()" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; text-decoration: none;">
+                                            <i class="far fa-thumbs-up"></i> &nbsp;<b> {{Number(thisUser.voted_by.length).toLocaleString('id')}}</b> &nbsp; {{isVote(thisUser.voted_by) ? 'Voted' : 'Vote'}}
                                         </a>
                                     </div>
                                 </div>
@@ -378,7 +496,7 @@
                             <div class="row d-flex justify-content-center" v-if="cafeRecomendation">
                                 <div v-for="(item, index) in cafeRecomendation" class="col-3 px-0 card-cafe" style="font-size: .8rem">
                                     <a href="#" v-on:click="openThisCafe(item.caffe_id)" class="text-white">
-                                        <img class="img-fluid" :src="item.rating_cafe.caffe_pictures ? imageUrl + item.rating_cafe.caffe_pictures : './assets/img/cafe.svg'" alt="">
+                                        <img class="img-fluid" :src="item.rating_cafe.caffe_pictures ? profileUrl + item.rating_cafe.caffe_pictures : './assets/img/cafe.svg'" alt="">
                                         <i v-if="(Number(index) + 1) === 1" class="fa fa-star fa-lg pt-3 pl-3" style="color: gold"></i>
                                         <i v-if="(Number(index) + 1) === 2" class="fa fa-star fa-lg pt-3 pl-3" style="color: silver"></i>
                                         <i v-if="(Number(index) + 1) === 3" class="fa fa-star fa-lg pt-3 pl-3" style="color: #cd7f32"></i>
@@ -508,7 +626,7 @@
                         </a>
                     </div>
                     <!-- sidebar-header  -->
-                    <div class="sidebar-item sidebar-header d-flex flex-nowrap">
+                    <div class="sidebar-item sidebar-header d-flex flex-nowrap" v-if="isLogin">
                         <div class="user-pic">
                             <img class="img-responsive img-rounded" :src="profile.members.profile_pictures ? profileUrl + profile.members.profile_pictures : './assets/img/Profile_dummy.svg'" alt="User picture">
                         </div>
@@ -616,14 +734,139 @@
                     <!-- sidebar-menu  -->
                 </div>
                 <!-- sidebar-footer  -->
-                <div class="sidebar-footer">
-                    <div>
-                        <a href="#" class="text-gold" v-on:click="signout">
-                            <i class="fa fa-power-off"></i> Logout
+                <div class="sidebar-footer mobile-only">
+                    <div v-if="isLogin">
+                        <a role="button" v-on:click="signout" class="signout">
+                            <i class="fa fa-sign-out-alt"></i> Sign-out
+                        </a>
+                    </div>
+                    <div class="not-signin" v-if="!isLogin">
+                        <a data-toggle="modal" class="register" data-target="#staticBackdrop2" role="button">
+                            <i class="fas fa-user-plus text-gold"></i>
+                            <span class="menu-text text-gold">Register</span>
+                        </a>
+                    </div>
+                    <div v-if="!isLogin">
+                        <a data-toggle="modal" class="signin" data-target="#sign-in2" role="button">
+                            <i class="fa fa-sign-in-alt"></i> Sign-in
                         </a>
                     </div>
                 </div>
             </nav>
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop2" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true" ref="registerModal">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content modal-register">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-navy-blue" id="staticBackdropLabel">Register Form</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center">
+                                <img src="./assets/img/Logo_Square.png" class="img-fluid" style="width: 10rem; height: 10rem" alt="">
+                            </div>
+                            <form class="form-signup" v-on:submit.prevent="register">
+                                <div :class="emailError ? 'form-label-group has-error' : 'form-label-group '">
+                                    <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email" v-model="email" required>
+                                    <label for="inputEmail">E-mail</label>
+                                    <span v-if="emailError" class="help-block" style="color: #F4D58D">{{errorEmail}}</span>
+                                </div>
+                                <div :class="passwordError ? 'form-label-group has-error' : 'form-label-group '">
+                                    <input type="password" id="inputPass" name="inputPass" class="form-control" placeholder="Password" v-model="password" required>
+                                    <label for="inputPass">Password</label>
+                                    <span v-if="passwordError" class="help-block" style="color: #F4D58D">{{passwordError}}</span>
+                                </div>
+                                <div :class="confirmPasswordError ? 'form-label-group has-error' : 'form-label-group '">
+                                    <input type="password" id="inputPassConf" name="inputPassConf" class="form-control" placeholder="Password" v-model="confirm_password" required>
+                                    <label for="inputPassConf">Confirmation Password</label>
+                                    <span v-if="confirmPasswordError" class="help-block" style="color: #F4D58D">{{confirmPasswordError}}</span>
+                                </div>
+                                <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                                    <div class="spinner-border spinner-border-sm text-light" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </button>
+                                <button v-else type="submit" class="btn btn-review text-gold">Register</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Signin-->
+            <div class="modal fade" id="sign-in2" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true" ref="registerModal">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content modal-register">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-navy-blue" id="staticBackdropLabel">Sign-in</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center">
+                                <img src="./assets/img/Logo_Square.png" class="img-fluid" style="width: 10rem; height: 10rem" alt="">
+                            </div>
+
+                            <form class="form-signup" v-on:submit.prevent="signin">
+                                <div :class="emailError ? 'form-label-group has-error' : 'form-label-group '">
+                                    <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email" v-model="email" required>
+                                    <label for="inputEmail">E-mail</label>
+                                    <span v-if="emailError" class="help-block" style="color: #F4D58D">{{errorEmail}}</span>
+                                </div>
+                                <div :class="passwordError ? 'form-label-group has-error' : 'form-label-group '">
+                                    <input type="password" id="inputPass" name="inputPass" class="form-control" placeholder="Password" v-model="password" required>
+                                    <label for="inputPass">Password</label>
+                                    <span v-if="passwordError" class="help-block" style="color: #F4D58D">{{passwordError}}</span>
+                                </div>
+                                <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                                    <div class="spinner-border spinner-border-sm text-light" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </button>
+                                <button v-else type="submit" class="btn btn-review text-gold">Sign-in</button>
+                                <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#forgotPassword2" class="float-right" style="text-decoration: none; color: gainsboro; ">Forgot my password?</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Signin-->
+            <div class="modal fade" id="forgotPassword2" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true" ref="registerModal">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content modal-register">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-navy-blue" id="staticBackdropLabel">Forgot Password</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center">
+                                <img src="./assets/img/Logo_Square.png" class="img-fluid" style="width: 10rem; height: 10rem" alt="">
+                            </div>
+
+                            <form class="form-signup" v-on:submit.prevent="forgotPassword">
+                                <div :class="emailError ? 'form-label-group has-error' : 'form-label-group '">
+                                    <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email" v-model="email" required>
+                                    <label for="inputEmail">E-mail</label>
+                                    <span v-if="emailError" class="help-block" style="color: #F4D58D">{{errorEmail}}</span>
+                                </div>
+                                <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                                    <div class="spinner-border spinner-border-sm text-light" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </button>
+                                <button v-else type="submit" class="btn btn-review text-gold">Send</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
     
             <nav class="navbar navbar-expand-lg navbar-dark navbar-dark-alt sticky-top">
     
@@ -634,7 +877,7 @@
                 <!-- <a class="navbar-brand text-white ml-auto font-weight-bolder" style="font-size: .9rem;" href="./profile">
                     <img src="./assets/img/Profile_dummy.svg" alt="" class="img-thumbnail img-circle">
                 </a> -->
-                <div class="dropdown dropdown-notif" style="padding-top: .5rem; margin-left: 2.25rem;">
+                <div class="dropdown dropdown-notif" style="padding-top: .5rem; margin-left: 2.25rem;" v-if="isLogin">
                     <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav btn-transparent" type="button" id="notificationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <!-- <i class="fas fa-bell"></i> <span class="badge badge-pill badge-warning">99</span> -->
                         <i class="fas fa-bell"></i>
@@ -646,7 +889,7 @@
                         <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 3</a>
                     </div>
                 </div>
-                <div class="dropdown">
+                <div class="dropdown" v-if="isLogin">
                     <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav btn-transparent" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding-left: 0px;padding-right: 0px">
                         <img :src="profile.members.profile_pictures ? profileUrl + profile.members.profile_pictures : './assets/img/Profile_dummy.svg'" alt="" class="img-thumbnail img-circle">
                     </button>
@@ -748,12 +991,12 @@
                                     <a href="./my-voucher.html" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem;">
                                         <i class="fas fa-tags"></i> Voucher
                                     </a>
-                                    <a href="#" v-on:click="vote()" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem;">
-                                        <i class="far fa-thumbs-up"></i> &nbsp;<b> {{Number(thisUser.voted_by.length).toLocaleString('id')}}</b> &nbsp; Vote
+                                    <a href="#" v-on:click="voteMobile()" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; text-decoration: none; color: black;">
+                                        <i class="far fa-thumbs-up"></i> &nbsp;<b> {{Number(thisUser.voted_by.length).toLocaleString('id')}}</b> &nbsp; {{isVote(thisUser.voted_by) ? 'Voted' : 'Vote'}}
                                     </a>
                                 </div>
                             </div>
-                            <div class="col-3 col-lg-2 text-gold" v-if="profile.caffe === null">
+                            <div class="col-3 col-lg-2 text-gold" v-if="thisUser.caffe === null">
                                 <div class="d-flex justify-content-center my-cafe">
                                     <a href="#" class="text-gold" style="font-size: 1rem" data-toggle="modal" data-target="#registerCafe2">
                                         <img src="./assets/img/My Cafe.png" style="width: 3.5rem;">
@@ -797,7 +1040,7 @@
                         <div class="row d-flex justify-content-center" v-if="cafeRecomendation">
                             <div v-for="(item, index) in cafeRecomendation" class="col-5 px-0 card-cafe my-2" style="font-size: .8rem">
                                 <a href="#" v-on:click="openThisCafe(item.caffe_id)" class="text-white">
-                                    <img class="img-fluid" :src="item.rating_cafe.caffe_pictures ? imageUrl + item.rating_cafe.caffe_pictures : './assets/img/cafe.svg'" alt="">
+                                    <img class="img-fluid" :src="item.rating_cafe.caffe_pictures ? profileUrl + item.rating_cafe.caffe_pictures : './assets/img/cafe.svg'" alt="">
                                     <i v-if="(Number(index) + 1) === 1" class="fa fa-star fa-lg pt-3 pl-3" style="color: gold"></i>
                                     <i v-if="(Number(index) + 1) === 2" class="fa fa-star fa-lg pt-3 pl-3" style="color: silver"></i>
                                     <i v-if="(Number(index) + 1) === 3" class="fa fa-star fa-lg pt-3 pl-3" style="color: #cd7f32"></i>
@@ -1063,7 +1306,7 @@
         </div>
 
         <!-- Modal Setting-->
-        <div class="modal fade" id="settingModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade" id="settingModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true" v-if="isLogin">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content modal-register">
                     <div class="modal-header">

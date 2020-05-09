@@ -41,7 +41,32 @@ new Vue({
         cafeReview: '',
         cafeRate: 0,
         reviewId: '',
-        short: 1
+        short: 1,
+        promos: [],
+        usernameError: '',
+        firstNameError: '',
+        midNameError: '',
+        latNameError: '',
+        placeOfBirthError: '',
+        dateOfBirthError: '',
+        genderError: '',
+        addressError: '',
+        emailError: '',
+        username: '',
+        email: '',
+        firstName: '',
+        midName: '',
+        lastName: '',
+        placeOfBirth: '',
+        dateOfBirth: '',
+        gender: '',
+        address: '',
+        erroMessage: '',
+        email: '',
+        password: '',
+        confirm_password: '',
+        passwordError: '',
+        confirmPasswordError: '',
     },
     computed: {
         food: function () {
@@ -81,6 +106,17 @@ new Vue({
             this.isLogin = 1
             if (localStorage.getItem('profile')) {
                 this.profile = JSON.parse(localStorage.getItem('profile'))
+                this.profile = JSON.parse(localStorage.getItem('profile'))
+                this.username = this.profile.user_name
+                this.email = this.profile.members.email
+                this.firstName = this.profile.members.first_name
+                this.midName = this.profile.members.mid_name
+                this.lastName = this.profile.members.last_name
+                this.placeOfBirth = this.profile.members.place_of_birth
+                this.dateOfBirth = this.profile.members.date_of_birth
+                this.gender = this.profile.members.gender
+                this.address = this.profile.members.address
+
             } else {
                 this.getProfile()
             }
@@ -99,9 +135,10 @@ new Vue({
                 this.openThisCafe()
             }
         }
-        console.log(this.profileCafe)
+        // console.log(this.profileCafe)
         this.getFoods()
         this.getBeverages()
+        this.gotoRandomPromo()
     },
     methods: {
         signout: function () {
@@ -114,7 +151,7 @@ new Vue({
             const { maxSize } = this
             let imageFile = this.imageToUpload
             let formData = new FormData()
-            console.log(imageFile)
+            // console.log(imageFile)
             let size = imageFile.size / maxSize / maxSize
             if (!imageFile.type.match('image.*')) {
                 // check whether the upload is an image
@@ -148,10 +185,10 @@ new Vue({
             formData.append('description', this.description)
 
             let payload = formData
-            console.log('payload', payload)
+            // console.log('payload', payload)
             axios.post(url, payload, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = res.data.message
@@ -165,12 +202,12 @@ new Vue({
                         let result = res.data.data
                         result.caffes = this.profile.caffe
                         if (res.data.data.type === '1') {
-                            console.log('food', result)
+                            // console.log('food', result)
                             this.trending_foods.data.push(result)
                         }
 
                         if (res.data.data.type === '2') {
-                            console.log('baverages', result)
+                            // console.log('baverages', result)
                             this.trending_baverages.data.push(result)
                         }
                         var form = document.getElementById('add-Food')
@@ -231,7 +268,7 @@ new Vue({
                 })
         },
         openThisCafe: function(id) {
-            console.log('id', id)
+            // console.log('id', id)
             let url = this.url + '/api/caffes/' + id
             let token = 'Bearer ' + localStorage.getItem('token')
             let header = {
@@ -241,7 +278,7 @@ new Vue({
             }
             axios.get(url, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     localStorage.setItem('profile-cafe', JSON.stringify(res.data.data))
                     window.location.replace('/profile-cafe')
                 })
@@ -274,7 +311,7 @@ new Vue({
             this.imageToUpload = file
         },
         shortData: function () {
-            console.log('short', this.short)
+            // console.log('short', this.short)
             this.getFoods()
             this.getBeverages()
         },
@@ -376,7 +413,7 @@ new Vue({
                 })
         },
         setDetail: function(id, type) {
-            console.log(id, type)
+            // console.log(id, type)
             const that = this
             let array = []
 
@@ -392,8 +429,21 @@ new Vue({
                 return el.id === id
             })
 
-            if (result.length > 0) {
+            if (result.length) {
                 this.detailDialog = result[0]
+                if (localStorage.getItem('token') && this.isLogin) {
+                    if (this.detailDialog.caffes.user_id === this.profile.id) {
+                        this.letReview = 0
+                        this.detailDialog.letReview = 0
+                    } else {
+                        this.letReview = 1
+                        this.detailDialog.letReview = 1
+                    }
+                } else {
+                    this.letReview = 0
+                    this.detailDialog.letReview = 0
+                }
+                // console.log(this.detailDialog, this.detailDialog.caffes.user_id, this.profile.id, this.letReview)
             }
         },
         searchCategory: function(id) {
@@ -428,7 +478,7 @@ new Vue({
             }
             axios.post(url, payload, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = res.data.message
@@ -439,8 +489,9 @@ new Vue({
                         setTimeout(() => {
                             $('#generalModal').modal('hide')
                             $('#writeReviewDesktop').modal('hide')
-                            this.rate = 0
-                            this.review = ''
+                            $('#writeReviewMobile').modal('hide')
+                            this.cafeRate = 0
+                            this.cafeReview = ''
                         }, 1000);
                     }
                 })
@@ -495,7 +546,7 @@ new Vue({
             }
             axios.delete(url, header, payload )
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = "Delete Success..."
@@ -548,6 +599,461 @@ new Vue({
                 this.detailDialog.letReview = 1
             }
             $('#detailSponsore').modal('show')
+        },
+        defineBedgeReviewer: function(voted_by) {
+            let bedgeReff = JSON.parse(localStorage.getItem('bedgeReff'))
+            let totalVoting = voted_by.length
+            let maxLengtReff = bedgeReff.length
+            for (let i = 0; i < maxLengtReff; i++) {
+                let data = bedgeReff[i]
+                let bedges = []
+                if (data.id === 1) {
+                    let start = 0
+                    let end = data.max_vote
+                    bedges = (totalVoting >= start && totalVoting <= end) ? data : []
+                    return bedges
+                } else if (data.id === maxLengtReff) {
+                    let end = data.max_vote
+                    bedges = (totalVoting >= end) ? data : []
+                    return bedges
+                } else {
+                    let start = bedgeReff[i -1].max_vote
+                    let end = data.max_vote
+                    bedges = (totalVoting >= start && totalVoting <= end) ? data : []
+                    return bedges
+                }
+            }
+        },
+        defineBedge: function() {
+            let bedgeReff = JSON.parse(localStorage.getItem('bedgeReff'))
+            let totalVoting = this.profileUser.voted_by.length
+            let maxLengtReff = bedgeReff.length
+            for (let i = 0; i < maxLengtReff; i++) {
+                let data = bedgeReff[i]
+                let bedges = []
+                if (data.id === 1) {
+                    let start = 0
+                    let end = data.max_vote
+                    bedges = (totalVoting >= start && totalVoting <= end) ? data : []
+                    return bedges
+                } else if (data.id === maxLengtReff) {
+                    let end = data.max_vote
+                    bedges = (totalVoting >= end) ? data : []
+                    return bedges
+                } else {
+                    let start = bedgeReff[i -1].max_vote
+                    let end = data.max_vote
+                    bedges = (totalVoting >= start && totalVoting <= end) ? data : []
+                    return bedges
+                }
+            }
+        },
+        gotoRandomPromo: function() {
+            let url = this.url + '/api/sponsore'
+            axios.get(url)
+                .then((res) => {
+                    this.promos = res.data.data
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        countRating: function (reviews) {
+            let total = reviews.length
+            let rate = 0
+            let allRate = reviews.map(el => {
+                rate = rate + el.rating
+                return rate
+            })
+            return rate / total
+        },
+        openThisProfile: function(id) {
+            let url = this.url + '/api/users/' + id
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`,
+                }
+            }
+            axios.get(url, header)
+                .then((res) => {
+                    // console.log(res)
+                    localStorage.setItem('profile-user', JSON.stringify(res.data.data))
+                    localStorage.setItem('route', 'profile-user:' + id)
+                    window.location.replace('/profile-user')
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        changeProfile: function (e) {
+            const { maxSize } = this
+            let imageFile = e.target.files[0]
+            // console.log(imageFile)
+            let formData = new FormData()
+            let size = imageFile.size / maxSize / maxSize
+            if (!imageFile.type.match('image.*')) {
+                // check whether the upload is an image
+                this.generalErrorMessage = 'Please choose an image file'
+                this.erroMessage = this.generalErrorMessage
+                $('#generalModal').modal('show')
+                return
+            } else if (size>1) {
+                // check whether the size is greater than the size limit
+                this.generalErrorMessage = 'Your file is too big! Please select an image under 1MB'
+                this.erroMessage = this.generalErrorMessage
+                $('#generalModal').modal('show')
+                return
+            } else {
+                // Append file into FormData and turn file into image URL
+                formData.append('pictures[0]', imageFile);
+            }
+
+            this.isLoading = true
+            let url = this.url + '/api/users/changeProfile'
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`,
+                    'Content-type': `multipart/form-data`
+                }
+            }
+
+            let payload = formData
+            // console.log('payload', payload)
+            axios.post(url, payload, header)
+                .then((res) => {
+                    // console.log(res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.generalErrorMessage = res.data.message
+                        $('#generalModal').modal('show')
+                        this.profile.members.profile_pictures = res.data.data.profile_pictures
+                        localStorage.setItem('profile', JSON.stringify(this.profile))
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                        }, 500);
+                    }
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        updateProfile: function () {
+            this.isLoading = true
+            let url = this.url + '/api/users/'
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`
+                }
+            }
+
+            let payload = {
+                user_name: this.username,
+                email: this.email,
+                first_name: this.firstName,
+                mid_name: this.midName,
+                last_name: this.lastName,
+                place_of_birth: this.placeOfBirth,
+                date_of_birth: this.dateOfBirth,
+                gender: this.gender,
+                address: this.address
+            }
+            
+            axios.put(url, payload, header)
+                .then((res) => {
+                    // console.log(res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.generalErrorMessage = res.data.message
+                        $('#generalModal').modal('show')
+                        this.profile.user_name = res.data.data.user_name
+                        this.profile.members.user_name = res.data.data.user_name
+                        this.profile.members.email = res.data.data.email
+                        this.profile.members.first_name = res.data.data.first_name
+                        this.profile.members.mid_name = res.data.data.mid_name
+                        this.profile.members.last_name = res.data.data.last_name
+                        this.profile.members.place_of_birth = res.data.data.place_of_birth
+                        this.profile.members.date_of_birth = res.data.data.date_of_birth
+                        this.profile.members.gender = res.data.data.gender
+                        this.profile.members.address = res.data.data.address
+                        
+                        localStorage.setItem('profile', JSON.stringify(this.profile))
+
+                        this.username = this.profile.user_name
+                        this.email = this.profile.members.email
+                        this.firstName = this.profile.members.first_name
+                        this.midName = this.profile.members.mid_name
+                        this.lastName = this.profile.members.last_name
+                        this.placeOfBirth = this.profile.members.place_of_birth
+                        this.dateOfBirth = this.profile.members.date_of_birth
+                        this.gender = this.profile.members.gender
+                        this.address = this.profile.members.address
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                            $('#settingModal').modal('hide')
+                        }, 500);
+                    }
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        register: function () {
+            this.isLoading = true
+            if (this.password !== this.confirm_password) {
+                this.passwordError = 'Your password not match with Confirmation Password'
+                this.confirmPasswordError = 'Your Confirmation Password not match with Password'
+                setTimeout(() => {
+                    this.passwordError = ''
+                    this.confirmPasswordError = ''
+                }, 3000);
+                this.isLoading = false
+                return
+            }
+            // this.isLogin = 1
+            // $('#staticBackdrop').modal('hide')
+            // $('#staticBackdrop2').modal('hide')
+            let url = this.url + '/api/registration'
+            // let token = localStorage.getItem('token')
+            let header = {
+                // headers: {
+                //     'Authorization': `${token}`,
+                // }
+            }
+            let payload = {
+                email: this.email,
+                password: this.password,
+            }
+            axios.post(url, payload, header)
+                .then((res) => {
+                    // console.log(res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.generalErrorMessage = res.data.message
+                        $('#generalModal').modal('show')
+                        this.email = ''
+                        this.password = ''
+                        this.confirm_password = ''
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                            $('#staticBackdrop').modal('hide')
+                            $('#staticBackdrop2').modal('hide')
+                            window.location.reload()
+                        }, 5000);
+                    }
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    if (err.response !== undefined) {
+                        this.generalErrorMessage = err.response.data
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        signin: function () {
+            this.isLoading = true
+            
+            if (this.email === '') {
+                this.email = 'Your password not match with Confirmation Password'
+                setTimeout(() => {
+                    this.email = ''
+                }, 3000);
+                this.isLoading = false
+                return
+            }
+
+            if (this.password === '') {
+                this.passwordError = 'Your password not match with Confirmation Password'
+                setTimeout(() => {
+                    this.passwordError = ''
+                }, 3000);
+                this.isLoading = false
+                return
+            }
+            // this.isLogin = 1
+            // $('#staticBackdrop').modal('hide')
+            // $('#staticBackdrop2').modal('hide')
+            let url = this.url + '/api/login'
+            // let token = localStorage.getItem('token')
+            let header = {
+                // headers: {
+                //     'Authorization': `${token}`,
+                // }
+            }
+            let payload = {
+                username: this.email,
+                password: this.password,
+            }
+            axios.post(url, payload, header)
+                .then((res) => {
+                    // console.log(res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.generalErrorMessage = "Sign-in Success..."
+                        $('#generalModal').modal('show')
+                        localStorage.setItem('token', res.data.token)
+                        this.email = ''
+                        this.password = ''
+                        this.isLogin = 1
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                            $('#sign-in').modal('hide')
+                            $('#sign-in2').modal('hide')
+                        }, 1000);
+                        // get profile user
+                        this.getProfile()
+                        window.location.reload()
+                    }
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    if (err.response !== undefined) {
+                        this.generalErrorMessage = err.response.data
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        forgotPassword: function() {
+            this.isLoading = true
+            let url = this.url + '/api/forgot'
+            // let token = localStorage.getItem('token')
+            let header = {
+                // headers: {
+                //     'Authorization': `${token}`,
+                // }
+            }
+            let payload = {
+                email: this.email,
+                password: this.password,
+            }
+            axios.post(url, payload, header)
+                .then((res) => {
+                    // console.log(res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.generalErrorMessage = res.data.message
+                        $('#generalModal').modal('show')
+                        this.email = ''
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                            $('#forgotPassword').modal('hide')
+                            $('#forgotPassword2').modal('hide')
+                        }, 5000);
+                    }
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    if (err.response !== undefined) {
+                        this.generalErrorMessage = err.response.data
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        toProfile: function () {
+            if (this.isLogin) {
+                window.location.replace('/profile')
+                return
+            }
+
+            this.generalErrorMessage = "You need to login, to acces your Profile"
+            $('#generalModal').modal('show')
+            setTimeout(() => {
+                $('#generalModal').modal('hide')
+                $('#sign-in2').modal('show')
+            }, 1000);
         },
     }
 })

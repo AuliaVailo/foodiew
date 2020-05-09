@@ -115,7 +115,7 @@
                     </div>
                 </div>
             </form>
-            <div class="dropdown dropdown-notif">
+            <div class="dropdown dropdown-notif" v-if="isLogin">
                 <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav" type="button" id="notificationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <!-- <i class="fas fa-bell"></i> <span class="badge badge-pill badge-warning">99</span> -->
                     <i class="fas fa-bell"></i>
@@ -127,7 +127,7 @@
                     <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 3</a>
                 </div>
             </div>
-            <div class="dropdown">
+            <div class="dropdown" v-if="isLogin">
                 <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img :src="profile.members.profile_pictures ? profileUrl + profile.members.profile_pictures : './assets/img/Profile_dummy.svg'" alt="" class="img-thumbnail img-circle">
                 </button>
@@ -136,7 +136,10 @@
                     <a class="dropdown-item" v-on:click="signout"><i class="fas fa-power-off"></i> &nbsp;Logout</a>
                 </div>
             </div>
-    
+            <ul class="navbar-nav" v-else>
+                <li class="nav-item"><a class="nav-link nav-link-gold" data-toggle="modal" data-target="#sign-in" role="button">Sign-in</a></li>
+                <li class="nav-item"><a class="nav-link nav-link-gold" data-toggle="modal" data-target="#staticBackdrop" role="button">Register</a></li>
+            </ul>
         </header>
         <div class="container-fluid desktop-only">
             <div class="row flex-xl-nowrap default-theme border-radius-on">
@@ -410,7 +413,7 @@
                                         <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/close-up-coffee-cup-decorated-with-coffee-beans-placed-wooden-serving-board_141793-2026.jpg'" alt="">
                                         <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
                                         <p class="rating mx-2 mb-0 white-text">
-                                            <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
+                                            <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating)"></i>
                                         </p>
                                         <span v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.price).toLocaleString('id')}}</span> <span  v-if="item.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
                                         <p v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.priceSale).toLocaleString('id')}}</p>
@@ -554,10 +557,21 @@
                     <!-- sidebar-menu  -->
                 </div>
                 <!-- sidebar-footer  -->
-                <div class="sidebar-footer">
-                    <div>
-                        <a href="#" v-on:click="signout" class="text-gold">
-                            <i class="fa fa-power-off"></i> Logout
+                <div class="sidebar-footer mobile-only">
+                    <div v-if="isLogin">
+                        <a role="button" v-on:click="signout" class="signout">
+                            <i class="fa fa-sign-out-alt"></i> Sign-out
+                        </a>
+                    </div>
+                    <div class="not-signin" v-if="!isLogin">
+                        <a data-toggle="modal" class="register" data-target="#staticBackdrop2" role="button">
+                            <i class="fas fa-user-plus text-gold"></i>
+                            <span class="menu-text text-gold">Register</span>
+                        </a>
+                    </div>
+                    <div v-if="!isLogin">
+                        <a data-toggle="modal" class="signin" data-target="#sign-in2" role="button">
+                            <i class="fa fa-sign-in-alt"></i> Sign-in
                         </a>
                     </div>
                 </div>
@@ -572,7 +586,7 @@
                 <!-- <a class="navbar-brand text-white ml-auto font-weight-bolder" style="font-size: .9rem;" href="./profile">
                     <img src="./assets/img/Profile_dummy.svg" alt="" class="img-thumbnail img-circle">
                 </a> -->
-                <div class="dropdown dropdown-notif" style="padding-top: .5rem; margin-left: 2.25rem;">
+                <div class="dropdown dropdown-notif" style="padding-top: .5rem; margin-left: 2.25rem;" v-if="isLogin">
                     <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav btn-transparent" type="button" id="notificationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <!-- <i class="fas fa-bell"></i> <span class="badge badge-pill badge-warning">99</span> -->
                         <i class="fas fa-bell"></i>
@@ -584,7 +598,7 @@
                         <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 3</a>
                     </div>
                 </div>
-                <div class="dropdown">
+                <div class="dropdown" v-if="isLogin">
                     <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav btn-transparent" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding-left: 0px;padding-right: 0px">
                         <img :src="profile.members.profile_pictures ? profileUrl + profile.members.profile_pictures : './assets/img/Profile_dummy.svg'" alt="" class="img-thumbnail img-circle">
                     </button>
@@ -606,7 +620,7 @@
                             </a>
                         </div>
                         <div class="col-3">
-                            <a class="text-gold" href="./profile" style="cursor: pointer">
+                            <a class="text-gold" href="#" style="cursor: pointer" v-on:click="toProfile()">
                                 <i class="fas fa-user fa-2x"></i>
                                 <br>
                                 <span class="nav-bawah">Profil</span>
@@ -770,7 +784,7 @@
                                     <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/close-up-coffee-cup-decorated-with-coffee-beans-placed-wooden-serving-board_141793-2026.jpg'" alt="">
                                     <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
                                     <p class="rating mx-2 mb-0 white-text">
-                                        <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
+                                        <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating)"></i>
                                     </p>
                                     <span v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.price).toLocaleString('id')}}</span> <span  v-if="item.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
                                     <p v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.priceSale).toLocaleString('id')}}</p>
@@ -852,14 +866,14 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-lg-4 col-md-4 px-0 d-flex justify-content-center">
-                                    <img src="./assets/img/logo-icon/hot_chocolatte.svg" class="img-fluid img-thumbnail" style="width: 10rem; height: 10rem" alt="">
+                                    <img :src="detailDialog.pictures ? imageUrl + detailDialog.pictures : 'https://image.freepik.com/free-photo/close-up-coffee-cup-decorated-with-coffee-beans-placed-wooden-serving-board_141793-2026.jpg'" class="img-fluid img-thumbnail" style="width: 10rem; height: 10rem" alt="">
                                 </div>
                                 <div class="col-lg-8 col-md-8 text-gold">
-                                    <p>Hot Chocolatte</p>
-                                    <p><i class="fas fa-store"></i> KFC</p>
-                                    <p><i class="fas fa-map-marked-alt"></i> Medan</p>
-                                    <p>Categories : <a class="link-categories-gold" href="./hot_chocolatte.html">Hot Chocolatte</a></p>
-                                    <p>Calories : 2000 calories</p>
+                                    <p>{{detailDialog.name}}</p>
+                                    <p><i class="fas fa-store"></i> {{profile.caffe.caffe_name}}</p>
+                                    <p><a :href="profile.caffe.googleMapLink" target="_blank" style="text-decoration: none; color: #f4d58d"><i class="fas fa-map-marked-alt"></i> {{profile.caffe.caffe_address}}</a></p>
+                                    <p>Categories : <a class="link-categories-gold" href="./noodles.html">{{searchCategory(detailDialog.category)}}</a></p>
+                                    <p>Description : {{detailDialog.description}}s</p>
                                 </div>
                             </div>
                             <h6 class="text-gold">Review <small>(scroll to see more)</small></h6>
@@ -1099,7 +1113,7 @@
                             <br>
                             <div class="row">
                                 <div class="col" v-if="detailDialog.caffes">
-                                    <button v-if="letReview" type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
+                                    <button v-if="letReview && isLogin" type="button" data-toggle="modal" data-target="#writeReview" class="btn btn-review text-gold">Write a Review!</button>
                                     <br v-if="letReview">
                                     <br v-if="letReview">
                                     <div class="review-box review-box-mak-mik" v-if="detailDialog.reviews">
