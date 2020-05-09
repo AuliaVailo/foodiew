@@ -983,12 +983,17 @@ new Vue({
             }
             $('#detailSponsore').modal('show')
         },
-        getBadgeReff: async function() {
-            let res = await axios.get( this.url + '/api/badge/')
-            if(res.status === 200) {
-                this.badgeReff = res.data.data
-                localStorage.setItem('bedgeReff', JSON.stringify(this.badgeReff))
-            }
+        getBadgeReff: function() {
+            axios.get( this.url + '/api/badge/')
+            .then((res) => {
+                if(res.status === 200) {
+                    this.badgeReff = res.data.data
+                    localStorage.setItem('bedgeReff', JSON.stringify(this.badgeReff))
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
         },
         defineBedge: function() {
             let bedgeReff = JSON.parse(localStorage.getItem('bedgeReff'))
