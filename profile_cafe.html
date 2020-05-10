@@ -296,6 +296,54 @@
     
                 <main class="col-md-9 col-xl-8 py-md-3 pl-md-3 dsk-content">
     
+                    <section id="information-panel">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-3 col-lg-2">
+                                    <img :src="profile.caffe.caffe_pictures ? profileUrl + profile.caffe.caffe_pictures : './assets/img/cafe.svg'" class="img-fluid img-profile-photo img-thumbnail">
+                                    <div id="badge-label" class="text-white text-center" style="margin-top: .475rem">
+                                        <i class="far fa-square kotak-bawah-tiga"></i>
+                                        <i class="far fa-square kotak-bawah-tiga"></i>
+                                        <i class="far fa-square kotak-bawah-tiga"></i>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-lg-4 text-gold px-0 info-panel">
+                                    <span class="h5 d-block" style="font-size: 1rem">{{profile.caffe.caffe_name}}</span>
+                                    <a :href="profile.caffe.googleMapLink" target="_blank" class="h6 d-inline-block text-truncate" style="font-size: .75rem; max-width: 200px; text-decoration: none; color: #f4d58d"><i class="fas fa-map-marker-alt"></i> {{profile.caffe.caffe_address}}</a>
+                                    <br>
+                                    <p class="rating mx-2 mb-0 text-gold">
+                                        <i class="lnr lnr-star text-warning" v-for="n in countRating(profile.caffe.reviews)"></i>&nbsp;({{countRating(profile.caffe.reviews)}})
+                                    </p>
+                                    <div class="addon" style="margin-top: 1rem !important">
+                                        <a href="#" class="label-sidebar" style="text-decoration: none; color: black;" v-on:click="changeStatus()">
+                                            <i class="fas fa-home text-navy-blue pr-0"></i></i>&nbsp;{{profile.caffe.status.charAt(0).toUpperCase() + profile.caffe.status.slice(1)}}
+                                        </a>
+                                        &nbsp;&nbsp;
+                                        <a href="#" class="label-sidebar" data-toggle="modal" data-target="#settingCafe" style="text-decoration: none; color: black;">
+                                            <i class="fas fa-cog text-navy-blue pr-0"></i></i>&nbsp;Settings
+                                        </a>
+                                        <!-- <a :href="telfon" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem;">
+                                            <i class="fas fa-phone"></i> Reservation
+                                        </a> -->
+                                    </div>
+                                </div>
+                                <div class="col-3 col-lg-6 text-gold">
+                                    <div class="review-header d-flex justify-content-between mb-2" style="font-size: 1rem;">
+                                        <span class="pt-1">Review <small>(scroll down to see more)</small></span>
+                                    </div>
+                                    <div class="review-box" v-if="profileUser.caffe.reviews">
+                                        <div v-for="item in profileUser.caffe.reviews">
+                                            <div class="review-single">
+                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black;">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i>  {{defineBedgeReviewer(item.users.voted_by) ?  defineBedgeReviewer(item.users.voted_by).name : ''}}</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><em>"{{item.review}}" ( <i class="far fa-star" v-for="n in item.rating"></i> )</em></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+    
                     <section id="user-recommendation" style="padding-bottom: 5rem;">
                         <div class="container">
                             <div class="row mb-0">
@@ -615,7 +663,7 @@
                                 <a :href="profile.caffe.googleMapLink" target="_blank" class="h6" style="font-size: .75rem; text-decoration: none; color: #f4d58d"><i class="fas fa-map-marker-alt"></i> {{profile.caffe.caffe_address.substr(1,25) + '...'}}</a>
                                 <br>
                                 <p class="rating mx-2 mb-0 text-gold">
-                                    
+                                    <i class="lnr lnr-star text-warning" v-for="n in countRating(profile.caffe.reviews)"></i> &nbsp;({{countRating(profile.caffe.reviews)}})
                                 </p>
     
                                 <!-- Modal -->

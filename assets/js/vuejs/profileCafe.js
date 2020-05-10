@@ -1217,12 +1217,15 @@ new Vue({
         },
         countRating: function (reviews) {
             let total = reviews.length
+            if (total <= 0) {
+                return 1
+            }
             let rate = 0
             let allRate = reviews.map(el => {
                 rate = rate + el.rating
                 return rate
             })
-            return rate / total
+            return allRate / total
         },
         openThisProfile: function(id) {
             let url = this.url + '/api/users/' + id
