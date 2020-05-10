@@ -228,7 +228,7 @@ new Vue({
 
                         if (res.data.data.type === '2') {
                             // console.log('baverages', result)
-                            if (this.trending_baverages) {
+                            if (this.trending_baverages.data) {
                                 if(this.trending_baverages.data.length === 0) {
                                     this.getBeverages()
                                 } else {
