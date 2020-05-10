@@ -3,10 +3,8 @@ new Vue({
     data: { 
         // url: 'http://localhost:8000',
         url: 'https://tranquil-dawn-58446.herokuapp.com',
-        // imageUrl: 'http://localhost:8000/menus/',
-        imageUrl: 'https://tranquil-dawn-58446.herokuapp.com/menus/',
-        // profileUrl: 'http://localhost:8000/profiles/',
-        profileUrl: 'https://tranquil-dawn-58446.herokuapp.com/profiles/',
+        imageUrl: '',
+        profileUrl: '',
         title: 'foodiew',
         isLogin: 0,
         items: [],
@@ -115,6 +113,8 @@ new Vue({
         localStorage.setItem('route', 'mycafe')
     },
     created () {
+        this.imageUrl = this.url + '/menus/'
+        this.profileUrl = this.url + '/profiles/'
         let token = localStorage.getItem('token')
         if (token !== null) {
             this.isLogin = 1

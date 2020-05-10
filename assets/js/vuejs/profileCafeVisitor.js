@@ -3,10 +3,8 @@ new Vue({
     data: { 
         // url: 'http://localhost:8000',
         url: 'https://tranquil-dawn-58446.herokuapp.com',
-        // imageUrl: 'http://localhost:8000/menus/',
-        imageUrl: 'https://tranquil-dawn-58446.herokuapp.com/menus/',
-        // profileUrl: 'http://localhost:8000/profiles/',
-        profileUrl: 'https://tranquil-dawn-58446.herokuapp.com/profiles/',
+        imageUrl: '',
+        profileUrl: '',
         title: 'foodiew',
         isLogin: 0,
         items: [],
@@ -100,7 +98,13 @@ new Vue({
         }
     },
     created () {
-        this.caffeId = localStorage.getItem('route').split(':')[1]
+        this.imageUrl = this.url + '/menus/'
+        this.profileUrl = this.url + '/profiles/'
+        if (localStorage.getItem('route')) {
+            this.caffeId = localStorage.getItem('route').split(':')[1]
+        } else {
+            this.signout()
+        }
         let token = localStorage.getItem('token')
         if (token !== null) {
             this.isLogin = 1
@@ -650,8 +654,15 @@ new Vue({
         },
         gotoRandomPromo: function() {
             let url = this.url + '/api/sponsore'
-            axios.get(url)
+            // let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                // headers: {
+                //     'Authorization': `${token}`,
+                // }
+            }
+            axios.get(url, header)
                 .then((res) => {
+                    console.log(res)
                     this.promos = res.data.data
                 })
                 .catch((err) => {
