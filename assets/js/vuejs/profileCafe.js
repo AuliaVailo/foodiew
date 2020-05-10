@@ -82,15 +82,15 @@ new Vue({
     },
     computed: {
         food: function () {
-            // if (this.trending_foods) {
-            //     return this.trending_foods.data
-            // }
+            if (this.trending_foods) {
+                return this.trending_foods.data
+            }
             return []
         },
         baverages: function () {
-            // if (this.trending_baverages) {
-            //     return this.trending_baverages.data
-            // }
+            if (this.trending_baverages) {
+                return this.trending_baverages.data
+            }
             return []
         },
         profileUser: function () {
