@@ -370,7 +370,7 @@
                                 </div>
                             </div>
                             <br>
-                            <div class="row d-flex justify-content-center px-0" v-if="trending_foods.data">
+                            <div class="row d-flex justify-content-center px-0" v-if="food">
                                 <div class="col-6 col-lg-3 col-md-4 col-sm-6 px-0 card-cafe" style="font-size: .8rem" v-for="item in food">
                                     <a href="#" role="button" data-toggle="modal" data-target="#detailFood" v-on:click="setDetail(item.id, 1)">
                                         <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/cup-instant-noodles-placed-napery-with-chilli-as-ingredients-top-view-noodle-copy-space_41722-860.jpg'" alt="">
@@ -407,8 +407,8 @@
                                     <div class="garis"></div>
                                 </div>
                             </div>
-                            <div class="row d-flex justify-content-center" v-if="trending_baverages.data">
-                                <div class="col-6 col-lg-3 col-md-4 col-sm-6  px-0 card-cafe" style="font-size: .8rem" v-for="item in baverages">
+                            <div class="row d-flex justify-content-center" v-if="food">
+                                <div class="col-6 col-lg-3 col-md-4 col-sm-6  px-0 card-cafe" style="font-size: .8rem" v-for="item in food">
                                     <a href="#" role="button" data-toggle="modal" data-target="#detailDrink"  v-on:click="setDetail(item.id, 1)">
                                         <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/close-up-coffee-cup-decorated-with-coffee-beans-placed-wooden-serving-board_141793-2026.jpg'" alt="">
                                         <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
@@ -741,7 +741,7 @@
                             </div>
                         </div>
                         <br>
-                        <div class="row d-flex justify-content-center px-0" v-if="trending_foods.data">
+                        <div class="row d-flex justify-content-center px-0" v-if="food">
                             <div class="col-5 col-lg-3 col-md-4 col-sm-6 px-0 my-2 card-cafe" style="font-size: .8rem" v-for="item in food" >
                                 <a href="#" role="button" data-toggle="modal" data-target="#detailFood"  v-on:click="setDetail(item.id, 1)">
                                     <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/cup-instant-noodles-placed-napery-with-chilli-as-ingredients-top-view-noodle-copy-space_41722-860.jpg'" alt="">
@@ -778,7 +778,7 @@
                                 <div class="garis"></div>
                             </div>
                         </div>
-                        <div class="row d-flex justify-content-center" v-if="trending_baverages.data">
+                        <div class="row d-flex justify-content-center" v-if="baverages">
                             <div class="col-5 col-lg-3 col-md-4 col-sm-6  px-0 card-cafe my-2" style="font-size: .8rem" v-for="item in baverages" >
                                 <a href="#" role="button" data-toggle="modal" data-target="#detailDrink"  v-on:click="setDetail(item.id, 1)">
                                     <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/close-up-coffee-cup-decorated-with-coffee-beans-placed-wooden-serving-board_141793-2026.jpg'" alt="">
