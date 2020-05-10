@@ -321,7 +321,7 @@ new Vue({
                     localStorage.setItem('trending_foods', JSON.stringify(this.trending_foods))
                 })
                 .catch((err) => {
-                    console.error(err)
+                    // console.error(err)
                     // if (err.response !== undefined) {
                     //     this.generalErrorMessage = err.response.data
                     // } else {
@@ -364,7 +364,7 @@ new Vue({
                     }
                 })
                 .catch((err) => {
-                    console.error(err)
+                    // console.error(err)
                     // if (err.response !== undefined) {
                     //     this.generalErrorMessage = err.response.data
                     // } else {
@@ -391,7 +391,7 @@ new Vue({
                     localStorage.setItem('trending_baverages', JSON.stringify(this.trending_baverages))
                 })
                 .catch((err) => {
-                    console.error(err)
+                    // console.error(err)
                     // if (err.response !== undefined) {
                     //     this.generalErrorMessage = err.response.data
                     // } else {
