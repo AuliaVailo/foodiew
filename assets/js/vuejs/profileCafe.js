@@ -85,18 +85,15 @@ new Vue({
             if (this.trending_foods) {
                 return this.trending_foods.data
             }
-            console.log('trending foods', this.trending_foods)
             return this.trending_foods
         },
         baverages: function () {
             if (this.trending_baverages) {
                 return this.trending_baverages.data
             }
-            console.log('trending baverages', this.trending_baverages)
             return this.trending_baverages
         },
         profileUser: function () {
-            console.log('profile computed', this.profile)
             let firstname = this.profile.members.first_name
             let midname = this.profile.members.mid_name
             let lastname = this.profile.members.last_name
@@ -115,6 +112,7 @@ new Vue({
                 name = this.profile.email
             }
             this.profile.name = name
+            console.log(this.profile)
             return this.profile
         }
     },
