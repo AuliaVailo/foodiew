@@ -82,16 +82,10 @@ new Vue({
     },
     computed: {
         food: function () {
-            if (this.trending_foods) {
-                return this.trending_foods.data
-            }
-            return []
+            return this.trending_foods ? this.trending_foods.data : []
         },
         baverages: function () {
-            if (this.trending_baverages) {
-                return this.trending_baverages.data
-            }
-            return []
+            return this.trending_baverages ? this.trending_baverages.data : []
         },
         profileUser: function () {
             let firstname = this.profile.members.first_name
