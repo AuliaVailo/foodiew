@@ -264,36 +264,6 @@
                     </div>
                 </div>
     
-                <nav class="d-none d-xl-block col-xl-2 dsk-sidebar-right text-white text-center">
-                    <h6 class="text-gold">Sponsored</h6>
-                    <div class="garis-promoted"></div>
-                    <br>
-                    <div v-if="promos">
-                        <div v-for="item in promos">
-                            <h6 v-if="item.details.type === '1'">Food</h6>
-                            <h6 v-if="item.details.type === '2'">Beverages</h6>
-                            <h6 v-if="item.details.type !== '2' && item.details.type !== '1'">Cafe</h6>
-                            <div class="row" v-if="item.details.type === '1' || item.details.type === '2'">
-                                <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem; min-height: 170px;">
-                                    <a href="#" v-on:click="openDetailSponsore(item.details)">
-                                        <img class="img-fluid" :src="item.details.pictures ? imageUrl + item.details.pictures : './assets/img/Header.jpg'" alt="">
-                                        <p class="mx-2 mt-2 pb-2 font-weight-bolder">{{item.details.name}}</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="row" v-else>
-                                <div class="px-0 card-cafe-sponsored text-left" style="font-size: .8rem; min-height: 170px">
-                                    <a href="#" v-on:click="openThisCafe(item.details.id)">
-                                        <img class="img-fluid" :src="item.details.caffe_pictures ? profileUrl + item.details.caffe_pictures : './assets/img/cafe.svg'" alt="">
-                                        <p class="mx-2 mt-2 pb-2 font-weight-bolder">{{item.details.caffe_name}}</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <br>
-                        </div>
-                    </div>
-                </nav>
-    
                 <main class="col-md-9 col-xl-8 py-md-3 pl-md-3 dsk-content">
     
                     <section id="information-panel">
