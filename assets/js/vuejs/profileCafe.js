@@ -12,8 +12,7 @@ new Vue({
         profile: [],
         generalErrorMessage: '',
         guestProfile: [],
-        route: localStorage.getItem('route'),
-        telfon: 'tel:087803166974',
+        route: '',
         imagePreview: '',
         defaultImage: './assets/img/Header.jpg',
         pictures: '',
@@ -114,6 +113,7 @@ new Vue({
         localStorage.setItem('route', 'mycafe')
     },
     created () {
+        this.route = localStorage.getItem('route'),
         this.imageUrl = this.url + '/menus/'
         this.profileUrl = this.url + '/profiles/'
         let token = localStorage.getItem('token')
@@ -215,7 +215,7 @@ new Vue({
                         result.caffes = this.profile.caffe
                         if (res.data.data.type === '1') {
                             // console.log('food', result)
-                            if(this.trending_foods.length === 0) {
+                            if(this.trending_foods.data.length === 0) {
                                 this.getFoods()
                             } else {
                                 this.trending_foods.data.push(result)
@@ -224,7 +224,7 @@ new Vue({
 
                         if (res.data.data.type === '2') {
                             // console.log('baverages', result)
-                            if(this.trending_baverages.length === 0) {
+                            if(this.trending_baverages.data.length === 0) {
                                 this.getBeverages()
                             } else {
                                 this.trending_baverages.data.push(result)
@@ -450,6 +450,9 @@ new Vue({
             if(result.length > 0){
                 result = result[0]
                 return result.name
+            }
+            return {
+                id: '', name: ''
             }
         },
         confirmDelete: function (id) {
