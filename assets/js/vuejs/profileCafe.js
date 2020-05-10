@@ -215,8 +215,12 @@ new Vue({
                         result.caffes = this.profile.caffe
                         if (res.data.data.type === '1') {
                             // console.log('food', result)
-                            if(this.trending_foods.data.length === 0) {
-                                this.getFoods()
+                            if(this.trending_foods.data) {
+                                if(this.trending_foods.data.length === 0) {
+                                    this.getFoods()
+                                } else {
+                                    this.trending_foods.data.push(result)
+                                }
                             } else {
                                 this.trending_foods.data.push(result)
                             }
@@ -224,8 +228,12 @@ new Vue({
 
                         if (res.data.data.type === '2') {
                             // console.log('baverages', result)
-                            if(this.trending_baverages.data.length === 0) {
-                                this.getBeverages()
+                            if (this.trending_baverages) {
+                                if(this.trending_baverages.data.length === 0) {
+                                    this.getBeverages()
+                                } else {
+                                    this.trending_baverages.data.push(result)
+                                }
                             } else {
                                 this.trending_baverages.data.push(result)
                             }
