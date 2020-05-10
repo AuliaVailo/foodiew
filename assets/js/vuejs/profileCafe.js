@@ -82,17 +82,17 @@ new Vue({
     },
     computed: {
         food: function () {
-            console.log('trending foods', this.trending_foods)
             if (this.trending_foods) {
                 return this.trending_foods.data
             }
+            console.log('trending foods', this.trending_foods)
             return this.trending_foods
         },
         baverages: function () {
-            console.log('trending baverages', this.trending_baverages)
             if (this.trending_baverages) {
                 return this.trending_baverages.data
             }
+            console.log('trending baverages', this.trending_baverages)
             return this.trending_baverages
         },
         profileUser: function () {
