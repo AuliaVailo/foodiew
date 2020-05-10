@@ -216,13 +216,17 @@ new Vue({
                         if (res.data.data.type === '1') {
                             // console.log('food', result)
                             if(this.trending_foods.data) {
+                                console.log('ada', this.trending_foods.data)
                                 if(this.trending_foods.data.length === 0) {
+                                    console.log(this.trending_foods.data.length, 'data kosong, ambil dari daftar')
                                     this.getFoods()
                                 } else {
+                                    console.log('data ada, push')
                                     this.trending_foods.data.push(result)
                                 }
                             } else {
-                                this.trending_foods.data.push(result)
+                                console.log('gak ada', this.trending_foods.data)
+                                this.getFoods()
                             }
                         }
 
