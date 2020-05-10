@@ -918,7 +918,7 @@ new Vue({
         countRate: function(reviews) {
             let rate = 0
             let totalRating = 0
-            let totalData = 0
+            let totalData = 1
             if(reviews.length) {
                 reviews.map(el=>{
                     totalRating += el.rating

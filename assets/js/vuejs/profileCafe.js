@@ -1223,17 +1223,20 @@ new Vue({
                 }
             }
         },
-        countRating: function (reviews) {
-            let total = reviews.length
-            if (total <= 0) {
-                return 1
-            }
+        countRating: function(reviews) {
             let rate = 0
-            let allRate = reviews.map(el => {
-                rate = rate + el.rating
-                return rate
-            })
-            return allRate / total
+            let totalRating = 0
+            let totalData = 1
+            if(reviews.length) {
+                reviews.map(el=>{
+                    totalRating += el.rating
+                    totalData++
+                })
+                rate = totalRating / totalData
+            } else {
+                rate = 1
+            }
+            return rate
         },
         openThisProfile: function(id) {
             let url = this.url + '/api/users/' + id

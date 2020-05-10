@@ -1176,6 +1176,21 @@ new Vue({
                 $('#sign-in2').modal('show')
             }, 1000);
         },
+        countRating: function(reviews) {
+            let rate = 0
+            let totalRating = 0
+            let totalData = 1
+            if(reviews.length) {
+                reviews.map(el=>{
+                    totalRating += el.rating
+                    totalData++
+                })
+                rate = totalRating / totalData
+            } else {
+                rate = 1
+            }
+            return rate
+        },
     }
 })
 
