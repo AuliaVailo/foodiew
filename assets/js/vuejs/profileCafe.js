@@ -78,7 +78,10 @@ new Vue({
         password: '',
         confirm_password: '',
         passwordError: '',
-        confirmPasswordError: ''
+        confirmPasswordError: '',
+        isSale: 0,
+        priceSale: 0,
+        priceSaleError: ''
     },
     computed: {
         food: function () {
@@ -559,12 +562,24 @@ new Vue({
             })
             if (item.length > 0) {
                 this.formUpdate = item[0]
+                let isSale = this.formUpdate.isSale
+                let priceSale  = this.formUpdate.priceSale
+                console.log(isSale, priceSale)
+                if(isSale === null) {
+                    isSale = 0
+                }
+
+                if(priceSale === null) {
+                    priceSale = 0
+                }
                 this.imagePreview = this.imageUrl + this.formUpdate.pictures
                 this.menuName = this.formUpdate.name
                 this.type = this.formUpdate.type
                 this.category = this.formUpdate.category
                 this.price = this.formUpdate.price
                 this.description = this.formUpdate.description
+                this.isSale = isSale
+                this.priceSale = priceSale
                 $('#updateFood').modal('show')
             } else {
                 let item = this.baverages.filter(el => {
@@ -615,6 +630,8 @@ new Vue({
             formData.append('category', this.category)
             formData.append('price', this.price)
             formData.append('description', this.description)
+            formData.append('isSale', this.isSale)
+            formData.append('priceSale', this.priceSale)
             formData.append('_method', 'PUT');
             let payload = formData
 

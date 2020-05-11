@@ -1327,6 +1327,18 @@
                                 <textarea class="form-control" id="inputDescription" name="inputDescription" style="height: 150px;" v-model="description" placeholder="Menu Descripton*" required></textarea>
                                 <span v-if="descriptionError" class="help-block" style="color: #F4D58D">{{descriptionError}}</span>
                             </div>
+                            <div :class="categoryError ? 'form-label-group has-error' : 'form-label-group '">
+                                <select name="inputCategory" id="inputCategory" class="form-control" v-model="isSale">
+                                    <option value="0">NORMAL</option>
+                                    <option value="1">PROMO</option>
+                                </select>
+                                <span v-if="categoryError" class="help-block" style="color: #F4D58D">{{categoryError}}</span>
+                            </div>
+                            <div :class="priceSaleError ? 'form-label-group has-error' : 'form-label-group '">
+                                <input type="number" id="inputPrice" name="inputPrice" class="form-control" placeholder="Rp. ___.___" v-model="priceSale">
+                                <label for="inputPrice">Price*</label>
+                                <span v-if="priceSaleError" class="help-block" style="color: #F4D58D">{{priceSaleError}}</span>
+                            </div>
                             <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
                                 <div class="spinner-border spinner-border-sm text-light" role="status">
                                     <span class="sr-only">Loading...</span>
