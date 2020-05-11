@@ -375,11 +375,8 @@
                                     <a href="#" role="button" data-toggle="modal" data-target="#detailFood" v-on:click="setDetail(item.id, 1)">
                                         <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/cup-instant-noodles-placed-napery-with-chilli-as-ingredients-top-view-noodle-copy-space_41722-860.jpg'" alt="">
                                         <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
-                                        <p class="rating mx-2 mb-0 white-text" v-if="item.rating !== 'null'">
-                                            <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating)"></i>
-                                        </p>
-                                        <p class="rating mx-2 mb-0 white-text" v-else>
-                                            <i class="lnr lnr-star text-warning"></i>
+                                        <p class="rating mx-2 mb-0 white-text">
+                                            <i class="lnr lnr-star text-warning" v-for="n in countRating(item.reviews)"></i>
                                         </p>
                                         <span v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.price).toLocaleString('id')}}</span> <span  v-if="item.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
                                         <p v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.priceSale).toLocaleString('id')}}</p>
@@ -415,11 +412,8 @@
                                     <a href="#" role="button" data-toggle="modal" data-target="#detailDrink"  v-on:click="setDetail(item.id, 1)">
                                         <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/close-up-coffee-cup-decorated-with-coffee-beans-placed-wooden-serving-board_141793-2026.jpg'" alt="">
                                         <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
-                                        <p class="rating mx-2 mb-0 white-text" v-if="item.rating !== 'null'">
-                                            <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating)"></i>
-                                        </p>
-                                        <p class="rating mx-2 mb-0 white-text" v-else>
-                                            <i class="lnr lnr-star text-warning"></i>
+                                        <p class="rating mx-2 mb-0 white-text">
+                                            <i class="lnr lnr-star text-warning" v-for="n in countRating(item.reviews)"></i>
                                         </p>
                                         <span v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.price).toLocaleString('id')}}</span> <span  v-if="item.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
                                         <p v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.priceSale).toLocaleString('id')}}</p>
@@ -752,11 +746,8 @@
                                 <a href="#" role="button" data-toggle="modal" data-target="#detailFood"  v-on:click="setDetail(item.id, 1)">
                                     <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/cup-instant-noodles-placed-napery-with-chilli-as-ingredients-top-view-noodle-copy-space_41722-860.jpg'" alt="">
                                     <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
-                                    <p class="rating mx-2 mb-0 white-text" v-if="item.rating !== 'null'">
-                                        <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating)"></i>
-                                    </p>
-                                    <p class="rating mx-2 mb-0 white-text" v-else>
-                                        <i class="lnr lnr-star text-warning"></i>
+                                    <p class="rating mx-2 mb-0 white-text">
+                                        <i class="lnr lnr-star text-warning" v-for="n in countRating(item.reviews)"></i>
                                     </p>
                                     <span v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.price).toLocaleString('id')}}</span> <span  v-if="item.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
                                     <p v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.priceSale).toLocaleString('id')}}</p>
@@ -792,11 +783,8 @@
                                 <a href="#" role="button" data-toggle="modal" data-target="#detailDrink"  v-on:click="setDetail(item.id, 1)">
                                     <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/close-up-coffee-cup-decorated-with-coffee-beans-placed-wooden-serving-board_141793-2026.jpg'" alt="">
                                     <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
-                                    <p class="rating mx-2 mb-0 white-text" v-if="item.rating !== 'null'">
-                                        <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating)"></i>
-                                    </p>
-                                    <p class="rating mx-2 mb-0 white-text" v-else>
-                                        <i class="lnr lnr-star text-warning"></i>
+                                    <p class="rating mx-2 mb-0 white-text">
+                                        <i class="lnr lnr-star text-warning" v-for="n in countRating(item.reviews)"></i>
                                     </p>
                                     <span v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.price).toLocaleString('id')}}</span> <span  v-if="item.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
                                     <p v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.priceSale).toLocaleString('id')}}</p>
