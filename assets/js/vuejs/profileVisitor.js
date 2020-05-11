@@ -515,25 +515,25 @@ new Vue({
                 })
                 .catch((err) => {
                     this.isLoading = false
-                    const that = this
-                    if (err.response !== undefined) {
-                        if(err.response.status === 401){
-                            this.generalErrorMessage = 'Your session is expired, please login...'
-                            $('#generalModal').modal('show')
-                            setTimeout(() => {
-                                $('#generalModal').modal('hide')
-                                that.signout()
-                            }, 3000);
-                        } else {
-                            this.generalErrorMessage = err.response.statusText
-                        }
-                    } else {
-                        this.generalErrorMessage = err
-                    }
-                    $('#generalModal').modal('show')
-                    setTimeout(() => {
-                        $('#generalModal').modal('hide')
-                    }, 3000);
+                    // const that = this
+                    // if (err.response !== undefined) {
+                    //     if(err.response.status === 401){
+                    //         this.generalErrorMessage = 'Your session is expired, please login...'
+                    //         $('#generalModal').modal('show')
+                    //         setTimeout(() => {
+                    //             $('#generalModal').modal('hide')
+                    //             that.signout()
+                    //         }, 3000);
+                    //     } else {
+                    //         this.generalErrorMessage = err.response.statusText
+                    //     }
+                    // } else {
+                    //     this.generalErrorMessage = err
+                    // }
+                    // $('#generalModal').modal('show')
+                    // setTimeout(() => {
+                    //     $('#generalModal').modal('hide')
+                    // }, 3000);
                 })
         },
         openDetailSponsore: function(item) {

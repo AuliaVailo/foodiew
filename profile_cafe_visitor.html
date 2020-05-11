@@ -417,7 +417,7 @@
                                         <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/cup-instant-noodles-placed-napery-with-chilli-as-ingredients-top-view-noodle-copy-space_41722-860.jpg'" alt="">
                                         <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
                                         <p class="rating mx-2 mb-0 white-text">
-                                            <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating)"></i>
+                                            <i class="lnr lnr-star text-warning" v-for="n in countRating(item.reviews)"></i>
                                         </p>
                                         <span v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.price).toLocaleString('id')}}</span> <span  v-if="item.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
                                         <p v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.priceSale).toLocaleString('id')}}</p>
@@ -453,7 +453,7 @@
                                         <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/close-up-coffee-cup-decorated-with-coffee-beans-placed-wooden-serving-board_141793-2026.jpg'" alt="">
                                         <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
                                         <p class="rating mx-2 mb-0 white-text">
-                                            <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating)"></i>
+                                            <i class="lnr lnr-star text-warning" v-for="n in countRating(item.reviews)"></i>
                                         </p>
                                         <span v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.price).toLocaleString('id')}}</span> <span  v-if="item.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
                                         <p v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.priceSale).toLocaleString('id')}}</p>
@@ -907,10 +907,10 @@
                         </div>
                         <div class="row">
                             <div class="col-2 col-lg-2">&nbsp;</div>
-                            <div class="col-10 col-lg-10" v-if="profileCafe.reviews">
+                            <div class="col-10 col-lg-10" v-if="profileCafe.reviews.length > 0">
                                 <!-- <div class="review-box"> -->
                                 <div class="review-single" id="reviewSingle">
-                                    <!-- <p><a href="#" v-on:click="openThisProfile(profileCafe.reviews[0].users.id)" style="text-decoration: none; color: black;">@ {{profileCafe.reviews[0].users.user_name ? profileCafe.reviews[0].users.user_name : profileCafe.reviews[0].users.email}}</a> - <small><i class="fas fa-star"></i>  {{defineBedgeReviewer(profileCafe.reviews[0].users.voted_by) ?  defineBedgeReviewer(profileCafe.reviews[0].users.voted_by).name : ''}}</small> &nbsp;&nbsp; <a v-if="profileCafe.reviews[0].user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(profileCafe.reviews[0].id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p> -->
+                                    <p><a href="#" v-on:click="openThisProfile(profileCafe.reviews[0].users.id)" style="text-decoration: none; color: black;">@ {{profileCafe.reviews[0].users.user_name ? profileCafe.reviews[0].users.user_name : profileCafe.reviews[0].users.email}}</a> - <small><i class="fas fa-star"></i>  {{defineBedgeReviewer(profileCafe.reviews[0].users.voted_by) ?  defineBedgeReviewer(profileCafe.reviews[0].users.voted_by).name : ''}}</small> &nbsp;&nbsp; <a v-if="profileCafe.reviews[0].user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(profileCafe.reviews[0].id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
                                     <p><em>"{{profileCafe.reviews[0].review}}" ( <i class="far fa-star" v-for="n in profileCafe.reviews[0].rating"></i>)</em></p>
                                 </div>
                                 <!-- </div> -->
@@ -951,7 +951,7 @@
                                     <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/cup-instant-noodles-placed-napery-with-chilli-as-ingredients-top-view-noodle-copy-space_41722-860.jpg'" alt="">
                                     <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
                                     <p class="rating mx-2 mb-0 white-text">
-                                        <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating)"></i>
+                                        <i class="lnr lnr-star text-warning" v-for="n in countRating(item.reviews)"></i>
                                     </p>
                                     <p class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.price).toLocaleString('id')}}</p>
                                     <p class="text-truncate">
@@ -985,7 +985,7 @@
                                     <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/close-up-coffee-cup-decorated-with-coffee-beans-placed-wooden-serving-board_141793-2026.jpg'" alt="">
                                     <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
                                     <p class="rating mx-2 mb-0 white-text">
-                                        <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating)"></i>
+                                        <i class="lnr lnr-star text-warning" v-for="n in countRating(item.reviews)"></i>
                                     </p>
                                     <span v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.price).toLocaleString('id')}}</span> <span  v-if="item.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
                                     <p v-if="item.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.priceSale).toLocaleString('id')}}</p>
