@@ -1237,8 +1237,8 @@ new Vue({
             } else {
                 rate = 1
             }
-            console.log(Number(Math.round(rate)))
-            return 1
+            
+            return Number(Math.round(rate))
         },
         openThisProfile: function(id) {
             let url = this.url + '/api/users/' + id
