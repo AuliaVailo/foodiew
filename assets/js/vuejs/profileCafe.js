@@ -622,7 +622,6 @@ new Vue({
             
             axios.post(url, payload, header)
                 .then((res) => {
-                    // console.log(res, this.formUpdate.type, this.type)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = res.data.message
