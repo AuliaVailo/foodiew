@@ -990,6 +990,7 @@ new Vue({
                     }
                 })
                 .catch((err) => {
+                    console.log(err)
                     this.isLoading = false
                     const that = this
                     if (err.response !== undefined) {
@@ -1087,7 +1088,7 @@ new Vue({
         },
         updateProfileCafe: function () {
             this.isLoading = true
-            let url = this.url + '/api/caffes/'
+            let url = this.url + '/api/caffes'
             let token = 'Bearer ' + localStorage.getItem('token')
             let header = {
                 headers: {
