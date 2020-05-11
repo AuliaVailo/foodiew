@@ -56,26 +56,98 @@
             .bd-placeholder-img-lg {
                 font-size: 3.5rem;
             }
+            [v-cloak] > * { display:none }
+            [v-cloak]::before { 
+                content: '';
+                position: absolute;
+                left: 55%;
+                top: 50%;
+                z-index: 1;
+                width: 80px;
+                height: 80px;
+                margin: -75px 0 0 -75px;
+                border: 16px solid #f3f3f3;
+                border-radius: 50%;
+                border-top: 16px solid #F4D58D;
+                width: 50px;
+                height: 50px;
+                -webkit-animation: spin 2s linear infinite;
+                animation: spin 2s linear infinite;
+            }
         }
 
-        [v-cloak] > * { display:none }
-        [v-cloak]::before { 
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            z-index: 1;
-            width: 80px;
-            height: 80px;
-            margin: -75px 0 0 -75px;
-            border: 16px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 16px solid #F4D58D;
-            width: 50px;
-            height: 50px;
-            -webkit-animation: spin 2s linear infinite;
-            animation: spin 2s linear infinite;
+        @media (max-width: 425px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+            [v-cloak] > * { display:none }
+            [v-cloak]::before { 
+                content: '';
+                position: absolute;
+                left: 65%;
+                top: 50%;
+                z-index: 1;
+                width: 80px;
+                height: 80px;
+                margin: -75px 0 0 -75px;
+                border: 16px solid #f3f3f3;
+                border-radius: 50%;
+                border-top: 16px solid #F4D58D;
+                width: 50px;
+                height: 50px;
+                -webkit-animation: spin 2s linear infinite;
+                animation: spin 2s linear infinite;
+            }
         }
+
+        @media (max-width: 375px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+            [v-cloak] > * { display:none }
+            [v-cloak]::before { 
+                content: '';
+                position: absolute;
+                left: 70%;
+                top: 50%;
+                z-index: 1;
+                width: 80px;
+                height: 80px;
+                margin: -75px 0 0 -75px;
+                border: 16px solid #f3f3f3;
+                border-radius: 50%;
+                border-top: 16px solid #F4D58D;
+                width: 50px;
+                height: 50px;
+                -webkit-animation: spin 2s linear infinite;
+                animation: spin 2s linear infinite;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+            [v-cloak] > * { display:none }
+            [v-cloak]::before { 
+                content: '';
+                position: absolute;
+                left: 55%;
+                top: 50%;
+                z-index: 1;
+                width: 80px;
+                height: 80px;
+                margin: -75px 0 0 -75px;
+                border: 16px solid #f3f3f3;
+                border-radius: 50%;
+                border-top: 16px solid #F4D58D;
+                width: 50px;
+                height: 50px;
+                -webkit-animation: spin 2s linear infinite;
+                animation: spin 2s linear infinite;
+            }
+        }
+        
         @-webkit-keyframes spin {
         0% { -webkit-transform: rotate(0deg); }
         100% { -webkit-transform: rotate(360deg); }
