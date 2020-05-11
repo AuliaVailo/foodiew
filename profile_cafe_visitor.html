@@ -260,6 +260,121 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true" ref="registerModal">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content modal-register">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-navy-blue" id="staticBackdropLabel">Register Form</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center">
+                                    <img src="./assets/img/Logo_Square.png" class="img-fluid" style="width: 10rem; height: 10rem" alt="">
+                                </div>
+
+                                <form class="form-signup" v-on:submit.prevent="register">
+                                    <div :class="emailError ? 'form-label-group has-error' : 'form-label-group '">
+                                        <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email" v-model="email" required>
+                                        <label for="inputEmail">E-mail</label>
+                                        <span v-if="emailError" class="help-block" style="color: #F4D58D">{{errorEmail}}</span>
+                                    </div>
+                                    <div :class="passwordError ? 'form-label-group has-error' : 'form-label-group '">
+                                        <input type="password" id="inputPass" name="inputPass" class="form-control" placeholder="Password" v-model="password" required>
+                                        <label for="inputPass">Password</label>
+                                        <span v-if="passwordError" class="help-block" style="color: #F4D58D">{{passwordError}}</span>
+                                    </div>
+                                    <div :class="confirmPasswordError ? 'form-label-group has-error' : 'form-label-group '">
+                                        <input type="password" id="inputPassConf" name="inputPassConf" class="form-control" placeholder="Password" v-model="confirm_password" required>
+                                        <label for="inputPassConf">Confirmation Password</label>
+                                        <span v-if="confirmPasswordError" class="help-block" style="color: #F4D58D">{{confirmPasswordError}}</span>
+                                    </div>
+                                    <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                                        <div class="spinner-border spinner-border-sm text-light" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </button>
+                                    <button v-else type="submit" class="btn btn-review text-gold">Register</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Signin-->
+                <div class="modal fade" id="sign-in" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true" ref="registerModal">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content modal-register">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-navy-blue" id="staticBackdropLabel">Sign-in</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center">
+                                    <img src="./assets/img/Logo_Square.png" class="img-fluid" style="width: 10rem; height: 10rem" alt="">
+                                </div>
+
+                                <form class="form-signup" v-on:submit.prevent="signin">
+                                    <div :class="emailError ? 'form-label-group has-error' : 'form-label-group '">
+                                        <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email" v-model="email" required>
+                                        <label for="inputEmail">E-mail</label>
+                                        <span v-if="emailError" class="help-block" style="color: #F4D58D">{{errorEmail}}</span>
+                                    </div>
+                                    <div :class="passwordError ? 'form-label-group has-error' : 'form-label-group '">
+                                        <input type="password" id="inputPass" name="inputPass" class="form-control" placeholder="Password" v-model="password" required>
+                                        <label for="inputPass">Password</label>
+                                        <span v-if="passwordError" class="help-block" style="color: #F4D58D">{{passwordError}}</span>
+                                    </div>
+                                    <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                                        <div class="spinner-border spinner-border-sm text-light" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </button>
+                                    <button v-else type="submit" class="btn btn-review text-gold">Sign-in</button>
+                                    <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#forgotPassword" class="float-right" style="text-decoration: none; color: gainsboro; ">Forgot my password?</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Signin-->
+                <div class="modal fade" id="forgotPassword" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true" ref="registerModal">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content modal-register">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-navy-blue" id="staticBackdropLabel">Forgot Password</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center">
+                                    <img src="./assets/img/Logo_Square.png" class="img-fluid" style="width: 10rem; height: 10rem" alt="">
+                                </div>
+
+                                <form class="form-signup" v-on:submit.prevent="forgotPassword">
+                                    <div :class="emailError ? 'form-label-group has-error' : 'form-label-group '">
+                                        <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email" v-model="email" required>
+                                        <label for="inputEmail">E-mail</label>
+                                        <span v-if="emailError" class="help-block" style="color: #F4D58D">{{errorEmail}}</span>
+                                    </div>
+                                    <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                                        <div class="spinner-border spinner-border-sm text-light" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </button>
+                                    <button v-else type="submit" class="btn btn-review text-gold">Send</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
     
                 <nav class="d-none d-xl-block col-xl-2 dsk-sidebar-right text-white text-center">
                     <h6 class="text-gold">Sponsored</h6>
