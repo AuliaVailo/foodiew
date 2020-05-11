@@ -928,11 +928,24 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-4 col-lg-2 text-gold" v-if="route !== 'mycafe'">
-                                <button type="button" class="btn btn-primary btn-review text-gold mt-1" data-toggle="modal" data-target="#writeReviewMobile"><i class="fas fa-edit"></i> Write a review!</button>
+                        </div>
+                        <div class="row">
+                            <div class="col-2"></div>
+                            <div class="col-10">
+                                <div class="addon pl-3 pb-2" style="margin-top: 1rem !important">
+                                    <a v-if="profileUser.caffe.phone" :href="'tel:' + profileUser.caffe.phone" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem; text-decoration: none; color: black;">
+                                        <i class="fas fa-phone"></i> Res
+                                    </a>
+                                    <a v-if="profileUser.caffe.email" :href="'mailto:' + profileUser.caffe.email" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem; text-decoration: none; color: black;">
+                                        <i class="fas fa-paper-plane"></i> Mail
+                                    </a>
+                                    <a href="#" v-on:click="openThisProfile(profileUser.caffe.user_id)" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem; text-decoration: none; color: black;">
+                                        <i class="fas fa-user"></i> Owner
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                        <div class="row row-review pt-4">
+                        <div class="row pt-4">
                             <div class="col-2 col-lg-2">&nbsp;</div>
                             <div class="col-10 col-lg-10" v-if="profileUser.caffe.reviews.length > 0">
                                 <!-- <div class="review-box"> -->
