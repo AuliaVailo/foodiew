@@ -2,7 +2,7 @@ new Vue({
     el: '#app',
     data: { 
         // url: 'http://localhost:8000',
-        url: 'https://tranpmnquil-dawn-58446.herokuapp.com',
+        url: 'https://tranquil-dawn-58446.herokuapp.com/',
         urlStorage: 'https://images.traceofficial.com/',
         imageUrl: '',
         profileUrl: '',
