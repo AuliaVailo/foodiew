@@ -1,8 +1,9 @@
 new Vue({
     el: '#app',
     data: { 
-        // url: 'http://localhost:8000',
-        url: 'https://tranquil-dawn-58446.herokuapp.com',
+        url: 'http://localhost:8000',
+        // url: 'https://tranquil-dawn-58446.herokuapp.com',
+        urlStorage: 'https://images.traceofficial.com/',
         imageUrl: '',
         profileUrl: '',
         title: 'foodiew',
@@ -114,8 +115,8 @@ new Vue({
     },
     created () {
         this.route = localStorage.getItem('route'),
-        this.imageUrl = this.url + '/menus/'
-        this.profileUrl = this.url + '/profiles/'
+        this.imageUrl = this.urlStorage + '/menus/'
+        this.profileUrl = this.urlStorage + '/profiles/'
         let token = localStorage.getItem('token')
         if (token !== null) {
             this.isLogin = 1
@@ -1236,7 +1237,7 @@ new Vue({
             } else {
                 rate = 1
             }
-            return rate
+            return Number(Math.round(rate))
         },
         openThisProfile: function(id) {
             let url = this.url + '/api/users/' + id
