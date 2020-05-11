@@ -466,6 +466,9 @@ new Vue({
                 result = result[0]
                 return result.name
             }
+            return {
+                id: '', name: ''
+            }
         },
         addReviewCafe: function () {
             this.isLoading = true
