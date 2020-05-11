@@ -3,7 +3,7 @@ new Vue({
     data: { 
         // url: 'http://localhost:8000',
         url: 'https://tranquil-dawn-58446.herokuapp.com',
-        urlStorage: 'https://images.traceofficial.com/',
+        urlStorage: 'https://images.traceofficial.com',
         imageUrl: '',
         profileUrl: '',
         title: 'foodiew',
