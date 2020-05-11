@@ -932,16 +932,17 @@
                         <div class="row">
                             <div class="col-2"></div>
                             <div class="col-10">
-                                <div class="addon pl-3 pb-2" style="margin-top: 1rem !important">
-                                    <a v-if="profileUser.caffe.phone" :href="'tel:' + profileUser.caffe.phone" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem; text-decoration: none; color: black;">
-                                        <i class="fas fa-phone"></i> Res
+                                <div class="addon" style="margin-top: 1rem !important">
+                                    <a href="#" class="label-sidebar" style="text-decoration: none; color: black;" v-on:click="changeStatus()">
+                                        <i class="fas fa-home text-navy-blue pr-0"></i></i>&nbsp;{{profile.caffe.status.charAt(0).toUpperCase() + profile.caffe.status.slice(1)}}
                                     </a>
-                                    <a v-if="profileUser.caffe.email" :href="'mailto:' + profileUser.caffe.email" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem; text-decoration: none; color: black;">
-                                        <i class="fas fa-paper-plane"></i> Mail
+                                    &nbsp;&nbsp;
+                                    <a href="#" class="label-sidebar" data-toggle="modal" data-target="#settingCafe" style="text-decoration: none; color: black;">
+                                        <i class="fas fa-cog text-navy-blue pr-0"></i></i>&nbsp;Settings
                                     </a>
-                                    <a href="#" v-on:click="openThisProfile(profileUser.caffe.user_id)" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem; text-decoration: none; color: black;">
-                                        <i class="fas fa-user"></i> Owner
-                                    </a>
+                                    <!-- <a :href="telfon" class="text-navy-blue px-2 py-2 drop-shadow btn-profile" style="font-size: .75rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem;">
+                                        <i class="fas fa-phone"></i> Reservation
+                                    </a> -->
                                 </div>
                             </div>
                         </div>
