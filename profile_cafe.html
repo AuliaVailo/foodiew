@@ -191,12 +191,13 @@
                 <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav" type="button" id="notificationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <!-- <i class="fas fa-bell"></i> <span class="badge badge-pill badge-warning">99</span> -->
                     <i class="fas fa-bell"></i>
+                    <span class="badge badge-pill badge-light" style="position: absolute;" v-if="allNotif > 0">{{allNotif}}</span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationMenu" style="font-size: .85rem;">
                     <!-- <a class="dropdown-item" href="#"><i class="fas fa-power-off"></i> Notif</a> -->
-                    <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 1</a>
-                    <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 2</a>
-                    <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 3</a>
+                    <a href="#" class="dropdown-item" v-for="item in notification" v-on:click="checkNotif(item.target, item.id)">
+                        <i :class="item.isRead ? 'far fa-bell' : 'fas fa-bell'"></i>&nbsp;<span v-html="item.notification"></span><br>&nbsp;&nbsp;&nbsp;<span style="font-size: 10px; color: grey;"> at {{item.created_at}}</span></a>
+                    <a href="#" class="dropdown-item text-center" v-if="nextNotif" v-on:click="seeMoreNotif()">See more...</a>
                 </div>
             </div>
             <div class="dropdown" v-if="isLogin">
@@ -503,7 +504,7 @@
                                     </p>
                                     <div class="addon" style="margin-top: 1rem !important">
                                         <a href="#" class="label-sidebar" style="text-decoration: none; color: black;" v-on:click="changeStatus()">
-                                            <i class="fas fa-home text-navy-blue pr-0"></i></i>&nbsp;{{profile.caffe.status.charAt(0).toUpperCase() + profile.caffe.status.slice(1)}}
+                                            <i class="fas fa-store text-navy-blue pr-0"></i></i>&nbsp;{{profile.caffe.status.charAt(0).toUpperCase() + profile.caffe.status.slice(1)}}
                                         </a>
                                         &nbsp;&nbsp;
                                         <a href="#" class="label-sidebar" data-toggle="modal" data-target="#settingCafe" style="text-decoration: none; color: black;">
@@ -889,16 +890,17 @@
                 <!-- <a class="navbar-brand text-white ml-auto font-weight-bolder" style="font-size: .9rem;" href="./profile">
                     <img src="./assets/img/Profile_dummy.svg" alt="" class="img-thumbnail img-circle">
                 </a> -->
-                <div class="dropdown dropdown-notif" style="padding-top: .5rem; margin-left: 2.25rem;" v-if="isLogin">
+                <div class="dropdown dropdown-notif pr-2" style="padding-top: .5rem; margin-left: 2.25rem;" v-if="isLogin">
                     <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav btn-transparent" type="button" id="notificationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <!-- <i class="fas fa-bell"></i> <span class="badge badge-pill badge-warning">99</span> -->
-                        <i class="fas fa-bell"></i>
+                        <i class="fas fa-lg fa-bell"></i>
+                        <span class="badge badge-pill badge-light" style="position: absolute;" v-if="allNotif > 0">{{allNotif}}</span>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationMenu" style="font-size: .85rem;">
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationMenu" style="font-size: .50rem;">
                         <!-- <a class="dropdown-item" href="#"><i class="fas fa-power-off"></i> Notif</a> -->
-                        <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 1</a>
-                        <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 2</a>
-                        <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 3</a>
+                        <a href="#" class="dropdown-item" v-for="item in notification" v-on:click="checkNotif(item.target, item.id)">
+                            <i :class="item.isRead ? 'far fa-bell' : 'fas fa-bell'"></i>&nbsp;<span v-html="item.notification"></span><br>&nbsp;&nbsp;&nbsp;<span style="font-size: .40rem; color: grey;"> at {{item.created_at}}</span></a>
+                        <a href="#" class="dropdown-item text-center" v-if="nextNotif" v-on:click="seeMoreNotif()">See more...</a>
                     </div>
                 </div>
                 <div class="dropdown" v-if="isLogin">
@@ -1006,7 +1008,7 @@
                             <div class="col-10">
                                 <div class="addon" style="margin-top: 1rem !important">
                                     <a href="#" class="label-sidebar" style="text-decoration: none; color: black;" v-on:click="changeStatus()">
-                                        <i class="fas fa-home text-navy-blue pr-0"></i></i>&nbsp;{{profile.caffe.status.charAt(0).toUpperCase() + profile.caffe.status.slice(1)}}
+                                        <i class="fas fa-store text-navy-blue pr-0"></i></i>&nbsp;{{profile.caffe.status.charAt(0).toUpperCase() + profile.caffe.status.slice(1)}}
                                     </a>
                                     &nbsp;&nbsp;
                                     <a href="#" class="label-sidebar" data-toggle="modal" data-target="#settingCafe" style="text-decoration: none; color: black;">

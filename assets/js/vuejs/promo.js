@@ -18,13 +18,10 @@ new Vue({
         isLoading: false,
         generalErrorMessage: '',
         profile: [],
-        trending_caffe: [],
-        trending_foods: [],
-        trending_baverages: [],
+        promos_menu: [],
+        nextPromo: '',
         location: '',
         detailDialog: [],
-        nextBeverages: null,
-        nextFoods: null,
         letReview: 1,
         rating: 1,
         review: '',
@@ -48,7 +45,6 @@ new Vue({
         dateOfBirth: '',
         gender: '',
         address: '',
-        nextCafe: '',
         erroMessage: '',
         promos: [],
         badgeReff: [],
@@ -106,9 +102,10 @@ new Vue({
             }
         }
         this.getLocationIp()
-        this.getCaffe()
-        this.getFoods()
-        this.getBeverages()
+        this.getPromo()
+        // this.getCaffe()
+        // this.getFoods()
+        // this.getBeverages()
         this.gotoRandomPromo()
         this.getBadgeReff()
     },
@@ -239,7 +236,7 @@ new Vue({
         signout: function () {
             localStorage.clear()
             this.isLogin = 0
-            window.location.replace('/')
+            window.location.replace('/promo')
         },
         getProfile: function () {
             let url = this.url + '/api/users'
@@ -254,7 +251,7 @@ new Vue({
                     // console.log(res)
                     this.profile = res.data.data
                     localStorage.setItem('profile', JSON.stringify(this.profile))
-                    window.location.replace('/')
+                    window.location.replace('/promo')
                 })
                 .catch((err) => {
                     if (err.response !== undefined) {
@@ -268,9 +265,8 @@ new Vue({
                     }, 3000);
                 })
         },
-        getCaffe: function () {
-            let location = 'bandung'
-            let url = this.url + '/api/caffes/' + location + '/location'
+        getPromo: function () {
+            let url = this.url + '/api/foods/promos'
             // let token = 'Bearer' + localStorage.getItem('token')
             let header = {
                 // headers: {
@@ -279,63 +275,9 @@ new Vue({
             }
             axios.get(url, header)
                 .then((res) => {
-                    this.nextCafe = res.data.data.next_page_url
-                    this.trending_caffe = res.data.data
-                    localStorage.setItem('trending_caffe', JSON.stringify(this.trending_caffe))
-                })
-                .catch((err) => {
-                    console.error(err)
-                    // if (err.response !== undefined) {
-                    //     this.generalErrorMessage = err.response.data
-                    // } else {
-                    //     this.generalErrorMessage = err
-                    // }
-                    // $('#generalModal').modal('show')
-                    // setTimeout(() => {
-                    //     $('#generalModal').modal('hide')
-                    // }, 3000);
-                })
-        },
-        getFoods: function () {
-            let url = this.url + '/api/foods/1/type'
-            // let token = 'Bearer' + localStorage.getItem('token')
-            let header = {
-                // headers: {
-                //     'Authorization': `${token}`,
-                // }
-            }
-            axios.get(url, header)
-                .then((res) => {
-                    this.nextFoods = res.data.data.next_page_url
-                    this.trending_foods = res.data.data
-                    localStorage.setItem('trending_foods', JSON.stringify(this.trending_foods))
-                })
-                .catch((err) => {
-                    console.error(err)
-                    // if (err.response !== undefined) {
-                    //     this.generalErrorMessage = err.response.data
-                    // } else {
-                    //     this.generalErrorMessage = err
-                    // }
-                    // $('#generalModal').modal('show')
-                    // setTimeout(() => {
-                    //     $('#generalModal').modal('hide')
-                    // }, 3000);
-                })
-        },
-        getBeverages: function () {
-            let url = this.url + '/api/foods/2/type'
-            // let token = 'Bearer' + localStorage.getItem('token')
-            let header = {
-                // headers: {
-                //     'Authorization': `${token}`,
-                // }
-            }
-            axios.get(url, header)
-                .then((res) => {
-                    this.nextBeverages = res.data.data.next_page_url
-                    this.trending_baverages = res.data.data
-                    localStorage.setItem('trending_baverages', JSON.stringify(this.trending_baverages))
+                    this.nextPromo = res.data.data.next_page_url
+                    this.promos_menu = res.data.data
+                    localStorage.setItem('promos_menu', JSON.stringify(this.promos_menu))
                 })
                 .catch((err) => {
                     console.error(err)
@@ -379,14 +321,8 @@ new Vue({
             const that = this
             let array = []
 
-            if (type === 1) {
-                array = that.trending_foods.data
-            }
-
-            if (type === 2) {
-                array = that.trending_baverages.data
-            }
-
+            array = that.promos_menu.data
+            
             let result = array.filter(el => {
                 return el.id === id
             })
@@ -460,23 +396,9 @@ new Vue({
             axios.get(url, header)
                 .then((res) => {
                     let data = res.data.data.data
-                    if (type === 0) {
-                        data.map(el => {this.trending_caffe.data.push(el)})
-                        this.nextFoods = res.data.data.next_page_url
-                        localStorage.setItem('trending_caffe', JSON.stringify(this.trending_caffe))
-                    }
-
-                    if (type === 1) {
-                        data.map(el => {this.trending_foods.data.push(el)})
-                        this.nextFoods = res.data.data.next_page_url
-                        localStorage.setItem('trending_foods', JSON.stringify(this.trending_foods))
-                    }
-
-                    if (type === 2) {
-                        data.map(el => {this.trending_baverages.data.push(el)})
-                        this.nextBeverages = res.data.data.next_page_url
-                        localStorage.setItem('trending_beverages', JSON.stringify(this.trending_baverages))
-                    }
+                     data.map(el => {this.promos_menu.data.push(el)})
+                    this.nextPromo = res.data.data.next_page_url
+                    localStorage.setItem('nextPromo', JSON.stringify(this.nextPromo))
                 })
                 .catch((err) => {
                     console.error(err)
@@ -514,15 +436,9 @@ new Vue({
                         $('#generalModal').modal('show')
                         // add review to state
                         // this.detailDialog.reviews.push(res.data.data)
-                        if (this.detailDialog.type === '1') { // food
-                            let objIndex = this.trending_foods.data.findIndex((obj => obj.id === this.detailDialog.id))
-                            this.trending_foods.data[objIndex].reviews.push(res.data.data)
-                        }
+                        let objIndex = this.promos_menu.data.findIndex((obj => obj.id === this.detailDialog.id))
+                        this.promos_menu.data[objIndex].reviews.push(res.data.data)
 
-                        if (this.detailDialog.type === '2') { // food
-                            let objIndex = this.trending_baverages.data.findIndex((obj => obj.id === this.detailDialog.id))
-                            this.trending_baverages.data[objIndex].reviews.push(res.data.data)
-                        }
                         setTimeout(() => {
                             $('#generalModal').modal('hide')
                             $('#writeReview').modal('hide')
@@ -594,21 +510,11 @@ new Vue({
                         this.detailDialog.reviews = this.detailDialog.reviews.filter(el => {
                             return el.id !== this.reviewId
                         })
-                        if (this.type === '1') {
-                            let objIndex = this.trending_foods.data.findIndex((obj => obj.id === this.menuId))
-                            let review = this.trending_foods.data[objIndex].reviews.filter(el => {
-                                return el.id !== this.reviewId
-                            })
-                            this.trending_foods.data[objIndex].reviews = review
-                        } // food
-
-                        if (this.type === '2') {
-                            let objIndex = this.trending_baverages.data.findIndex((obj => obj.id === this.menuId))
-                            let review = this.trending_baverages.data[objIndex].reviews.filter(el => {
-                                return el.id !== this.reviewId
-                            })
-                            this.trending_baverages.data[objIndex].reviews = review
-                        } // beverages
+                        let objIndex = this.promos_menu.data.findIndex((obj => obj.id === this.menuId))
+                        let review = this.promos_menu.data[objIndex].reviews.filter(el => {
+                            return el.id !== this.reviewId
+                        })
+                        this.promos_menu.data[objIndex].reviews = review
                         setTimeout(() => {
                             $('#generalModal').modal('hide')
                             $('#deleteReview').modal('hide')
@@ -746,41 +652,6 @@ new Vue({
                     // setTimeout(() => {
                     //     $('#generalModal').modal('hide')
                     // }, 3000);
-                })
-        },
-        gotoRandomCafe: function() {
-            let url = this.url + '/api/caffes/random/cafes'
-            // let token = 'Bearer ' + localStorage.getItem('token')
-            let header = {
-                // headers: {
-                //     'Authorization': `${token}`,
-                // }
-            }
-            axios.get(url, header)
-                .then((res) => {
-                    this.openThisCafe(res.data.data.id)
-                })
-                .catch((err) => {
-                    this.isLoading = false
-                    const that = this
-                    if (err.response !== undefined) {
-                        if(err.response.status === 401){
-                            this.generalErrorMessage = 'Your session is expired, please login...'
-                            $('#generalModal').modal('show')
-                            setTimeout(() => {
-                                $('#generalModal').modal('hide')
-                                that.signout()
-                            }, 3000);
-                        } else {
-                            this.generalErrorMessage = err.response.statusText
-                        }
-                    } else {
-                        this.generalErrorMessage = err
-                    }
-                    $('#generalModal').modal('show')
-                    setTimeout(() => {
-                        $('#generalModal').modal('hide')
-                    }, 3000);
                 })
         },
         changeProfile: function (e) {

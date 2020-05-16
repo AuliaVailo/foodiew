@@ -188,13 +188,13 @@
                 <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav" type="button" id="notificationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <!-- <i class="fas fa-bell"></i> <span class="badge badge-pill badge-warning">99</span> -->
                     <i class="fas fa-bell"></i>
-                    <span class="badge badge-pill badge-light" style="position: absolute;">4</span>
+                    <span class="badge badge-pill badge-light" style="position: absolute;" v-if="allNotif > 0">{{allNotif}}</span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationMenu" style="font-size: .85rem;">
                     <!-- <a class="dropdown-item" href="#"><i class="fas fa-power-off"></i> Notif</a> -->
-                    <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 1</a>
-                    <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 2</a>
-                    <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 3</a>
+                    <a href="#" class="dropdown-item" v-for="item in notification" v-on:click="checkNotif(item.target, item.id)">
+                        <i :class="item.isRead ? 'far fa-bell' : 'fas fa-bell'"></i>&nbsp;<span v-html="item.notification"></span><br>&nbsp;&nbsp;&nbsp;<span style="font-size: 10px; color: grey;"> at {{item.created_at}}</span></a>
+                    <a href="#" class="dropdown-item text-center" v-if="nextNotif" v-on:click="seeMoreNotif()">See more...</a>
                 </div>
             </div>
             <div class="dropdown" v-if="isLogin">
@@ -579,7 +579,7 @@
                                         <span v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3">th</span>
                                         <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.rating_cafe.caffe_name}}</p>
                                         <p class="rating mx-2 mb-0 white-text">
-                                            <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating_cafe.rating)"></i><span class="mx-2 mb-2 font-weight-bolder">({{Number(item.rating_cafe.rating).toLocaleString('id')}})</span>
+                                            <i class="lnr lnr-star text-warning" v-for="n in Math.round(Number(item.rating_cafe.rating))"></i><span class="mx-2 mb-2 font-weight-bolder">({{Number(item.rating_cafe.rating).toLocaleString('id')}})</span>
                                         </p>
                                         <p class="text-truncate pr-1 pb-2"><i class="mx-2 mb-2 fas fa-map-marker-alt"></i>{{item.rating_cafe.caffe_address}}</p>
                                     </a>
@@ -618,7 +618,7 @@
                                         <span v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3">th</span>
                                         <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.rating_menu.name}}</p>
                                         <p class="rating mx-2 mb-0 white-text">
-                                            <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating_menu.rating)"></i>
+                                            <i class="lnr lnr-star text-warning" v-for="n in Math.round(Number(item.rating_menu.rating))"></i>
                                         </p>
                                         <span v-if="item.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.rating_menu.price).toLocaleString('id')}}</span> <span  v-if="item.rating_menu.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
                                         <p v-if="item.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.rating_menu.priceSale).toLocaleString('id')}}</p>
@@ -662,7 +662,7 @@
                                         <span v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3">th</span>
                                         <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.rating_menu.name}}</p>
                                         <p class="rating mx-2 mb-0 white-text">
-                                            <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating_menu.rating)"></i>
+                                            <i class="lnr lnr-star text-warning" v-for="n in Math.round(Number(item.rating_menu.rating))"></i>
                                         </p>
                                         <span v-if="item.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.rating_menu.price).toLocaleString('id')}}</span> <span  v-if="item.rating_menu.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
                                         <p v-if="item.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.rating_menu.priceSale).toLocaleString('id')}}</p>
@@ -949,16 +949,17 @@
                 <!-- <a class="navbar-brand text-white ml-auto font-weight-bolder" style="font-size: .9rem;" href="./profile">
                     <img src="./assets/img/Profile_dummy.svg" alt="" class="img-thumbnail img-circle">
                 </a> -->
-                <div class="dropdown dropdown-notif" style="padding-top: .5rem; margin-left: 2.25rem;" v-if="isLogin">
+                <div class="dropdown dropdown-notif pr-2" style="padding-top: .5rem; margin-left: 2.25rem;" v-if="isLogin">
                     <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav btn-transparent" type="button" id="notificationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <!-- <i class="fas fa-bell"></i> <span class="badge badge-pill badge-warning">99</span> -->
-                        <i class="fas fa-bell"></i>
+                        <i class="fas fa-lg fa-bell"></i>
+                        <span class="badge badge-pill badge-light" style="position: absolute;" v-if="allNotif > 0">{{allNotif}}</span>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationMenu" style="font-size: .85rem;">
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationMenu" style="font-size: .50rem;">
                         <!-- <a class="dropdown-item" href="#"><i class="fas fa-power-off"></i> Notif</a> -->
-                        <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 1</a>
-                        <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 2</a>
-                        <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 3</a>
+                        <a href="#" class="dropdown-item" v-for="item in notification" v-on:click="checkNotif(item.target, item.id)">
+                            <i :class="item.isRead ? 'far fa-bell' : 'fas fa-bell'"></i>&nbsp;<span v-html="item.notification"></span><br>&nbsp;&nbsp;&nbsp;<span style="font-size: .40rem; color: grey;"> at {{item.created_at}}</span></a>
+                        <a href="#" class="dropdown-item text-center" v-if="nextNotif" v-on:click="seeMoreNotif()">See more...</a>
                     </div>
                 </div>
                 <div class="dropdown" v-if="isLogin">
@@ -1025,7 +1026,7 @@
                             </div>
                             <div class="col-6 col-lg-8 text-gold px-0 info-panel">
                                 <span class="h5 d-block mb-0" style="font-size: 1rem">{{thisUser.name}}</span>
-                                <span class="h6" style="font-size: .75rem">{{(thisUser.user_name === null) ? thisUser.email : '@' + thisUser.user}}</span>
+                                <span class="h6" style="font-size: .75rem">{{thisUser.user_name ? '@' + thisUser.user_name : thisUser.email}}</span>
                                 <br>
                                 <img :src="defineBedgeReviewer(thisUser.voted_by) ? './assets/img/badges/' + defineBedgeReviewer(thisUser.voted_by).id + '.png' : './assets/img/badges/1.png'" width="30%" alt=""><a href="#" data-toggle="modal" data-target="#aaa2" role="button" class="text-navy-blue px-2 py-1 btn-profile" style="font-size: 1rem; background: #f4d58d; border-radius: 1rem; margin-right: 1rem;"><i class="fas fa-star"></i> {{defineBedgeReviewer(thisUser.voted_by) ?  defineBedgeReviewer(thisUser.voted_by).name : ''}}</a>
                                 <br>
@@ -1123,7 +1124,7 @@
                                     <span v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3">th</span>
                                     <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.rating_cafe.caffe_name}}</p>
                                     <p class="rating mx-2 mb-0 white-text">
-                                        <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating_cafe.rating)"></i><span class="mx-2 mb-2 font-weight-bolder">({{Number(item.rating_cafe.rating).toLocaleString('id')}})</span>
+                                        <i class="lnr lnr-star text-warning" v-for="n in Math.round(Number(item.rating_cafe.rating))"></i><span class="mx-2 mb-2 font-weight-bolder">({{Number(item.rating_cafe.rating).toLocaleString('id')}})</span>
                                     </p>
                                     <p class="text-truncate pr-1 pb-2"><i class="mx-2 mb-2 fas fa-map-marker-alt"></i>{{item.rating_cafe.caffe_address}}</p>
                                 </a>
@@ -1163,7 +1164,7 @@
                                     <span v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3">th</span>
                                     <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.rating_menu.name}}</p>
                                     <p class="rating mx-2 mb-0 white-text">
-                                        <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating_menu.rating)"></i>
+                                        <i class="lnr lnr-star text-warning" v-for="n in Math.round(Number(item.rating_menu.rating))"></i>
                                     </p>
                                     <span v-if="item.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.rating_menu.price).toLocaleString('id')}}</span> <span  v-if="item.rating_menu.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
                                     <p v-if="item.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.rating_menu.priceSale).toLocaleString('id')}}</p>
@@ -1207,7 +1208,7 @@
                                     <span v-if="(Number(index) + 1) !== 1 && (Number(index) + 1) !== 2 && (Number(index) + 1) !== 3">th</span>
                                     <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.rating_menu.name}}</p>
                                     <p class="rating mx-2 mb-0 white-text">
-                                        <i class="lnr lnr-star text-warning" v-for="n in Number(item.rating_menu.rating)"></i>
+                                        <i class="lnr lnr-star text-warning" v-for="n in Math.round(Number(item.rating_menu.rating))"></i>
                                     </p>
                                     <span v-if="item.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder" style="text-decoration: line-through; color: gainsboro; font-size: .6rem;">Rp. {{Number(item.rating_menu.price).toLocaleString('id')}}</span> <span  v-if="item.rating_menu.isSale === '1'" class="badge badge-pill badge-light bg-success text-light">PROMO</span> 
                                     <p v-if="item.rating_menu.isSale === '1'" class="mx-2 mb-2 font-weight-bolder">Rp. {{Number(item.rating_menu.priceSale).toLocaleString('id')}}</p>
@@ -1270,7 +1271,7 @@
                                         <div v-for="item in detailDialog.rating_menu.reviews">
                                             <div class="review-single">
                                                 <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> {{defineBedgeReviewer(item.users.voted_by) ? defineBedgeReviewer(item.users.voted_by).name : ''}} Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
-                                                <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
+                                                <p><em>"{{item.review}}" (<span v-for="n in Math.round(item.rating)"><i class="far fa-star"></i></span>)</em></p>
                                             </div>
                                         </div>
                                     </div>
@@ -1323,7 +1324,7 @@
                                         <div v-for="item in detailDialog.rating_menu.reviews">
                                             <div class="review-single">
                                                 <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> {{defineBedgeReviewer(item.users.voted_by) ? defineBedgeReviewer(item.users.voted_by).name : ''}} Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
-                                                <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
+                                                <p><em>"{{item.review}}" (<span v-for="n in Math.round(item.rating)"><i class="far fa-star"></i></span>)</em></p>
                                             </div>
                                         </div>
                                     </div>
@@ -1340,22 +1341,38 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title text-navy-blue" id="writeReviewMobileLabel">Nama Food / Beverages</h5>
+                        <h5 class="modal-title text-navy-blue" id="writeReviewMobileLabel">{{detailDialog.name}}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
                     </div>
                     <div class="modal-body">
-                        <form action="POST">
+                        <form action="POST" v-on:submit.prevent="addReview">
+                            <div class="form-group text-navy-blue">
+                                <label for="exampleFormControlTextarea1">Ratings</label>
+                                <select class="custom-select" name="selectRating" style="font-family: 'Font Awesome 5 Free'" v-model="rate">
+                                        <option value="0" selected>Select your rating</option>
+                                        <option value="1" style="font-family: 'Font Awesome 5 Free'">&#xf005;</option>
+                                        <option value="2" style="font-family: 'Font Awesome 5 Free'">&#xf005;&#xf005;</option>
+                                        <option value="3" style="font-family: 'Font Awesome 5 Free'">&#xf005;&#xf005;&#xf005;</option>
+                                        <option value="4" style="font-family: 'Font Awesome 5 Free'">&#xf005;&#xf005;&#xf005;&#xf005;</option>
+                                        <option value="5" style="font-family: 'Font Awesome 5 Free'">&#xf005;&#xf005;&#xf005;&#xf005;&#xf005;</option>
+                                    </select>
+                            </div>
                             <div class="form-group text-navy-blue">
                                 <label for="exampleFormControlTextarea1">Add your review</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="review"></textarea>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <!-- <button type="button" class="btn btn-secondary btn-close-review" data-dismiss="modal">Close</button> -->
-                        <button type="button" class="btn btn-review text-gold">Submit Review</button>
+                        <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                            <div class="spinner-border spinner-border-sm text-light" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </button>
+                        <button v-else type="button" class="btn btn-review text-gold" v-on:click="addReview">Submit Review</button>
                     </div>
                 </div>
             </div>
@@ -1497,7 +1514,7 @@
                                         <div v-for="item in detailDialog.reviews">
                                             <div class="review-single">
                                                 <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black;">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> {{defineBedgeReviewer(item.users.voted_by)}}</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
-                                                <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
+                                                <p><em>"{{item.review}}" (<span v-for="n in Math.round(item.rating)"><i class="far fa-star"></i></span>)</em></p>
                                             </div>
                                         </div>
                                     </div>
@@ -1549,6 +1566,25 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal for alert -->
+        <div id="deleteReview" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Information</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p>Yakin akan menghapus review Anda?</p>
+                </div>
+                <button class="btn btn-danger" v-on:click="doDelete">Delete</button>
+              </div>
+            </div>
+        </div>
+
     </div>
 
 

@@ -1,8 +1,8 @@
 new Vue({
     el: '#app',
     data: { 
-        // url: 'http://localhost:8000',
-        url: 'https://tranquil-dawn-58446.herokuapp.com',
+        url: 'http://localhost:8000',
+        // url: 'https://tranquil-dawn-58446.herokuapp.com',
         urlStorage: 'https://images.traceofficial.com',
         imageUrl: '',
         profileUrl: '',
@@ -52,7 +52,10 @@ new Vue({
         password: '',
         confirm_password: '',
         passwordError: '',
-        confirmPasswordError: ''
+        confirmPasswordError: '',
+        notification: [],
+        nextNotif: '',
+        allNotif: 0
     },
     computed: {
         profileUser: function () {
@@ -97,8 +100,10 @@ new Vue({
             this.isLogin = 1
             if (localStorage.getItem('profile')) {
                 this.profile = JSON.parse(localStorage.getItem('profile'))
+                this.getNotification()
             } else {
                 this.getProfile()
+                this.getNotification()
             }
         } else {
             this.signout()
@@ -117,6 +122,19 @@ new Vue({
         this.gender = this.profile.members.gender
         this.address = this.profile.members.address
 
+        // chek if notif command is apear
+        let notifCommand = localStorage.getItem('pleaseOpen')
+        if (notifCommand) {
+            notifCommand = notifCommand.split('::')
+            let route = notifCommand[0]
+            if (route === 'profile') {
+                this.search = notifCommand[2]
+                setTimeout(() => {
+                    $('#vouter').modal('show')
+                    localStorage.removeItem('pleaseOpen')
+                }, 1500);
+            }
+        }
     },
     methods: {
         signout: function () {
@@ -486,10 +504,24 @@ new Vue({
         },
         searchCategory: function(id) {
             let Category = [
-                {id: 1, name: 'ICE'},
-                {id: 2, name: 'HOT'},
-                {id: 3, name: 'NOODLE'},
-                {id: 4, name: 'RICE'}
+                {id: 1, name: 'Breads n Cereals'},
+                {id: 2, name: 'Rice n grains'},
+                {id: 3, name: 'Pasta n Noodles'},
+                {id: 4, name: 'Vegetable n Fruit'},
+                {id: 5, name: 'Cheese n others'},
+                {id: 6, name: 'Lean Meat n Poulty'},
+                {id: 7, name: 'Fish'},
+                {id: 8, name: 'Egg'},
+                {id: 9, name: 'Others'},
+                {id: 10, name: 'Milk n Yoghurt'},
+                {id: 11, name: 'Shoft Drinks variant'},
+                {id: 12, name: 'Juicy Juice Drinks'},
+                {id: 13, name: 'Bear, wine, cinder, etc.'},
+                {id: 14, name: 'Tea variant drinks'},
+                {id: 15, name: 'Coffe variant drinks'},
+                {id: 16, name: 'Tasty Hot Chocolatte'},
+                {id: 17, name: 'Spirits, booze, etc.'},
+                {id: 18, name: 'other tasty drinks'},
             ]
             let result = Category.filter(el => {
                 return el.id === Number(id)
@@ -978,6 +1010,271 @@ new Vue({
             }
             return Number(Math.round(rate))
         },
+        getNotification: function () {
+            let url = this.url + '/api/notification'
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`,
+                }
+            }
+            axios.get(url, header)
+                .then((res) => {
+                    this.notification = res.data.data.data
+                    this.nextNotif = res.data.data.next_page_url
+                    this.getTotalUnread()
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                $('#writeReview').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else if (err.response.status === 500){
+                            this.generalErrorMessage = err.response.data.message
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                $('#writeReview').modal('hide')
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    // $('#generalModal').modal('show')
+                    // setTimeout(() => {
+                    //     $('#generalModal').modal('hide')
+                    // }, 3000);
+                })
+        },
+        getTotalUnread: function () {
+            let url = this.url + '/api/notification/status/0'
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`,
+                }
+            }
+            axios.get(url, header)
+                .then((res) => {
+                    console.log(res)
+                    this.allNotif = res.data.data
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                $('#writeReview').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else if (err.response.status === 500){
+                            this.generalErrorMessage = err.response.data.message
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                $('#writeReview').modal('hide')
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    // $('#generalModal').modal('show')
+                    // setTimeout(() => {
+                    //     $('#generalModal').modal('hide')
+                    // }, 3000);
+                })
+        },
+        updateNotif: async function (id) {
+            this.isLoading = true
+            let url = this.url + '/api/notification/' + id
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`,
+                }
+            }
+            let payload = {
+
+            }
+            try {
+                const response = await axios.put(url, payload, header)
+                this.isLoading = false
+                this.allNotif--
+                return response.data
+            } catch (err) {
+                this.isLoading = false
+                const that = this
+                if (err.response !== undefined) {
+                    if(err.response.status === 401){
+                        this.generalErrorMessage = 'Your session is expired, please login...'
+                        $('#generalModal').modal('show')
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                            $('#writeReview').modal('hide')
+                            that.signout()
+                        }, 3000);
+                    } else if (err.response.status === 500){
+                        this.generalErrorMessage = err.response.data.message
+                        $('#generalModal').modal('show')
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                            $('#writeReview').modal('hide')
+                        }, 3000);
+                    } else {
+                        this.generalErrorMessage = err.response.statusText
+                    }
+                } else {
+                    this.generalErrorMessage = err
+                }
+                // $('#generalModal').modal('show')
+                // setTimeout(() => {
+                //     $('#generalModal').modal('hide')
+                // }, 3000);
+            }
+        },
+        checkNotif: async function (target, id) {
+            let param = target.split('::')
+            let route = param[0]
+
+            const update = await this.updateNotif(id)
+            if (update.status === 200) {
+                if (route === 'profile') {
+                    this.search = param[1]
+                    $('#vouter').modal('show')
+                }
+    
+                if (route === 'mycafe') {
+                    let type = param[1]
+                    let id = param[2]
+    
+                    if (type === '0' || type === 0) { // only open mycafe
+                        localStorage.setItem('pleaseOpen', 'mycafe::0')
+                        window.location.replace('/mycafe')
+                    }
+    
+                    if (type === '1' || type === 1) { // only open mycafe, and open modal food with id
+                        localStorage.setItem('pleaseOpen', 'mycafe::1::' + id)
+                        window.location.replace('/mycafe')
+                    }
+    
+                    if (type === '2' || type === 2) { // only open mycafe, and open modal baverages with id
+                        localStorage.setItem('pleaseOpen', 'mycafe::2::' + id)
+                        window.location.replace('/mycafe')
+                    }
+                }
+            }
+        },
+        seeMoreNotif: function () {
+            let url = this.nextNotif
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`,
+                }
+            }
+            axios.get(url, header)
+                .then((res) => {
+                    let dataNotif = res.data.data.data
+                    dataNotif.map(el => this.notification.push(el))
+                    this.nextNotif = res.data.data.next_page_url
+                    this.allNotif = res.data.data.total
+                    console.log(this.notification, this.nextNotif)
+                    $('#notificationMenu').click()
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                $('#writeReview').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else if (err.response.status === 500){
+                            this.generalErrorMessage = err.response.data.message
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                $('#writeReview').modal('hide')
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    // $('#generalModal').modal('show')
+                    // setTimeout(() => {
+                    //     $('#generalModal').modal('hide')
+                    // }, 3000);
+                })
+        },
+        seeMoreNotif2: function () {
+            let url = this.nextNotif
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`,
+                }
+            }
+            axios.get(url, header)
+                .then((res) => {
+                    let dataNotif = res.data.data.data
+                    dataNotif.map(el => this.notification.push(el))
+                    this.nextNotif = res.data.data.next_page_url
+                    this.allNotif = res.data.data.total
+                    console.log(this.notification, this.nextNotif)
+                    $('#notificationMenu2').click()
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                $('#writeReview').modal('hide')
+                                that.signout()
+                            }, 3000);
+                        } else if (err.response.status === 500){
+                            this.generalErrorMessage = err.response.data.message
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                $('#writeReview').modal('hide')
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    // $('#generalModal').modal('show')
+                    // setTimeout(() => {
+                    //     $('#generalModal').modal('hide')
+                    // }, 3000);
+                })
+        }
     }
 })
 

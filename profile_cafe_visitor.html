@@ -188,12 +188,13 @@
                 <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav" type="button" id="notificationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <!-- <i class="fas fa-bell"></i> <span class="badge badge-pill badge-warning">99</span> -->
                     <i class="fas fa-bell"></i>
+                    <span class="badge badge-pill badge-light" style="position: absolute;" v-if="allNotif > 0">{{allNotif}}</span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationMenu" style="font-size: .85rem;">
                     <!-- <a class="dropdown-item" href="#"><i class="fas fa-power-off"></i> Notif</a> -->
-                    <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 1</a>
-                    <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 2</a>
-                    <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 3</a>
+                    <a href="#" class="dropdown-item" v-for="item in notification" v-on:click="checkNotif(item.target, item.id)">
+                        <i :class="item.isRead ? 'far fa-bell' : 'fas fa-bell'"></i>&nbsp;<span v-html="item.notification"></span><br>&nbsp;&nbsp;&nbsp;<span style="font-size: 10px; color: grey;"> at {{item.created_at}}</span></a>
+                    <a href="#" class="dropdown-item text-center" v-if="nextNotif" v-on:click="seeMoreNotif()">See more...</a>
                 </div>
             </div>
             <div class="dropdown" v-if="isLogin">
@@ -636,7 +637,7 @@
                             </div>
                             <div class="row d-flex justify-content-center" v-if="trending_baverages.data">
                                 <div class="col-6 col-lg-3 col-md-4 col-sm-6  px-0 card-cafe" style="font-size: .8rem" v-for="item in baverages">
-                                    <a href="#" role="button" data-toggle="modal" data-target="#detailDrink"  v-on:click="setDetail(item.id, 1)">
+                                    <a href="#" role="button" data-toggle="modal" data-target="#detailDrink" v-on:click="setDetail(item.id, 2)">
                                         <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/close-up-coffee-cup-decorated-with-coffee-beans-placed-wooden-serving-board_141793-2026.jpg'" alt="">
                                         <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
                                         <p class="rating mx-2 mb-0 white-text">
@@ -920,16 +921,17 @@
                 <!-- <a class="navbar-brand text-white ml-auto font-weight-bolder" style="font-size: .9rem;" href="./profile">
                     <img src="./assets/img/Profile_dummy.svg" alt="" class="img-thumbnail img-circle">
                 </a> -->
-                <div class="dropdown dropdown-notif" style="padding-top: .5rem; margin-left: 2.25rem;" v-if="isLogin">
+                <div class="dropdown dropdown-notif pr-2" style="padding-top: .5rem; margin-left: 2.25rem;" v-if="isLogin">
                     <button class="btn btn-secondary dropdown-toggle btn-upper-right-nav btn-transparent" type="button" id="notificationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <!-- <i class="fas fa-bell"></i> <span class="badge badge-pill badge-warning">99</span> -->
-                        <i class="fas fa-bell"></i>
+                        <i class="fas fa-lg fa-bell"></i>
+                        <span class="badge badge-pill badge-light" style="position: absolute;" v-if="allNotif > 0">{{allNotif}}</span>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationMenu" style="font-size: .85rem;">
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationMenu" style="font-size: .50rem;">
                         <!-- <a class="dropdown-item" href="#"><i class="fas fa-power-off"></i> Notif</a> -->
-                        <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 1</a>
-                        <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 2</a>
-                        <a href="#" class="dropdown-item"><i class="fas fa-bell"></i> Notification 3</a>
+                        <a href="#" class="dropdown-item" v-for="item in notification" v-on:click="checkNotif(item.target, item.id)">
+                            <i :class="item.isRead ? 'far fa-bell' : 'fas fa-bell'"></i>&nbsp;<span v-html="item.notification"></span><br>&nbsp;&nbsp;&nbsp;<span style="font-size: .40rem; color: grey;"> at {{item.created_at}}</span></a>
+                        <a href="#" class="dropdown-item text-center" v-if="nextNotif" v-on:click="seeMoreNotif()">See more...</a>
                     </div>
                 </div>
                 <div class="dropdown" v-if="isLogin">
@@ -1168,7 +1170,7 @@
                         </div>
                         <div class="row d-flex justify-content-center" v-if="trending_baverages.data">
                             <div class="col-5 col-lg-3 col-md-4 col-sm-6 px-0 my-2 card-cafe" style="font-size: .8rem"v-for="item in baverages" >
-                                <a href="#" role="button" data-toggle="modal" data-target="#detailDrink"  v-on:click="setDetail(item.id, 1)">
+                                <a href="#" role="button" data-toggle="modal" data-target="#detailDrink"  v-on:click="setDetail(item.id, 2)">
                                     <img class="img-fluid" :src="item.pictures ? imageUrl + item.pictures : 'https://image.freepik.com/free-photo/close-up-coffee-cup-decorated-with-coffee-beans-placed-wooden-serving-board_141793-2026.jpg'" alt="">
                                     <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.name}}</p>
                                     <p class="rating mx-2 mb-0 white-text">
@@ -1229,7 +1231,7 @@
                                     <div class="review-box review-box-mak-mik" v-if="detailDialog.reviews">
                                         <div v-for="item in detailDialog.reviews">
                                             <div class="review-single">
-                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> {{defineBedgeReviewer(item.users.voted_by) ? defineBedgeReviewer(item.users.voted_by).name : ''}} Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> {{defineBedgeReviewer(item.users.voted_by) ? defineBedgeReviewer(item.users.voted_by).name : ''}} Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiwFoodBaverages(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
                                                 <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
                                             </div>
                                         </div>
@@ -1276,7 +1278,7 @@
                                     <div class="review-box review-box-mak-mik" v-if="detailDialog.reviews">
                                         <div v-for="item in detailDialog.reviews">
                                             <div class="review-single">
-                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> {{defineBedgeReviewer(item.users.voted_by) ? defineBedgeReviewer(item.users.voted_by).name : ''}} Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiw(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
+                                                <p><a href="#" v-on:click="openThisProfile(item.users.id)" style="text-decoration: none; color: black">@ {{item.users.user_name ? item.users.user_name : item.users.email}}</a> - <small><i class="fas fa-star"></i> {{defineBedgeReviewer(item.users.voted_by) ? defineBedgeReviewer(item.users.voted_by).name : ''}} Reviewer</small> &nbsp;&nbsp; <a v-if="item.user_id === profile.id" href="#" v-on:click="confirmDeleteReveiwFoodBaverages(item.id, detailDialog.type, detailDialog.id)"><i class="fa fa-trash" style="color: red;"></i></a></p>
                                                 <p><em>"{{item.review}}" (<span v-for="n in item.rating"><i class="far fa-star"></i></span>)</em></p>
                                             </div>
                                         </div>
@@ -1294,22 +1296,38 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title text-navy-blue" id="writeReviewMobileLabel">Nama Food / Beverages</h5>
+                        <h5 class="modal-title text-navy-blue" id="writeReviewMobileLabel">{{detailDialog.name}}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
                     </div>
                     <div class="modal-body">
-                        <form action="POST">
+                        <form action="POST" v-on:submit.prevent="addReview">
+                            <div class="form-group text-navy-blue">
+                                <label for="exampleFormControlTextarea1">Ratings</label>
+                                <select class="custom-select" name="selectRating" style="font-family: 'Font Awesome 5 Free'" v-model="rate">
+                                        <option value="0" selected>Select your rating</option>
+                                        <option value="1" style="font-family: 'Font Awesome 5 Free'">&#xf005;</option>
+                                        <option value="2" style="font-family: 'Font Awesome 5 Free'">&#xf005;&#xf005;</option>
+                                        <option value="3" style="font-family: 'Font Awesome 5 Free'">&#xf005;&#xf005;&#xf005;</option>
+                                        <option value="4" style="font-family: 'Font Awesome 5 Free'">&#xf005;&#xf005;&#xf005;&#xf005;</option>
+                                        <option value="5" style="font-family: 'Font Awesome 5 Free'">&#xf005;&#xf005;&#xf005;&#xf005;&#xf005;</option>
+                                    </select>
+                            </div>
                             <div class="form-group text-navy-blue">
                                 <label for="exampleFormControlTextarea1">Add your review</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" v-model="review"></textarea>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <!-- <button type="button" class="btn btn-secondary btn-close-review" data-dismiss="modal">Close</button> -->
-                        <button type="button" class="btn btn-review text-gold">Submit Review</button>
+                        <button v-if="isLoading" type="submit" class="btn btn-review text-gold">
+                            <div class="spinner-border spinner-border-sm text-light" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </button>
+                        <button v-else type="button" class="btn btn-review text-gold" v-on:click="addReview">Submit Review</button>
                     </div>
                 </div>
             </div>
@@ -1399,7 +1417,8 @@
                 <div class="modal-body">
                   <p>Yakin akan menghapus review Anda?</p>
                 </div>
-                <button class="btn btn-danger" v-on:click="doDelete">Delete</button>
+                <button class="btn btn-danger" v-if="detailDialog.type === '1' || detailDialog.type === '2'" v-on:click="doDeleteReviewFoodBaverages">Delete</button>
+                <button class="btn btn-danger" v-else v-on:click="doDelete">Delete</button>
               </div>
             </div>
         </div>

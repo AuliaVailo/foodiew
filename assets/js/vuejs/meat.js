@@ -11,7 +11,6 @@ new Vue({
         items: [],
         isLoading: false,
         profile: [],
-        userProfile: [],
         generalErrorMessage: '',
         cafeName: '',
         cafeAddress: '',
@@ -41,8 +40,8 @@ new Vue({
         address: '',
         detailDialog: [],
         promos: [],
-        cafeRecomendation: [],
-        nextCafeRecomendation: '',
+        thisCategories: [],
+        nextMenu: '',
         foodRecomendation: [],
         nextFoodRecomendation: '',
         beveragesRecomendation: [],
@@ -57,38 +56,19 @@ new Vue({
         notification: [],
         nextNotif: '',
         allNotif: 0,
+        location: '',
+        rating: 1,
+        review: '',
         rate: 0,
-        review: ''
+        foodCategories: [],
+        baveragesCategories: [],
+        category: 'city'
     },
     computed: {
         profileUser: function () {
-            if (this.profile.length) {
-                let firstname = this.profile.members.first_name
-                let midname = this.profile.members.mid_name
-                let lastname = this.profile.members.last_name
-                if (firstname === null) {
-                    firstname = ''
-                }
-                if (midname === null) {
-                    midname = ''
-                }
-                if (lastname === null) {
-                    lastname = ''
-                }
-                let name = firstname + ' ' + midname + ' ' + lastname
-                name = name.trim()
-                if (name === '') {
-                    name = this.profile.email
-                }
-                this.profile.name = name
-            }
-            return this.profile
-        },
-        thisUser: function () {
-            // console.log('user profile', this.userProfile)
-            let firstname = this.userProfile.members.first_name
-            let midname = this.userProfile.members.mid_name
-            let lastname = this.userProfile.members.last_name
+            let firstname = this.profile.members.first_name
+            let midname = this.profile.members.mid_name
+            let lastname = this.profile.members.last_name
             if (firstname === null) {
                 firstname = ''
             }
@@ -101,28 +81,28 @@ new Vue({
             let name = firstname + ' ' + midname + ' ' + lastname
             name = name.trim()
             if (name === '') {
-                name = this.userProfile.email
+                name = this.profile.email
             }
-            this.userProfile.name = name
-            return this.userProfile
+            this.profile.name = name
+            return this.profile
         },
         searchReviewer: function () {
-            if (this.profile.length) {
-                return this.profileUser.voted_by.filter(item => {
-                    if (!this.search) return this.profileUser.voted_by
-                    return (
-                        item.voter.user_name.toLowerCase().includes(this.search.toLowerCase()) || 
-                        item.voter.email.toLowerCase().includes(this.search.toLowerCase()) || 
-                        item.voter.members.first_name.toLowerCase().includes(this.search.toLowerCase()) || 
-                        item.voter.members.mid_name.toLowerCase().includes(this.search.toLowerCase()) || 
-                        item.voter.members.last_name.toLowerCase().includes(this.search.toLowerCase())
-                        )
-                })
-            }
-            return []
+            return this.profileUser.voted_by.filter(item => {
+                if (!this.search) return this.profileUser.voted_by
+                return (
+                    item.voter.user_name.toLowerCase().includes(this.search.toLowerCase()) || 
+                    item.voter.email.toLowerCase().includes(this.search.toLowerCase()) || 
+                    item.voter.members.first_name.toLowerCase().includes(this.search.toLowerCase()) || 
+                    item.voter.members.mid_name.toLowerCase().includes(this.search.toLowerCase()) || 
+                    item.voter.members.last_name.toLowerCase().includes(this.search.toLowerCase())
+                    )
+            })
         }
     },
     created () {
+        if(localStorage.getItem('category')) {
+            this.category = localStorage.getItem('category')
+        }
         this.imageUrl = this.urlStorage + '/menus/'
         this.profileUrl = this.urlStorage + '/profiles/'
         let token = localStorage.getItem('token')
@@ -130,6 +110,7 @@ new Vue({
             this.isLogin = 1
             if (localStorage.getItem('profile')) {
                 this.profile = JSON.parse(localStorage.getItem('profile'))
+                this.getNotification()
                 this.username = this.profile.user_name
                 this.email = this.profile.members.email
                 this.firstName = this.profile.members.first_name
@@ -139,39 +120,64 @@ new Vue({
                 this.dateOfBirth = this.profile.members.date_of_birth
                 this.gender = this.profile.members.gender
                 this.address = this.profile.members.address
-                this.getNotification()
             } else {
                 this.getProfile()
                 this.getNotification()
             }
-            if (localStorage.getItem('profile-user')) {
-                this.userProfile = JSON.parse(localStorage.getItem('profile-user'))
-            } else {
-                this.getProfileUser()
-            }
         } else {
             // this.signout()
-            if (localStorage.getItem('profile-user')) {
-                this.userProfile = JSON.parse(localStorage.getItem('profile-user'))
-                // console.log(this.userProfile)
-            } else {
-                // console.log('get profile user')
-                this.getProfileUser()
+        }
+
+        if(localStorage.getItem('myLocation')){
+            this.location = JSON.parse(localStorage.getItem('myLocation'))
+            this.getThisMenu()
+        } else {
+            this.getLocationIp()
+        }
+        this.gotoRandomPromo()
+        // chek if notif command is apear
+        let notifCommand = localStorage.getItem('pleaseOpen')
+        if (notifCommand) {
+            notifCommand = notifCommand.split('::')
+            let route = notifCommand[0]
+            if (route === 'profile') {
+                this.search = notifCommand[2]
+                setTimeout(() => {
+                    $('#vouter').modal('show')
+                    localStorage.removeItem('pleaseOpen')
+                }, 1500);
             }
         }
-        // console.log(this.userProfile)
-        this.gotoRandomPromo()
-        this.getRecomandationCafe()
-        this.getRecomandationFood()
-        this.getRecomandationBeverages()
+        this.foodCategories = [
+            {id: 1, name: 'Breads n Cereals', route: './breads', icon: './assets/img/logo-icon/bread.svg'},
+            {id: 2, name: 'Rice n grains', route: './rice', icon: './assets/img/logo-icon/rice.svg'},
+            {id: 3, name: 'Pasta n Noodles', route: './noodles', icon: './assets/img/logo-icon/noodles.svg'},
+            {id: 4, name: 'Vegetable n Fruit', route: './vegefruit', icon: './assets/img/logo-icon/vegefruit.svg'},
+            {id: 5, name: 'Cheese n others', route: './cheese', icon: './assets/img/logo-icon/cheese.svg'},
+            {id: 6, name: 'Lean Meat n Poulty', route: './meat', icon: './assets/img/logo-icon/meat.svg'},
+            {id: 7, name: 'Fish', route: './fish', icon: './assets/img/logo-icon/fish.svg'},
+            {id: 8, name: 'Egg', route: './egg', icon: './assets/img/logo-icon/egg.svg'},
+            {id: 9, name: 'Others', route: './other_food', icon: './assets/img/logo-icon/porridge.svg'},
+        ]
 
+        this.baveragesCategories = [
+            {id: 10, name: 'Milk n Yoghurt', route: './milk', icon: './assets/img/logo-icon/milk.svg'},
+            {id: 11, name: 'Shoft Drinks variant', route: './softdrink', icon: './assets/img/logo-icon/softdrink.svg'},
+            {id: 12, name: 'Juicy Juice Drinks', route: './juice', icon: './assets/img/logo-icon/juice.svg'},
+            {id: 13, name: 'Bear, wine, cinder, etc.', route: './beer_wine_cinder_spirits', icon: './assets/img/logo-icon/beer_wine_cinder_spirits.svg'},
+            {id: 14, name: 'Tea variant drinks', route: './tea', icon: './assets/img/logo-icon/tea.svg'},
+            {id: 15, name: 'Coffe variant drinks', route: './coffee', icon: './assets/img/logo-icon/coffee.svg'},
+            {id: 16, name: 'Tasty Hot Chocolatte', route: './hot_chocolatte', icon: './assets/img/logo-icon/hot_chocolatte.svg'},
+            {id: 17, name: 'Spirits, booze, etc.', route: './water', icon: './assets/img/logo-icon/water.svg'},
+            {id: 18, name: 'other tasty drinks', route: './other_drinks', icon: './assets/img/logo-icon/others.svg'},
+        ]
     },
     methods: {
         signout: function () {
             localStorage.removeItem('token')
             localStorage.removeItem('userProfile')
             this.isLogin = 0
-            window.location.replace('/')
+            window.location.replace('/category')
         },
         registerCafe: function () {
             this.isLoading = true
@@ -231,9 +237,7 @@ new Vue({
                 })
         },
         getProfile: function () {
-            // console.log('get Profile Data')
-            // let id = localStorage.getItem('route').split(':')[1]
-            let url = this.url + '/api/users/'
+            let url = this.url + '/api/users'
             let token = 'Bearer ' + localStorage.getItem('token')
             let header = {
                 headers: {
@@ -255,64 +259,15 @@ new Vue({
                     this.address = this.profile.members.address
                 })
                 .catch((err) => {
-                    this.isLoading = false
-                        const that = this
-                        if (err.response !== undefined) {
-                            if(err.response.status === 401){
-                                this.generalErrorMessage = 'Your session is expired, please login...'
-                                $('#generalModal').modal('show')
-                                setTimeout(() => {
-                                    $('#generalModal').modal('hide')
-                                    that.signout()
-                                }, 3000);
-                            } else {
-                                this.generalErrorMessage = err.response.statusText
-                            }
-                        } else {
-                            this.generalErrorMessage = err
-                        }
-                        $('#generalModal').modal('show')
-                        setTimeout(() => {
-                            $('#generalModal').modal('hide')
-                        }, 3000);
-                })
-        },
-        getProfileUser: function () {
-            let id = localStorage.getItem('route').split(':')[1]
-            let url = this.url + + '/api/users/' + id
-            let token = 'Bearer ' + localStorage.getItem('token')
-            let header = {
-                headers: {
-                    'Authorization': `${token}`,
-                }
-            }
-            axios.get(url, header)
-                .then((res) => {
-                    this.userProfile = res.data.data
-                    localStorage.setItem('profile-user', JSON.stringify(res.data.data))
-                    localStorage.setItem('route', 'profile-user:' + id)
-                })
-                .catch((err) => {
-                    this.isLoading = false
-                        const that = this
-                        if (err.response !== undefined) {
-                            if(err.response.status === 401){
-                                this.generalErrorMessage = 'Your session is expired, please login...'
-                                $('#generalModal').modal('show')
-                                setTimeout(() => {
-                                    $('#generalModal').modal('hide')
-                                    that.signout()
-                                }, 3000);
-                            } else {
-                                this.generalErrorMessage = err.response.statusText
-                            }
-                        } else {
-                            this.generalErrorMessage = err
-                        }
-                        $('#generalModal').modal('show')
-                        setTimeout(() => {
-                            $('#generalModal').modal('hide')
-                        }, 3000);
+                    if (err.response !== undefined) {
+                        this.generalErrorMessage = err.response.data
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
                 })
         },
         changeProfile: function (e) {
@@ -483,23 +438,17 @@ new Vue({
             const that = this
             let array = []
 
-            if (type === 1) {
-                array = that.foodRecomendation
-            }
-
-            if (type === 2) {
-                array = that.beveragesRecomendation
-            }
+            array = that.thisCategories
 
             let result = array.filter(el => {
-                return el.rating_menu.id === id
+                return el.id === id
             })
 
             if (result.length > 0) {
                 this.detailDialog = result[0]
-                console.log('detail dialog : ', this.detailDialog, this.profile)
+                // console.log('detail dialog : ', this.detailDialog, this.profile)
                 if (localStorage.getItem('token') && this.isLogin) {
-                    if (this.detailDialog.rating_menu.caffes.user_id === this.profile.id) {
+                    if (this.detailDialog.user_id === this.profile.id) {
                         this.letReview = 0
                         this.detailDialog.letReview = 0
                     } else {
@@ -552,6 +501,7 @@ new Vue({
                 this.letReview = 1
                 this.detailDialog.letReview = 1
             }
+            this.detailDialog.promo = '1'
             $('#detailSponsore').modal('show')
         },
         openThisCafe: function(id) {
@@ -657,9 +607,15 @@ new Vue({
                 }
             }
         },
-        getRecomandationCafe: function() {
-            let id = this.userProfile.id
-            let url = this.url + '/api/caffes/recomendation/now/' + id
+        getThisMenu: async function() {
+            let url = ''
+            if (this.category === 'city') {
+                url = this.url + '/api/foods/recomendation/6/category/' + this.location.city
+            }
+
+            if (this.category === 'all') {
+                url = this.url + '/api/foods/recomendation/6/category/all'
+            }
             // let token = 'Bearer ' + localStorage.getItem('token')
             let header = {
                 // headers: {
@@ -669,8 +625,8 @@ new Vue({
             axios.get(url, header)
                 .then((res) => {
                     // console.log(res)
-                    this.cafeRecomendation = res.data.data.data
-                    this.nextCafeRecomendation = res.data.data.next_page_url
+                    this.thisCategories = res.data.data.data
+                    this.nextMenu = res.data.data.next_page_url
                     // console.log(this.cafeRecomendation, this.nextCafeRecomendation)
                 })
                 .catch((err) => {
@@ -682,91 +638,10 @@ new Vue({
                             $('#generalModal').modal('show')
                             setTimeout(() => {
                                 $('#generalModal').modal('hide')
-                                // that.signout()
+                                that.signout()
                             }, 3000);
                         } else {
                             this.generalErrorMessage = err.response.statusText
-                            return
-                        }
-                    } else {
-                        this.generalErrorMessage = err
-                    }
-                    $('#generalModal').modal('show')
-                    setTimeout(() => {
-                        $('#generalModal').modal('hide')
-                    }, 3000);
-                })
-        },
-        getRecomandationFood: function() {
-            let id = this.userProfile.id
-            let url = this.url + '/api/foods/recomendation/1/now/' + id
-            // let token = 'Bearer ' + localStorage.getItem('token')
-            let header = {
-                // headers: {
-                //     'Authorization': `${token}`,
-                // }
-            }
-            axios.get(url, header)
-                .then((res) => {
-                    console.log('FOODS', res)
-                    this.foodRecomendation = res.data.data.data
-                    this.nextFoodRecomendation = res.data.data.next_page_url
-                    // console.log('FOODS', this.foodRecomendation, this.nextFoodRecomendation)
-                })
-                .catch((err) => {
-                    this.isLoading = false
-                    const that = this
-                    if (err.response !== undefined) {
-                        if(err.response.status === 401){
-                            this.generalErrorMessage = 'Your session is expired, please login...'
-                            $('#generalModal').modal('show')
-                            setTimeout(() => {
-                                $('#generalModal').modal('hide')
-                                // that.signout()
-                            }, 3000);
-                        } else {
-                            this.generalErrorMessage = err.response.statusText
-                            return
-                        }
-                    } else {
-                        this.generalErrorMessage = err
-                    }
-                    $('#generalModal').modal('show')
-                    setTimeout(() => {
-                        $('#generalModal').modal('hide')
-                    }, 3000);
-                })
-        },
-        getRecomandationBeverages: function() {
-            let id = this.userProfile.id
-            let url = this.url + '/api/foods/recomendation/2/now/' + id
-            // let token = 'Bearer ' + localStorage.getItem('token')
-            let header = {
-                // headers: {
-                //     'Authorization': `${token}`,
-                // }
-            }
-            axios.get(url, header)
-                .then((res) => {
-                    // console.log(res)
-                    this.beveragesRecomendation = res.data.data.data
-                    this.nextBeveragesRecomendation = res.data.data.next_page_url
-                    // console.log(this.beveragesRecomendation, this.nextBeveragesRecomendation)
-                })
-                .catch((err) => {
-                    this.isLoading = false
-                    const that = this
-                    if (err.response !== undefined) {
-                        if(err.response.status === 401){
-                            this.generalErrorMessage = 'Your session is expired, please login...'
-                            $('#generalModal').modal('show')
-                            setTimeout(() => {
-                                $('#generalModal').modal('hide')
-                                // that.signout()
-                            }, 3000);
-                        } else {
-                            this.generalErrorMessage = err.response.statusText
-                            return
                         }
                     } else {
                         this.generalErrorMessage = err
@@ -788,43 +663,24 @@ new Vue({
                     let start = 0
                     let end = data.max_vote
                     bedges = (totalVoting >= start && totalVoting <= end) ? data : []
-                    bedges.start = start
-                    bedges.end = end
-                    bedges.percentage = Number(totalVoting) / Number(end) * 100
-                    bedges.nextLevel = bedgeReff[i + 1]
                     return bedges
                 } else if (data.id === maxLengtReff) {
                     let end = data.max_vote
                     bedges = (totalVoting >= end) ? data : []
-                    bedges.end = end
-                    bedges.percentage = 100
-                    bedges.nextLevel = end
+                    console.log(end, bedges)
                     return bedges
                 } else {
                     let start = bedgeReff[i -1].max_vote
                     let end = data.max_vote
                     bedges = (totalVoting >= start && totalVoting <= end) ? data : []
-                    bedges.start = start
-                    bedges.end = end
-                    bedges.percentage = Number(totalVoting) / Number(end) * 100
-                    bedges.nextLevel = bedgeReff[i + 1]
+                    console.log(start, end, bedges)
                     return bedges
                 }
             }
         },
         nextRecomendation: function (type) {
-            let url
-            if (type === 0) {
-                url = this.nextCafeRecomendation
-            }
+            let url = this.nextMenu
 
-            if (type === 1) {
-                url = this.nextFoodRecomendation
-            }
-
-            if (type === 2) {
-                url = this.nextBeveragesRecomendation
-            }
             let token = 'Bearer' + localStorage.getItem('token')
             let header = {
                 headers: {
@@ -836,20 +692,8 @@ new Vue({
                 .then((res) => {
                     let data = res.data.data.data
                     // console.log(res, data)
-                    if (type === 0) {
-                        data.map(el => {this.cafeRecomendation.push(el)})
-                        this.nextCafeRecomendation = res.data.data.next_page_url
-                    }
-
-                    if (type === 1) {
-                        data.map(el => {this.foodRecomendation.push(el)})
-                        this.nextFoodRecomendation = res.data.data.next_page_url
-                    }
-
-                    if (type === 2) {
-                        data.map(el => {this.beveragesRecomendation.push(el)})
-                        this.nextBeveragesRecomendation = res.data.data.next_page_url
-                    }
+                    data.map(el => {this.thisCategories.push(el)})
+                    this.nextMenu = res.data.data.next_page_url
                 })
                 .catch((err) => {
                     console.error(err)
@@ -917,107 +761,8 @@ new Vue({
                     })
             }
         },
-        voteMobile: function () {
-            if (this.isLogin) {
-                if (this.thisUser.id === this.profileUser.id) {
-                    this.generalErrorMessage = "You can't vote your self."
-                    $('#generalModal').modal('show')
-                    setTimeout(() => {
-                        $('#generalModal').modal('hide')
-                    }, 1000);
-                } else {
-                    this.vote()
-                }
-            } else {
-                this.generalErrorMessage = "You need to login, to acces your Profile"
-                $('#generalModal').modal('show')
-                setTimeout(() => {
-                    $('#generalModal').modal('hide')
-                    $('#sign-in2').modal('show')
-                }, 1000);
-            }
-        },
-        voteDesktop: function () {
-            if (this.isLogin) {
-                if (this.thisUser.id === this.profileUser.id) {
-                    this.generalErrorMessage = "You can't vote your self."
-                    $('#generalModal').modal('show')
-                    setTimeout(() => {
-                        $('#generalModal').modal('hide')
-                    }, 1000);
-                } else {
-                    this.vote()
-                }
-            } else {
-                this.generalErrorMessage = "You need to login, to acces your Profile"
-                $('#generalModal').modal('show')
-                setTimeout(() => {
-                    $('#generalModal').modal('hide')
-                    $('#sign-in').modal('show')
-                }, 1000);
-            }
-        },
         vote: function () {
-            this.isLoading = true
-            let url = this.url + '/api/vote'
-            let token = 'Bearer ' + localStorage.getItem('token')
-            let header = {
-                headers: {
-                    'Authorization': `${token}`,
-                }
-            }
-            let payload = {
-                user_id: this.thisUser.id
-            }
-            axios.post(url, payload, header)
-                .then((res) => {
-                    this.isLoading = false
-                    if (res.status === 200) {
-                        if (res.data.message === 'vote') {
-                            // add vote data to voted_by
-                            this.userProfile.voted_by.push(res.data.data[0])
-                            localStorage.setItem('profile-user', JSON.stringify(this.userProfile))
-                        }
-                        if (res.data.message === 'unvote') {
-                            // remove vote data on voted_by
-                            let sisa = this.userProfile.voted_by.filter(el => {
-                                return el.voter_id !== this.profile.id
-                            })
-
-                            this.userProfile.voted_by = sisa
-                            localStorage.setItem('profile-user', JSON.stringify(this.userProfile))
-                        }
-                    }
-                })
-                .catch((err) => {
-                    this.isLoading = false
-                    if (err.response !== undefined) {
-                        this.generalErrorMessage = err.response.data
-                    } else {
-                        this.generalErrorMessage = err
-                    }
-                    $('#generalModal').modal('show')
-                    setTimeout(() => {
-                        $('#generalModal').modal('hide')
-                    }, 3000);
-                })
-        },
-        isVote: function (votedBy) {
-            if (this.isLogin) {
-                if (votedBy.length <= 0) {
-                    return false
-                }
-                let vote = votedBy.filter(el => {
-                    return el.voter_id = this.profileUser.id
-                })
-                if (vote.length > 0) {
-                    return true
-                } else {
-                    return false
-                }
-            } else {
-                return false
-            }
+            $('#vouter').modal('show')
         },
         register: function () {
             this.isLoading = true
@@ -1357,9 +1102,8 @@ new Vue({
             const update = await this.updateNotif(id)
             if (update.status === 200) {
                 if (route === 'profile') {
-                    let id = param[1]
-                    localStorage.setItem('pleaseOpen', 'profile::0::' + id)
-                    window.location.replace('/profile')
+                    this.search = param[1]
+                    $('#vouter').modal('show')
                 }
     
                 if (route === 'mycafe') {
@@ -1479,84 +1223,17 @@ new Vue({
                     // }, 3000);
                 })
         },
-        confirmDeleteReveiw: function(reviewId, type, menuId) {
-            this.reviewId = reviewId
-            this.type = type
-            this.menuId = menuId
-            $('#deleteReview').modal('show')
-        },
-        doDelete: function() {
-            $('#deleteReview').modal('hide')
-            this.isLoading = true
-            let url = this.url + '/api/foods/reviews/' + this.reviewId
-            let token = 'Bearer ' + localStorage.getItem('token')
-            let header = {
-                headers: {
-                    'Authorization': `${token}`,
-                }
-            }
-            let payload = {
-                // username: this.email,
-                // password: this.password,
-            }
-            axios.delete(url, header, payload )
+        getLocationIp: function () {
+            let url = 'https://ipapi.co/json'
+            axios.get(url)
                 .then((res) => {
-                    console.log(res)
-                    this.isLoading = false
-                    if (res.status === 200) {
-                        this.generalErrorMessage = "Delete Success..."
-                        $('#generalModal').modal('show')
-                        // delete data from state
-                        this.detailDialog.rating_menu.reviews = this.detailDialog.rating_menu.reviews.filter(el => {
-                            return el.id !== this.reviewId
-                        })
-                        if (this.type === '1') {
-                            let objIndex = this.foodRecomendation.findIndex((obj => obj.id === this.menuId))
-                            let review = this.foodRecomendation[objIndex].rating_menu.reviews.filter(el => {
-                                return el.id !== this.reviewId
-                            })
-                            this.foodRecomendation[objIndex].rating_menu.reviews = review
-                        } // food
-
-                        if (this.type === '2') {
-                            let objIndex = this.beveragesRecomendation.findIndex((obj => obj.id === this.menuId))
-                            let review = this.beveragesRecomendation[objIndex].rating_menu.reviews.filter(el => {
-                                return el.id !== this.reviewId
-                            })
-                            this.beveragesRecomendation[objIndex].rating_menu.reviews = review
-                        } // beverages
-                        setTimeout(() => {
-                            $('#generalModal').modal('hide')
-                            $('#deleteReview').modal('hide')
-                            
-                            this.reviewId = ''
-                            this.type = ''
-                            this.menuId = ''
-                        }, 1000);
-                    }
+                    this.location = res.data
+                    this.location.countryCode = res.data.country_code
+                    localStorage.setItem('myLocation', JSON.stringify(res.data))
+                    this.getThisMenu()
                 })
                 .catch((err) => {
-                    console.log(err)
-                    this.isLoading = false
-                    const that = this
-                    if (err.response !== undefined) {
-                        if(err.response.status === 401){
-                            this.generalErrorMessage = 'Your session is expired, please login...'
-                            $('#generalModal').modal('show')
-                            setTimeout(() => {
-                                $('#generalModal').modal('hide')
-                                // that.signout()
-                            }, 3000);
-                        } else {
-                            this.generalErrorMessage = err.response.statusText
-                        }
-                    } else {
-                        this.generalErrorMessage = err
-                    }
-                    $('#generalModal').modal('show')
-                    setTimeout(() => {
-                        $('#generalModal').modal('hide')
-                    }, 3000);
+                    console.error(err)
                 })
         },
         addReview: function () {
@@ -1569,27 +1246,25 @@ new Vue({
                 }
             }
             let payload = {
-                id: this.detailDialog.foodBaverages_id,
+                id: this.detailDialog.id,
                 rate: this.rate,
                 review: this.review,
             }
             axios.post(url, payload, header)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.isLoading = false
                     if (res.status === 200) {
                         this.generalErrorMessage = res.data.message
                         $('#generalModal').modal('show')
                         // add review to state
                         // this.detailDialog.reviews.push(res.data.data)
-                        if (this.detailDialog.type === '1') { // food
-                            let objIndex = this.foodRecomendation.findIndex((obj => obj.id === this.detailDialog.id))
-                            this.foodRecomendation[objIndex].rating_menu.reviews.push(res.data.data)
-                        }
-
-                        if (this.detailDialog.type === '2') { // food
-                            let objIndex = this.beveragesRecomendation.findIndex((obj => obj.id === this.detailDialog.id))
-                            this.foodRecomendation[objIndex].rating_menu.reviews.push(res.data.data)
+                        if(this.detailDialog.promo === '1') {
+                            let objIndex = this.promos.findIndex((obj => obj.details.id === this.detailDialog.id))
+                            this.promos[objIndex].details.reviews.push(res.data.data)
+                        } else {
+                            let objIndex = this.thisCategories.findIndex((obj => obj.id === this.detailDialog.id))
+                            this.thisCategories[objIndex].reviews.push(res.data.data)
                         }
                         setTimeout(() => {
                             $('#generalModal').modal('hide')
@@ -1600,7 +1275,6 @@ new Vue({
                     }
                 })
                 .catch((err) => {
-                    console.log(err)
                     this.isLoading = false
                     const that = this
                     if (err.response !== undefined) {
@@ -1631,8 +1305,150 @@ new Vue({
                     }, 3000);
                 })
         },
+        confirmDeleteReveiw: function(reviewId) {
+            this.reviewId = reviewId
+            this.type = ''
+            this.menuId = ''
+            $('#deleteReview').modal('show')
+        },
+        confirmDeleteReveiwFoodBaverages: function(reviewId, type, menuId) {
+            // console.log(reviewId, type, menuId)
+            this.reviewId = reviewId
+            this.type = type
+            this.menuId = menuId
+            $('#deleteReview').modal('show')
+        },
+        doDeleteReviewFoodBaverages: function() {
+            $('#deleteReview').modal('hide')
+            this.isLoading = true
+            let url = this.url + '/api/foods/reviews/' + this.reviewId
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`,
+                }
+            }
+            let payload = {
+                // username: this.email,
+                // password: this.password,
+            }
+            axios.delete(url, header, payload )
+                .then((res) => {
+                    // console.log(res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.generalErrorMessage = "Delete Success..."
+                        $('#generalModal').modal('show')
+                        // delete data from state
+                        this.detailDialog.reviews = this.detailDialog.reviews.filter(el => {
+                            return el.id !== this.reviewId
+                        })
+                        if (this.type === '1') {
+                            let objIndex = this.trending_foods.data.findIndex((obj => obj.id === this.menuId))
+                            let review = this.trending_foods.data[objIndex].reviews.filter(el => {
+                                return el.id !== this.reviewId
+                            })
+                            this.trending_foods.data[objIndex].reviews = review
+                        } // food
+
+                        if (this.type === '2') {
+                            let objIndex = this.trending_baverages.data.findIndex((obj => obj.id === this.menuId))
+                            let review = this.trending_baverages.data[objIndex].reviews.filter(el => {
+                                return el.id !== this.reviewId
+                            })
+                            this.trending_baverages.data[objIndex].reviews = review
+                        } // beverages
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                            $('#deleteReview').modal('hide')
+                            
+                            this.reviewId = ''
+                            this.type = ''
+                            this.menuId = ''
+                        }, 1000);
+                    }
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                // that.signout()
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
+        doDelete: function() {
+            $('#deleteReview').modal('hide')
+            this.isLoading = true
+            let url = this.url + '/api/caffes/reviews/' + this.reviewId
+            let token = 'Bearer ' + localStorage.getItem('token')
+            let header = {
+                headers: {
+                    'Authorization': `${token}`,
+                }
+            }
+            let payload = {
+                // username: this.email,
+                // password: this.password,
+            }
+            axios.delete(url, header, payload )
+                .then((res) => {
+                    // console.log(res)
+                    this.isLoading = false
+                    if (res.status === 200) {
+                        this.generalErrorMessage = "Delete Success..."
+                        $('#generalModal').modal('show')
+                        // delete data from state
+                        let review = this.profileCafe.reviews.filter(el => {
+                            return el.id !== this.reviewId
+                        })
+                        this.profileCafe.reviews = review
+                        localStorage.setItem('profile-cafe', JSON.stringify(this.profileCafe))
+                        setTimeout(() => {
+                            $('#generalModal').modal('hide')
+                            $('#deleteReview').modal('hide')
+                            
+                            this.reviewId = ''
+                            this.caffeId = this.profileCafe.id
+                        }, 1000);
+                    }
+                })
+                .catch((err) => {
+                    this.isLoading = false
+                    const that = this
+                    if (err.response !== undefined) {
+                        if(err.response.status === 401){
+                            this.generalErrorMessage = 'Your session is expired, please login...'
+                            $('#generalModal').modal('show')
+                            setTimeout(() => {
+                                $('#generalModal').modal('hide')
+                                // that.signout()
+                            }, 3000);
+                        } else {
+                            this.generalErrorMessage = err.response.statusText
+                        }
+                    } else {
+                        this.generalErrorMessage = err
+                    }
+                    $('#generalModal').modal('show')
+                    setTimeout(() => {
+                        $('#generalModal').modal('hide')
+                    }, 3000);
+                })
+        },
     }
 })
-
-$('[data-toggle="tooltip"]').tooltip()
-bsCustomFileInput.init()
