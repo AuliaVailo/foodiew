@@ -233,7 +233,7 @@ new Vue({
         getProfile: function () {
             // console.log('get Profile Data')
             // let id = localStorage.getItem('route').split(':')[1]
-            let url = this.url + '/api/users/'
+            let url = this.url + '/api/users'
             let token = 'Bearer ' + localStorage.getItem('token')
             let header = {
                 headers: {
@@ -389,7 +389,7 @@ new Vue({
         },
         updateProfile: function () {
             this.isLoading = true
-            let url = this.url + '/api/users/'
+            let url = this.url + '/api/users'
             let token = 'Bearer ' + localStorage.getItem('token')
             let header = {
                 headers: {
