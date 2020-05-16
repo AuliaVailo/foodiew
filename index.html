@@ -535,9 +535,8 @@
                                                     <img class="img-fluid" :src="item.caffe_pictures ? profileUrl + item.caffe_pictures : './assets/img/cafe.svg'" alt="">
                                                     <p class="mx-2 mt-2 mb-0 font-weight-bolder">{{item.caffe_name}}</p>
                                                     <p class="rating mx-2 mb-0 white-text">
-                                                        <i class="lnr lnr-star text-warning" v-for="n in countRate(item.reviews)"></i>
+                                                        <i class="lnr lnr-star text-warning" v-for="n in countRate(item.reviews)"></i> ({{countRate(item.reviews)}})
                                                     </p>
-                                                    <p class="mx-2 mb-2 font-weight-bolder">({{countRate(item.reviews)}})</p>
                                                     <p class="text-truncate pr-1"><i class="mx-2 mb-2 fas fa-map-marker-alt"></i>{{item.caffe_address}}</p>
                                                 </a>
                                             </div>
