@@ -528,7 +528,7 @@
                             <div class="row d-flex justify-content-center" v-if="cafeRecomendation">
                                 <div v-for="(item, index) in cafeRecomendation" class="col-3 px-0 card-cafe" style="font-size: .8rem">
                                     <a href="#" v-on:click="openThisCafe(item.id)" class="text-white">
-                                        <img class="img-fluid" :src="item.caffe_pictures ? imageUrl + item.caffe_pictures : './assets/img/cafe.svg'" alt="">
+                                        <img class="img-fluid" :src="item.caffe_pictures ? profileUrl + item.caffe_pictures : './assets/img/cafe.svg'" alt="">
                                         <i v-if="(Number(index) + 1) === 1" class="fa fa-star fa-lg pt-3 pl-3" style="color: gold"></i>
                                         <i v-if="(Number(index) + 1) === 2" class="fa fa-star fa-lg pt-3 pl-3" style="color: silver"></i>
                                         <i v-if="(Number(index) + 1) === 3" class="fa fa-star fa-lg pt-3 pl-3" style="color: #cd7f32"></i>
