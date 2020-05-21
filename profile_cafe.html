@@ -547,7 +547,7 @@
                     <div class="addon" style="margin-top: 1rem !important">
                       <a href="#" class="label-sidebar" style="text-decoration: none; color: black;" v-on:click="changeStatus()">
                         <i class="fas fa-store text-navy-blue pr-0"></i>
-                      </i>&nbsp;{{(profile.caffe.status !== 'null') ? profile.caffe.status.charAt(0).toUpperCase() + profile.caffe.status.slice(1) : 'Close'}}
+                      </i>&nbsp;{{(profile.caffe.status !== null) ? profile.caffe.status.charAt(0).toUpperCase() + profile.caffe.status.slice(1) : 'Close'}}
                     </a>
                     &nbsp;&nbsp;
                     <a href="#" class="label-sidebar" data-toggle="modal" data-target="#settingCafe" style="text-decoration: none; color: black;">
@@ -1126,7 +1126,7 @@
             <div class="addon" style="margin-top: 1rem !important">
               <a href="#" class="label-sidebar" style="text-decoration: none; color: black;" v-on:click="changeStatus()">
                 <i class="fas fa-store text-navy-blue pr-0"></i>
-              </i>&nbsp;{{(profile.caffe.status !== 'null') ? profile.caffe.status.charAt(0).toUpperCase() + profile.caffe.status.slice(1) : 'Close'}}
+              </i>&nbsp;{{(profile.caffe.status !== null) ? profile.caffe.status.charAt(0).toUpperCase() + profile.caffe.status.slice(1) : 'Close'}}
             </a>
             &nbsp;&nbsp;
             <a href="#" class="label-sidebar" data-toggle="modal" data-target="#settingCafe" style="text-decoration: none; color: black;">
