@@ -59,7 +59,8 @@ new Vue({
     isTyping: false,
     serachUser: [],
     serachCafe: [],
-    serachMenu: []
+    serachMenu: [],
+    kota: ""
   },
   watch: {
     globalSearch: _.debounce(function () {
@@ -98,6 +99,9 @@ new Vue({
     }
   },
   created() {
+    axios.get("/assets/kota.json").then(res => {
+      this.kota = res.data;
+    });
     this.imageUrl = this.urlStorage + "/menus/";
     this.profileUrl = this.urlStorage + "/profiles/";
     let token = localStorage.getItem("token");
