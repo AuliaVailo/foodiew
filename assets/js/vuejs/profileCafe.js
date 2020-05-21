@@ -1,7 +1,7 @@
 new Vue({
   el: "#app",
   data: {
-    // url: 'http://localhost:8000',
+    // url: "http://localhost:8000",
     url: "https://tranquil-dawn-58446.herokuapp.com",
     urlStorage: "https://images.traceofficial.com",
     imageUrl: "",
@@ -62,6 +62,8 @@ new Vue({
     cafeAddress: "",
     gmapLink: "",
     gmapLocation: "",
+    latitude: "",
+    longitude: "",
     cafePictures: "",
     status: "",
     emailCafe: "",
@@ -95,11 +97,25 @@ new Vue({
       lat: -2.548926,
       lng: 118.0148634
     },
+    cafeLocation: {
+      lat: -2.548926,
+      lng: 118.0148634
+    },
     searchLocation: "",
     locationResult: "",
     isTyping: false,
     isInitialize1: false,
     isInitialize2: false
+  },
+  watch: {
+    searchLocation: _.debounce(function () {
+      this.isTyping = false;
+    }, 1000),
+    isTyping: function (value) {
+      if (!value) {
+        this.getLocationCoordinate(this.searchLocation);
+      }
+    }
   },
   computed: {
     food: function () {
@@ -1211,8 +1227,8 @@ new Vue({
       let payload = {
         caffe_name: this.cafeName,
         caffe_address: this.cafeAddress,
-        googlemaphtml: this.gmapLocation,
-        googlemaplink: this.gmapLink,
+        latitude: this.mylocation.lat,
+        longitude: this.mylocation.lng,
         phone: this.phone,
         email: this.emailCafe,
         status: this.status
@@ -1226,8 +1242,8 @@ new Vue({
           $("#generalModal").modal("show");
           this.profile.caffe.caffe_name = res.data.data.caffe_name;
           this.profile.caffe.caffe_address = res.data.data.caffe_address;
-          this.profile.caffe.googleMapLink = res.data.data.googleMapLink;
-          this.profile.caffe.googleMapHTML = res.data.data.googleMapHTML;
+          this.profile.caffe.latitude = res.data.data.latitude;
+          this.profile.caffe.longitude = res.data.data.longitude;
           this.profile.caffe.caffe_pictures = res.data.data.caffe_pictures;
           this.profile.caffe.status = res.data.data.status;
           this.profile.caffe.email = res.data.data.email;
@@ -1237,8 +1253,8 @@ new Vue({
 
           this.cafeName = this.profile.caffe.caffe_name;
           this.cafeAddress = this.profile.caffe.caffe_address;
-          this.gmapLink = this.profile.caffe.googleMapLink;
-          this.gmapLocation = this.profile.caffe.googleMapHTML;
+          this.latitude = this.profile.caffe.latitude;
+          this.longitude = this.profile.caffe.longitude;
           this.cafePictures = this.profile.caffe.caffe_pictures;
           this.status = this.profile.caffe.status;
           this.email = this.profile.caffe.email;
@@ -1853,8 +1869,8 @@ new Vue({
     initializeMap: function () {
       const that = this;
       let coords = {
-        lat: this.mylocation.lat,
-        lng: this.mylocation.lng
+        lat: that.mylocation.lat,
+        lng: that.mylocation.lng
       };
       //Initialize the Platform object:
       this.platform = new window.H.service.Platform({apikey: "hQkqDq-A1a7iSJolM1tmTBgWojxw9J2IPv-heJPdPLI"});
@@ -1864,7 +1880,7 @@ new Vue({
 
       // Instantiate the map:
       this.map = new window.H.Map(that.$refs.locationMap, that.defaultLayers.vector.normal.map, {
-        zoom: 5,
+        zoom: 17,
         center: coords
       });
 
@@ -1892,53 +1908,42 @@ new Vue({
       }, 1500);
 
       setTimeout(() => {
-        this.setMyLocation();
+        this.setMyCafeLocation();
       }, 2000);
     },
-    initializeMap2: function () {
+    setMyCafeLocation: function () {
+      if (this.map.getObjects()) {
+        this.map.removeObjects(this.map.getObjects());
+      }
+      // Create an icon, an object holding the latitude and longitude, and a marker:
+      // var icon = new window.H.map.Icon(require('@/assets/myPin.svg')),
+      var coords = {
+          lat: this.profile.caffe.latitude,
+          lng: this.profile.caffe.longitude
+        },
+        // marker = new window.H.map.Marker(coords, {icon: icon})
+        marker = new window.H.map.Marker(coords);
+
       const that = this;
-      let coords = {
-        lat: this.mylocation.lat,
-        lng: this.mylocation.lng
-      };
-      //Initialize the Platform object:
-      this.platform = new window.H.service.Platform({apikey: "hQkqDq-A1a7iSJolM1tmTBgWojxw9J2IPv-heJPdPLI"});
+      marker.setData("Your location");
+      // add 'tap' event listener, that opens info bubble, to the group
+      marker.addEventListener("tap", function (evt) {
+        // event target is the marker itself, group is a parent event target
+        // for all objects that it contains
+        var bubble = new window.H.ui.InfoBubble(evt.target.getGeometry(), {
+          // read custom data
+          content: evt.target.getData()
+        });
+        // show info bubble
+        that.ui.addBubble(bubble);
+      }, false);
 
-      // Get the default map types from the Platform object:
-      this.defaultLayers = this.platform.createDefaultLayers();
-
-      // Instantiate the map:
-      this.map = new window.H.Map(that.$refs.locationMap2, that.defaultLayers.vector.normal.map, {
-        zoom: 5,
-        center: coords
-      });
-
-      // add a resize listener to make sure that the map occupies the whole container
-      window.addEventListener("resize", () => this.map.getViewPort().resize());
-
-      this.map.addEventListener("tap", function (evt) {
-        var coord = that.map.screenToGeo(evt.currentPointer.viewportX, evt.currentPointer.viewportY);
-        that.mylocation.lat = coord.lat;
-        that.mylocation.lng = coord.lng;
-        that.setMarker();
-      });
-
-      // MapEvents enables the event system
-      // Behavior implements default interactions for pan/zoom (also on mobile touch environments)
-      // Enable the event system on the map instance:
-      this.mapEvents = new window.H.mapevents.MapEvents(this.map);
-      this.behavior = new window.H.mapevents.Behavior(this.mapEvents);
-
-      // Create the default UI:
-      this.ui = window.H.ui.UI.createDefault(this.map, this.defaultLayers);
-
-      setTimeout(() => {
-        this.getGeolocation();
-      }, 1500);
-
-      setTimeout(() => {
-        this.setMyLocation();
-      }, 2000);
+      // Add the marker to the map and center the map at the location of the marker:
+      this.map.addObject(marker);
+      this.map.setCenter(coords);
+      this.map.setZoom(this.map.getZoom() + 7, true);
+      let prox = this.mylocation.lat + "," + this.mylocation.lng;
+      this.getLocationAddress2(prox);
     },
     setMyLocation: function () {
       if (this.map.getObjects()) {
@@ -2048,9 +2053,39 @@ new Vue({
           let subsdistrinct = location.Address.Subdistrict
             ? location.Address.Subdistrict.split("Kel.")[0]
             : "";
-          let address = "Kel/Desa. " + subsdistrinct + ", Kec/Dist. " + location.Address.District + ", " + location.Address.Label;
+          let address = "Kel/Desa. " + subsdistrinct + ", Kec/Dist. " + location.Address.District + ", " + location.Address.Label + ", Kode Pos : " + location.Address.PostalCode;
           that.locationResult = address;
           that.cafeAddress = address;
+        } else {
+          that.generalErrorMessage = "Location name not found";
+          $("#generalModal").modal("show");
+          setTimeout(() => {
+            that.generalErrorMessage = "";
+            $("#generalModal").modal("hide");
+          }, 3000);
+        }
+      }, function (error) {
+        console.log(error);
+      });
+    },
+    getLocationAddress2: function (proxy) {
+      const that = this;
+      let geocoder = this.platform.getGeocodingService(),
+        parameters = {
+          prox: proxy,
+          mode: "retrieveAddresses",
+          maxresults: "1",
+          gen: "9"
+        };
+
+      geocoder.reverseGeocode(parameters, function (result) {
+        if (result.Response.View.length > 0) {
+          let location = result.Response.View[0].Result[0].Location;
+          let subsdistrinct = location.Address.Subdistrict
+            ? location.Address.Subdistrict.split("Kel.")[0]
+            : "";
+          let address = "Kel/Desa. " + subsdistrinct + ", Kec/Dist. " + location.Address.District + ", " + location.Address.Label;
+          that.locationResult = address;
         } else {
           that.generalErrorMessage = "Location name not found";
           $("#generalModal").modal("show");
@@ -2100,6 +2135,21 @@ new Vue({
         //     break;
         // }
       });
+    },
+    openSetting: function () {
+      $("#settingCafe").modal("show");
+      const that = this;
+      if (this.profile.caffe.latitude != null || this.profile.caffe.longitude != null) {
+        this.mylocation.lat = this.profile.caffe.latitude;
+        this.mylocation.lat = this.profile.caffe.longitude;
+      }
+      console.log(this.mylocation);
+      setTimeout(function () {
+        if (!that.isInitialize) {
+          that.initializeMap();
+          that.isInitialize = true;
+        }
+      }, 1000);
     }
   }
 });
