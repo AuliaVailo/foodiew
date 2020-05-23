@@ -1463,10 +1463,7 @@
       </div>
       <div :class="categoryError ? 'form-label-group has-error' : 'form-label-group '">
         <select name="inputCategory" id="inputCategory" class="form-control" v-model="category">
-          <option value="1">ICE</option>
-          <option value="2">HOT</option>
-          <option value="3">NOODLE</option>
-          <option value="4">RICE</option>
+          <option v-for="item in selectCategory" :value="item.id">{{ item.name.toUpperCase() }}</option>
         </select>
         <span v-if="categoryError" class="help-block" style="color: #F4D58D">{{categoryError}}</span>
       </div>
@@ -1925,12 +1922,12 @@
 <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
 <!-- <script src="assets/js/custom_underline.js"></script> -->
 
- <!-- Here Map -->
- <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
- <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
- <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" type="text/javascript" charset="utf-8"></script>
- <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
- <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css"/>
+<!-- Here Map -->
+<script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css"/>
 
 <!-- Load vuejs -->
 <script src="/assets/js/lodash.min.js"></script>

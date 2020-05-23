@@ -18,7 +18,7 @@ new Vue({
     defaultImage: "./assets/img/Header.jpg",
     pictures: "",
     menuName: "",
-    type: "",
+    type: "1",
     category: "",
     price: "",
     description: "",
@@ -105,7 +105,8 @@ new Vue({
     locationResult: "",
     isTyping: false,
     isInitialize1: false,
-    isInitialize2: false
+    isInitialize2: false,
+    FilterCategory: []
   },
   watch: {
     searchLocation: _.debounce(function () {
@@ -118,6 +119,15 @@ new Vue({
     }
   },
   computed: {
+    selectCategory: function () {
+      let categorySelect = this.FilterCategory.filter(el => {
+        return el.type === this.type;
+      });
+      if (categorySelect.length === 0) {
+        return [];
+      }
+      return categorySelect;
+    },
     food: function () {
       return this.trending_foods.data
         ? this.trending_foods.data
@@ -194,6 +204,81 @@ new Vue({
     this.getFoods();
     this.getBeverages();
     this.gotoRandomPromo();
+    this.FilterCategory = [
+      {
+        id: 1,
+        name: "Breads n Cereals",
+        type: "1"
+      }, {
+        id: 2,
+        name: "Rice n grains",
+        type: "1"
+      }, {
+        id: 3,
+        name: "Pasta n Noodles",
+        type: "1"
+      }, {
+        id: 4,
+        name: "Vegetable n Fruit",
+        type: "1"
+      }, {
+        id: 5,
+        name: "Cheese n others",
+        type: "1"
+      }, {
+        id: 6,
+        name: "Lean Meat n Poulty",
+        type: "1"
+      }, {
+        id: 7,
+        name: "Fish",
+        type: "1"
+      }, {
+        id: 8,
+        name: "Egg",
+        type: "1"
+      }, {
+        id: 9,
+        name: "Others",
+        type: "1"
+      }, {
+        id: 10,
+        name: "Milk n Yoghurt",
+        type: "2"
+      }, {
+        id: 11,
+        name: "Shoft Drinks variant",
+        type: "2"
+      }, {
+        id: 12,
+        name: "Juicy Juice Drinks",
+        type: "2"
+      }, {
+        id: 13,
+        name: "Bear, wine, cinder, etc.",
+        type: "2"
+      }, {
+        id: 14,
+        name: "Tea variant drinks",
+        type: "2"
+      }, {
+        id: 15,
+        name: "Coffe variant drinks",
+        type: "2"
+      }, {
+        id: 16,
+        name: "Tasty Hot Chocolatte",
+        type: "2"
+      }, {
+        id: 17,
+        name: "Spirits, booze, etc.",
+        type: "2"
+      }, {
+        id: 18,
+        name: "other tasty drinks",
+        type: "2"
+      }
+    ];
   },
   methods: {
     signout: function () {
@@ -535,64 +620,7 @@ new Vue({
       }
     },
     searchCategory: function (id) {
-      let Category = [
-        {
-          id: 1,
-          name: "Breads n Cereals"
-        }, {
-          id: 2,
-          name: "Rice n grains"
-        }, {
-          id: 3,
-          name: "Pasta n Noodles"
-        }, {
-          id: 4,
-          name: "Vegetable n Fruit"
-        }, {
-          id: 5,
-          name: "Cheese n others"
-        }, {
-          id: 6,
-          name: "Lean Meat n Poulty"
-        }, {
-          id: 7,
-          name: "Fish"
-        }, {
-          id: 8,
-          name: "Egg"
-        }, {
-          id: 9,
-          name: "Others"
-        }, {
-          id: 10,
-          name: "Milk n Yoghurt"
-        }, {
-          id: 11,
-          name: "Shoft Drinks variant"
-        }, {
-          id: 12,
-          name: "Juicy Juice Drinks"
-        }, {
-          id: 13,
-          name: "Bear, wine, cinder, etc."
-        }, {
-          id: 14,
-          name: "Tea variant drinks"
-        }, {
-          id: 15,
-          name: "Coffe variant drinks"
-        }, {
-          id: 16,
-          name: "Tasty Hot Chocolatte"
-        }, {
-          id: 17,
-          name: "Spirits, booze, etc."
-        }, {
-          id: 18,
-          name: "other tasty drinks"
-        }
-      ];
-      let result = Category.filter(el => {
+      let result = this.FilterCategory.filter(el => {
         return el.id === Number(id);
       });
 
