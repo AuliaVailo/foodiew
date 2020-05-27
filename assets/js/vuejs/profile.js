@@ -70,7 +70,11 @@ new Vue({
     locationResult: "",
     isTyping: false,
     isInitialize1: false,
-    isInitialize2: false
+    isInitialize2: false,
+    globalSearch: "",
+    serachUser: [],
+    serachCafe: [],
+    serachMenu: []
   },
   watch: {
     searchLocation: _.debounce(function () {
@@ -79,6 +83,14 @@ new Vue({
     isTyping: function (value) {
       if (!value) {
         this.getLocationCoordinate(this.searchLocation);
+      }
+    },
+    globalSearch: _.debounce(function () {
+      this.isTyping = false;
+    }, 1000),
+    isTyping: function (value) {
+      if (!value) {
+        this.searchData(this.globalSearch);
       }
     }
   },
@@ -161,6 +173,14 @@ new Vue({
     }
   },
   methods: {
+    searchData: function (searchQuery) {
+      let url = this.url + "/api/search/" + searchQuery;
+      axios.get(url).then(response => {
+        this.serachUser = response.data.data.user;
+        this.serachCafe = response.data.data.cafe;
+        this.serachMenu = response.data.data.menu;
+      });
+    },
     signout: function () {
       localStorage.removeItem("token");
       localStorage.removeItem("userProfile");
@@ -1589,6 +1609,25 @@ new Vue({
           that.isInitialize2 = true;
         }
       }, 1000);
+    },
+    showSearch: function () {
+      $("#search").modal("show");
+    },
+    countRating: function (reviews) {
+        let rate = 0;
+        let totalRating = 0;
+        let totalData = 1;
+        if (reviews.length) {
+          reviews.map(el => {
+            totalRating += el.rating;
+            totalData++;
+          });
+          rate = totalRating / totalData;
+        } else {
+          rate = 1;
+        }
+
+        return Number(Math.round(rate));
     }
   }
 });

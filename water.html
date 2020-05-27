@@ -177,7 +177,7 @@
             <!-- <img src="./assets/img/Foodiew_samping_gold.png" alt="" style="width: 6rem;" class="top-logo-nav"> -->
             <form class="form-inline my-lg-0 ml-auto">
                 <div class="input-group">
-                    <input type="text" class="form-control search-menu text-navy-blue" placeholder="Search...">
+                    <input type="text" class="form-control search-menu text-navy-blue" placeholder="Search..." v-on:click="showSearch()"  v-on:change="showSearch()">
                     <div class="input-group-append">
                         <span class="input-group-text text-navy-blue">
                             <i class="fa fa-search text-navy-blue" aria-hidden="true"></i>
@@ -587,7 +587,7 @@
                     <div class="sidebar-item sidebar-search">
                         <div>
                             <div class="input-group text-gold">
-                                <input type="text" class="form-control search-menu text-gold" placeholder="Search...">
+                                <input type="text" class="form-control search-menu text-gold" placeholder="Search..." v-on:click="showSearch()" v-on:change="showSearch()">
                                 <div class="input-group-append">
                                     <span class="input-group-text text-gold">
                                     <i class="fa fa-search text-gold" aria-hidden="true"></i>
@@ -1203,6 +1203,91 @@
               </div>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="search" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content modal-register">
+                    <div class="modal-header">
+                        <h6 class="modal-title text-navy-blue" id="staticBackdropLabel">Search</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row pb-3">
+                                <div class="col">
+                                    <form class="form-inline my-lg-0 ml-auto">
+                                        <div class="input-group col-12">
+                                            <input type="text" class="form-control search-menu text-navy-blue" placeholder="Search..." @input="isTyping = true" v-model="globalSearch">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text text-navy-blue">
+                                                    <i class="fa fa-search text-navy-blue" aria-hidden="true"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="review-box review-box-mak-mik">
+                                    <div v-if="serachUser.length > 0">
+                                        <div class="pl-2" style="color: #F4D58D;">
+                                            <u><h6>Reviewer</h6></u>
+                                        </div>
+                                        <div v-for="item in serachUser">
+                                            <div class="review-single">
+                                                <p>
+                                                    <i class="fas fa-user"></i><a href="#" v-on:click="openThisProfile(item.id)" style="text-decoration: none; color: black;">@ {{(item.user_name !== 'null') ? item.user_name : item.email}}</a> - <small><i class="fas fa-star"></i> {{defineBedgeReviewer(item.voted_by).name}} Reviewer</small>
+                                                </p>
+                                                <p class="pl-3">
+                                                    <i class="fas fa-store"></i><a href="#" v-on:click="openThisCafe(item.caffe.id)" style="text-decoration: none; color: black;">{{item.caffe.caffe_name}}</a> - <i class="fas fa-star" v-for="n in countRating(item.caffe.reviews)"></i> &nbsp;({{countRating(item.caffe.reviews)}})<small class="text-truncate"> {{item.caffe.caffe_address}}</small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div v-if="serachCafe.length > 0">
+                                        <div class="pl-2" style="color: #F4D58D;">
+                                            <u><h6>Cafe</h6></u>
+                                        </div>
+                                        <div v-for="item in serachCafe">
+                                            <div class="review-single">
+                                                <p>
+                                                    <i class="fas fa-store"></i><a href="#" v-on:click="openThisCafe(item.id)" style="text-decoration: none; color: black;">{{item.caffe_name}}</a> - <i class="fas fa-star" v-for="n in countRating(item.reviews)"></i> &nbsp;({{countRating(item.reviews)}}) - <small class="text-truncate">{{item.caffe_address}}</small>
+                                                </p>
+                                                <p class="pl-3">
+                                                    <i class="fas fa-user"></i><a href="#" v-on:click="openThisProfile(item.owner.id)" style="text-decoration: none; color: black;">@ {{(item.owner.user_name !== 'null') ? item.owner.user_name : item.owner.email}}</a> - <small>(Owner)</small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div v-if="serachMenu.length > 0">
+                                        <div class="pl-2" style="color: #F4D58D;">
+                                            <u><h6>Menu</h6></u>
+                                        </div>
+                                        <div v-for="item in serachMenu">
+                                            <div class="review-single">
+                                                <p>
+                                                    <i class="fas fa-utensils"></i><a href="#" v-on:click="openThisCafeMenu(item)" style="text-decoration: none; color: black;"> {{item.name}}</a> - <small><i class="fas fa-star"></i> {{Number(Math.round(item.rating))}}</small>
+                                                </p>
+                                                <p class="pl-3">
+                                                    <i class="fas fa-store"></i><a href="#" v-on:click="openThisCafe(item.caffe_id)" style="text-decoration: none; color: black;"> {{item.caffes.caffe_name}}</a> - <small class="text-truncate">{{item.caffes.caffe_address}}</small>
+                                                </p>
+                                                <p class="pl-5" v-if="item.reviews.length > 0">
+                                                    <i class="far fa-comments"></i> <small>{{item.reviews[0].review}}</small> - <i class="fas fa-star"></i> {{Number(Math.round(item.reviews[0].rating))}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script src="assets/js/jquery-3.4.1.min.js"></script>
@@ -1214,6 +1299,7 @@
     <!-- <script src="assets/js/custom_underline.js"></script> -->
 
     <!-- Load vuejs  -->
+    <script src="/assets/js/lodash.min.js"></script>
     <script src="/assets/js/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module" src="/assets/js/vuejs/water.js"></script>

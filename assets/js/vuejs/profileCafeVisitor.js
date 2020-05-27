@@ -71,6 +71,21 @@ new Vue({
         allNotif: 0,
         review: '',
         rate: 0,
+        globalSearch: "",
+        isTyping: false,
+        serachUser: [],
+        serachCafe: [],
+        serachMenu: []
+    },
+    watch: {
+        globalSearch: _.debounce(function () {
+          this.isTyping = false;
+        }, 1000),
+        isTyping: function (value) {
+          if (!value) {
+            this.searchData(this.globalSearch);
+          }
+        }
     },
     computed: {
         food: function () {
@@ -152,6 +167,14 @@ new Vue({
         this.gotoRandomPromo()
     },
     methods: {
+        searchData: function (searchQuery) {
+            let url = this.url + "/api/search/" + searchQuery;
+            axios.get(url).then(response => {
+              this.serachUser = response.data.data.user;
+              this.serachCafe = response.data.data.cafe;
+              this.serachMenu = response.data.data.menu;
+            });
+        },
         signout: function () {
             localStorage.removeItem('token')
             localStorage.removeItem('userProfile')
@@ -1510,6 +1533,25 @@ new Vue({
                     //     $('#generalModal').modal('hide')
                     // }, 3000);
                 })
+        },
+        showSearch: function () {
+            $("#search").modal("show");
+        },
+        countRating: function (reviews) {
+            let rate = 0;
+            let totalRating = 0;
+            let totalData = 1;
+            if (reviews.length) {
+              reviews.map(el => {
+                totalRating += el.rating;
+                totalData++;
+              });
+              rate = totalRating / totalData;
+            } else {
+              rate = 1;
+            }
+      
+            return Number(Math.round(rate));
         }
     }
 })
