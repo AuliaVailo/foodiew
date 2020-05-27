@@ -353,14 +353,14 @@
                     <span class="text-gold">Follow Us!</span>
                   </li>
                   <div class="social-media">
-                    <a href="#" style="margin-left: 1.25rem;">
-                      <i class="fab fa-2x fa-facebook-square text-gold"></i>
+                    <a href="https://www.facebook.com/foodiew/" style="margin-left: 1.25rem;" target="_blank">
+                        <i class="fab fa-2x fa-facebook-square text-gold"></i>
                     </a>
-                    <a href="#">
-                      <i class="fab fa-2x fa-instagram text-gold"></i>
+                    <a href="https://www.instagram.com/foodiew_/" target="_blank">
+                        <i class="fab fa-2x fa-instagram text-gold"></i>
                     </a>
-                    <a href="#">
-                      <i class="fab fa-2x fa-youtube-square text-gold"></i>
+                    <a href="https://www.youtube.com/channel/UCu7qwlULfbRO21utMwT0FWw/" target="_blank">
+                        <i class="fab fa-2x fa-youtube-square text-gold"></i>
                     </a>
                   </div>
                 </ul>
@@ -1455,15 +1455,16 @@
         <span v-if="nameError" class="help-block" style="color: #F4D58D">{{nameError}}</span>
       </div>
       <div :class="typeError ? 'form-label-group has-error' : 'form-label-group '">
-        <select name="inputType" id="inputType" class="form-control" v-model="type">
+        <select name="inputType" id="inputType" class="custom-select" v-model="type">
           <option value="1">FOOD</option>
           <option value="2">BEVERAGES</option>
         </select>
         <span v-if="typeError" class="help-block" style="color: #F4D58D">{{typeError}}</span>
       </div>
       <div :class="categoryError ? 'form-label-group has-error' : 'form-label-group '">
-        <select name="inputCategory" id="inputCategory" class="form-control" v-model="category">
-          <option v-for="item in selectCategory" :value="item.id">{{ item.name.toUpperCase() }}</option>
+        <select name="inputCategory" id="inputCategory" class="custom-select" v-model="category">
+          <option value="" disabled="disabled" selected="selected">CATEGORY</option> 
+          <option v-for="item in selectCategory" :value="item.id">&nbsp;&raquo; {{ item.name.toUpperCase() }}</option>
         </select>
         <span v-if="categoryError" class="help-block" style="color: #F4D58D">{{categoryError}}</span>
       </div>
